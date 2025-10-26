@@ -172,84 +172,137 @@
         }
         
         .status-badge {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             padding: 0.5rem 1.5rem;
-            background: linear-gradient(135deg, rgba(67, 233, 123, 0.15), rgba(56, 249, 215, 0.15));
-            border: 1px solid rgba(67, 233, 123, 0.3);
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.3);
             border-radius: 50px;
-            font-weight: 600;
+            color: #667eea;
             font-size: 0.9rem;
-            color: #059669;
+            font-weight: 600;
             margin-bottom: 2rem;
             animation: pulse 2s ease-in-out infinite;
         }
         
         @keyframes pulse {
             0%, 100% {
-                box-shadow: 0 0 0 0 rgba(67, 233, 123, 0.4);
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
             }
             50% {
-                box-shadow: 0 0 0 10px rgba(67, 233, 123, 0);
+                box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
             }
+        }
+        
+        .status-badge::before {
+            content: '●';
+            color: #43e97b;
+            font-size: 1.2rem;
+            animation: blink 2s ease-in-out infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
         }
         
         h1 {
-            font-size: 4rem;
+            font-size: 4.5rem;
             font-weight: 900;
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-        }
-        
-        .gradient-text {
-            background: var(--gradient-1);
+            background: linear-gradient(135deg, #1a202c 0%, #667eea 50%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
         }
         
         .hero-subtitle {
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             color: #4a5568;
-            margin-bottom: 2rem;
-            font-weight: 500;
-        }
-        
-        .hero-description {
-            font-size: 1.2rem;
-            color: #718096;
-            max-width: 700px;
-            margin: 0 auto 3rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
             line-height: 1.8;
         }
         
+        .hero-subtitle strong {
+            color: #667eea;
+            font-weight: 700;
+        }
+        
+        /* Certification Badges */
+        .cert-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+        }
+        
+        .cert-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            color: #2d3748;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .cert-badge:hover {
+            transform: translateY(-3px) scale(1.05);
+            border-color: #667eea;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+        
+        .cert-icon {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .cert-badge:hover .cert-icon {
+            transform: rotate(12deg);
+        }
+        
+        /* CTA Buttons */
         .cta-buttons {
             display: flex;
-            gap: 1.5rem;
-            justify-content: center;
             flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
         }
         
         .btn {
-            padding: 1rem 2.5rem;
-            font-size: 1.1rem;
+            padding: 1rem 2rem;
+            font-size: 1rem;
             font-weight: 600;
-            border-radius: 12px;
             text-decoration: none;
+            border-radius: 12px;
             transition: all 0.3s ease;
-            display: inline-block;
-            position: relative;
-            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
         }
         
         .btn-primary {
             background: var(--gradient-1);
             color: white;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
         }
         
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.5);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
         }
         
         .btn-outline {
@@ -261,37 +314,35 @@
         .btn-outline:hover {
             background: #667eea;
             color: white;
-            transform: translateY(-3px);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
         }
         
-        /* Container */
+        /* Sections */
         .container {
             max-width: 1200px;
-            margin: 5rem auto;
-            padding: 0 2rem;
+            margin: 0 auto;
+            padding: 4rem 2rem;
         }
         
         .section-title {
             font-size: 3rem;
             font-weight: 800;
-            text-align: center;
+            background: linear-gradient(135deg, #1a202c 0%, #667eea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 3rem;
-            color: #1a202c;
         }
         
-        /* Projects Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-            margin-top: 3rem;
-        }
-        
+        /* Project Cards */
         .project-card {
-            background: white;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 24px;
             padding: 2.5rem;
-            box-shadow: var(--shadow-lg);
+            margin-bottom: 2rem;
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
@@ -303,59 +354,104 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 4px;
+            height: 100%;
             background: var(--gradient-1);
-            transform: scaleX(0);
-            transition: transform 0.4s ease;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
         }
         
         .project-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-10px) scale(1.02);
             box-shadow: var(--shadow-xl);
+            border-color: #667eea;
         }
         
         .project-card:hover::before {
-            transform: scaleX(1);
+            opacity: 0.05;
         }
         
-        .project-number {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            font-size: 3rem;
-            font-weight: 900;
-            color: rgba(102, 126, 234, 0.1);
-            line-height: 1;
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
         }
         
         .project-title {
-            font-size: 1.75rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            margin-bottom: 1rem;
             color: #1a202c;
+            margin-bottom: 1rem;
+        }
+        
+        .metrics {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .metric-badge {
+            padding: 0.4rem 1rem;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(67, 233, 123, 0.3);
         }
         
         .project-desc {
             color: #4a5568;
-            margin-bottom: 1.5rem;
-            font-size: 1.05rem;
-            line-height: 1.7;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        
+        .project-proof {
+            color: #718096;
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .project-bullets {
+            list-style: disc;
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+            color: #4a5568;
+        }
+        
+        .project-bullets li {
+            margin-bottom: 0.5rem;
         }
         
         .tech-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
         }
         
         .tag {
-            padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            padding: 0.4rem 1rem;
+            background: rgba(102, 126, 234, 0.1);
             color: #667eea;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .tag:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
         
         .project-links {
@@ -364,103 +460,167 @@
             flex-wrap: wrap;
         }
         
-        /* Highlights Section */
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card-small {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .project-card-small:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+        
+        .project-title-small {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.75rem;
+        }
+        
+        .metrics-small {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+        
+        .metric-badge-small {
+            padding: 0.3rem 0.75rem;
+            background: rgba(67, 233, 123, 0.2);
+            color: #10b981;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(67, 233, 123, 0.3);
+        }
+        
+        .project-desc-small {
+            font-size: 0.9rem;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+        
+        .tech-tags-small {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.75rem 0;
+        }
+        
+        .tag-small {
+            padding: 0.25rem 0.75rem;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        /* Highlights */
         .highlights-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin-top: 3rem;
         }
         
         .highlight-card {
-            background: white;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
             padding: 2rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
         
         .highlight-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
         }
         
         .highlight-card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: #1a202c;
+            font-size: 1.3rem;
             font-weight: 700;
+            color: #667eea;
+            margin-bottom: 1rem;
         }
         
-        .highlight-card p, .highlight-card li {
+        .highlight-card p, .highlight-card ul {
             color: #4a5568;
-            line-height: 1.8;
+            line-height: 1.7;
         }
         
         .highlight-card ul {
             list-style: none;
-            padding-left: 0;
+            padding: 0;
         }
         
         .highlight-card li {
-            padding: 0.5rem 0;
-            padding-left: 1.5rem;
-            position: relative;
-        }
-        
-        .highlight-card li::before {
-            content: '▸';
-            position: absolute;
-            left: 0;
-            color: #667eea;
-            font-weight: bold;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
         }
         
         .check {
-            color: #43e97b;
-            margin-right: 0.5rem;
-            font-size: 1.2rem;
+            color: #10b981;
+            font-weight: bold;
         }
         
-        /* Contact Section */
+        /* Contact */
         .contact-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 1.5rem;
-            margin-top: 3rem;
+            margin: 2rem 0;
         }
         
         .contact-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 16px;
             display: flex;
             align-items: center;
             gap: 1rem;
+            padding: 1.5rem;
+            background: white;
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
             text-decoration: none;
             color: #2d3748;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
         }
         
         .contact-card:hover {
+            border-color: #667eea;
             transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
         }
         
         .contact-icon {
-            width: 32px;
-            height: 32px;
+            width: 24px;
+            height: 24px;
             color: #667eea;
         }
         
         /* Footer */
         footer {
-            background: #1a202c;
-            color: white;
-            text-align: center;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
             padding: 2rem;
-            margin-top: 5rem;
+            text-align: center;
+            color: #718096;
+            font-size: 0.9rem;
         }
         
         footer a {
@@ -472,14 +632,18 @@
             text-decoration: underline;
         }
         
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
             h1 {
                 font-size: 2.5rem;
             }
             
-            .hero-subtitle {
-                font-size: 1.2rem;
+            .hero {
+                padding: 4rem 1.5rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
             }
             
             .section-title {
@@ -489,83 +653,15 @@
             .projects-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .nav-links {
-                gap: 1rem;
-            }
         }
-
-        /* Featured Project Styling */
-        .featured-project {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
-            border: 2px solid rgba(102, 126, 234, 0.2);
+        
+        html {
+            scroll-behavior: smooth;
         }
-
-        .featured-badge {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            background: var(--gradient-1);
+        
+        ::selection {
+            background: #667eea;
             color: white;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        /* Smaller project cards for bottom section */
-        .project-card-small {
-            background: white;
-            border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s ease;
-        }
-
-        .project-card-small:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
-        }
-
-        .project-title-small {
-            font-size: 1.4rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: #1a202c;
-        }
-
-        .project-desc-small {
-            color: #4a5568;
-            margin-bottom: 1.25rem;
-            font-size: 1rem;
-            line-height: 1.6;
-        }
-
-        .tech-tags-small {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .tag-small {
-            padding: 0.4rem 0.9rem;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            color: #667eea;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .in-progress-badge {
-            display: inline-block;
-            padding: 0.4rem 1rem;
-            background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.15));
-            color: #d97706;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1rem;
-            border: 1px solid rgba(251, 191, 36, 0.3);
         }
     </style>
 </head>
@@ -578,10 +674,11 @@
 
     <header>
         <nav>
-            <div class="logo">WK</div>
+            <div class="logo">William Kim</div>
             <ul class="nav-links">
+                <li><a href="#featured">Featured</a></li>
                 <li><a href="#projects">Projects</a></li>
-                <li><a href="#highlights">Skills</a></li>
+                <li><a href="#highlights">Highlights</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -589,176 +686,308 @@
     </header>
 
     <section class="hero">
-        <div class="status-badge">📊 Open to Opportunities</div>
-        <h1>William Kim</h1>
-        <p class="hero-subtitle">Data & Business Analyst</p>
-        <p class="hero-description">
-            Turning complex data into actionable insights through advanced analytics, 
-            automated reporting, and interactive dashboards. Specialized in FP&A, KPI tracking, 
-            and business intelligence with modern data tools.
+        <div class="status-badge">Available for new opportunities</div>
+        <h1>Data & Business Analyst</h1>
+        <p class="hero-subtitle">
+            I build <strong>end-to-end analytics solutions</strong> that transform raw data into actionable insights—from 
+            SQL queries and ETL pipelines to interactive dashboards and automated reporting. Focus: <strong>Financial Analysis</strong>, 
+            <strong>Business Intelligence</strong>, <strong>Data Visualization</strong>, and <strong>KPI Development</strong> using Python, SQL, Power BI, and Snowflake.
         </p>
-        <div class="cta-buttons">
-            <a href="#projects" class="btn btn-primary">View Projects</a>
-            <a href="#contact" class="btn btn-outline">Contact Me</a>
+
+        <div class="cert-badges">
+            <a href="https://learn.microsoft.com/credentials/certifications/azure-ai-engineer/" class="cert-badge" target="_blank">
+                <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span><strong>Microsoft</strong> Azure AI</span>
+            </a>
+            <a href="https://credentials.edx.org/credentials/e2bf6e539d774ac4ae66bf7dc2ecea53/" class="cert-badge" target="_blank">
+                <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span><strong>IBM</strong> Applied AI</span>
+            </a>
+            <a href="https://credentials.edx.org/credentials/8b25ad43d6134401ab3190b0a039b723/" class="cert-badge" target="_blank">
+                <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span><strong>IBM</strong> Generative AI for Software Developers</span>
+            </a>
+            <a href="https://credentials.databricks.com/e34f4848-d941-4a9e-8ef6-fa59298ac56e" class="cert-badge" target="_blank">
+                <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span><strong>Databricks</strong> GenAI</span>
+            </a>
         </div>
+
+        <div class="cta-buttons">
+            <a href="https://www.finsight-llm.com/" class="btn btn-primary" target="_blank">
+                ✨ Try FinSight →
+            </a>
+            <a href="/resume.pdf" class="btn btn-outline" download>
+                📄 Resume
+            </a>
+            <a href="https://www.linkedin.com/in/william-c-kim/" class="btn btn-outline" target="_blank">
+                💼 LinkedIn
+            </a>
+            <a href="https://github.com/willckim" class="btn btn-outline" target="_blank">
+                👨‍💻 GitHub
+            </a>
+        </div>
+
+        <p style="margin-top: 2rem; color: #718096; font-size: 0.9rem;">
+            SQL • Python • Power BI • Tableau • Snowflake • Excel • DAX • ETL • Financial Analysis • KPI Development • Data Visualization
+        </p>
     </section>
 
     <!-- FEATURED PROJECTS -->
-    <section id="projects" class="container">
+    <section id="featured" class="container">
         <h2 class="section-title">Featured Analytics Projects</h2>
         
-        <div class="projects-grid">
-            <!-- PROJECT 1: FP&A Dashboard -->
-            <div class="project-card featured-project">
-                <span class="featured-badge">FEATURED</span>
-                <span class="project-number">01</span>
-                <h3 class="project-title">Automated FP&A Dashboard</h3>
-                <p class="project-desc">
-                    Built an end-to-end Financial Planning & Analysis platform with automated variance analysis, 
-                    rolling 3–6 month forecasts, and AI-generated executive briefs. Exports to CSV/PPTX for 
-                    stakeholder reporting. Reduces manual reporting time by 80%.
-                </p>
-                <div class="tech-tags">
-                    <span class="tag">Python</span>
-                    <span class="tag">Pandas</span>
-                    <span class="tag">SQL</span>
-                    <span class="tag">Power BI</span>
-                    <span class="tag">Financial Modeling</span>
-                    <span class="tag">Variance Analysis</span>
+        <div class="project-card">
+            <div class="project-header">
+                <div>
+                    <h3 class="project-title">FP&A AI Dashboard – Automated Financial Analysis</h3>
+                    <div class="metrics">
+                        <span class="metric-badge">✓ 80% time reduction</span>
+                        <span class="metric-badge">✓ Automated reporting</span>
+                    </div>
                 </div>
                 <div class="project-links">
-                    <a href="https://github.com/willckim/fpna-ai-dashboard" class="btn btn-outline" target="_blank">View on GitHub</a>
+                    <a href="https://github.com/willckim/fpna-ai-dashboard" class="btn btn-outline" target="_blank">GitHub</a>
                 </div>
             </div>
+            <p class="project-desc">
+                Complete Financial Planning & Analysis platform with automated variance analysis, rolling 3–6 month forecasts, 
+                and AI-generated executive briefs. Reduces manual reporting time by 80% with CSV/PPTX export capabilities.
+            </p>
+            <p class="project-proof">
+                Python-based analytics engine with Pandas for data transformation, statistical modeling for forecasting, 
+                and Power BI integration for stakeholder dashboards.
+            </p>
+            <div class="tech-tags">
+                <span class="tag">Python</span>
+                <span class="tag">Pandas</span>
+                <span class="tag">Financial Modeling</span>
+                <span class="tag">Variance Analysis</span>
+                <span class="tag">Power BI</span>
+                <span class="tag">Forecasting</span>
+                <span class="tag">Reporting</span>
+            </div>
+            <ul class="project-bullets">
+                <li>Built automated variance analysis tracking actuals vs. budget with drill-down capabilities.</li>
+                <li>Implemented rolling forecast models using statistical methods for 3-6 month predictions.</li>
+                <li>Created executive reporting templates with automated data refresh and export to presentations.</li>
+            </ul>
+        </div>
 
-            <!-- PROJECT 2: Snowflake Analytics -->
-            <div class="project-card featured-project">
-                <span class="featured-badge">FEATURED</span>
-                <span class="project-number">02</span>
-                <h3 class="project-title">Snowflake + Power BI Sales Analytics</h3>
-                <p class="project-desc">
-                    Complete sales analytics solution from data warehouse to visualization. Built ETL pipelines 
-                    in Snowflake, designed dimensional data models, and created interactive Power BI dashboards 
-                    with KPIs, drilldowns, and automated refresh schedules.
-                </p>
-                <div class="tech-tags">
-                    <span class="tag">Snowflake</span>
-                    <span class="tag">SQL</span>
-                    <span class="tag">ETL</span>
-                    <span class="tag">Power BI</span>
-                    <span class="tag">Data Modeling</span>
-                    <span class="tag">DAX</span>
+        <div class="project-card">
+            <div class="project-header">
+                <div>
+                    <h3 class="project-title">Snowflake + Power BI Sales Analytics</h3>
+                    <div class="metrics">
+                        <span class="metric-badge">✓ End-to-end pipeline</span>
+                        <span class="metric-badge">✓ Real-time dashboards</span>
+                    </div>
                 </div>
                 <div class="project-links">
                     <a href="https://app.snowflake.com/zmydbpf/fq34862/w3u0HWZNPryg/query" class="btn btn-primary" target="_blank">Live Demo</a>
                     <a href="https://github.com/willckim/snowflake-powerbi-sales-dashboard" class="btn btn-outline" target="_blank">GitHub</a>
                 </div>
             </div>
-
-            <!-- PROJECT 3: KPIFlow -->
-            <div class="project-card featured-project">
-                <span class="featured-badge">FEATURED</span>
-                <span class="project-number">03</span>
-                <h3 class="project-title">KPIFlow AI - Self-Service Analytics</h3>
-                <p class="project-desc">
-                    Self-service KPI dashboard platform enabling non-technical users to upload CSV/Excel files 
-                    or connect SQL databases and instantly generate visualizations with automated insights. 
-                    Includes trend analysis, anomaly detection, and exportable reports.
-                </p>
-                <div class="tech-tags">
-                    <span class="tag">Python</span>
-                    <span class="tag">Pandas</span>
-                    <span class="tag">Streamlit</span>
-                    <span class="tag">Plotly</span>
-                    <span class="tag">Data Visualization</span>
-                    <span class="tag">Business Intelligence</span>
-                </div>
-                <div class="project-links">
-                    <a href="https://kpiflow-ai.streamlit.app/" class="btn btn-primary" target="_blank">Live Demo</a>
-                    <a href="https://github.com/willckim/kpiflow-ai" class="btn btn-outline" target="_blank">GitHub</a>
-                </div>
+            <p class="project-desc">
+                Complete sales analytics solution from data warehouse to visualization. Built ETL pipelines in Snowflake, 
+                designed dimensional data models, and created interactive Power BI dashboards with KPIs and drilldowns.
+            </p>
+            <p class="project-proof">
+                SQL-based data transformations in Snowflake with star schema modeling. Power BI dashboards with DAX calculations, 
+                automated refresh schedules, and role-based access control.
+            </p>
+            <div class="tech-tags">
+                <span class="tag">Snowflake</span>
+                <span class="tag">SQL</span>
+                <span class="tag">ETL</span>
+                <span class="tag">Power BI</span>
+                <span class="tag">DAX</span>
+                <span class="tag">Data Modeling</span>
+                <span class="tag">KPI Tracking</span>
             </div>
+            <ul class="project-bullets">
+                <li>Designed and implemented star schema data model with fact and dimension tables.</li>
+                <li>Created 10+ KPI dashboards tracking revenue, conversion rates, and customer metrics.</li>
+                <li>Built automated ETL processes with data quality checks and error handling.</li>
+            </ul>
         </div>
 
-        <!-- ADDITIONAL PROJECTS -->
-        <h2 class="section-title" style="margin-top: 5rem;">Additional Projects</h2>
+        <div class="project-card">
+            <div class="project-header">
+                <div>
+                    <h3 class="project-title">AI Research Copilot – Document Intelligence Platform</h3>
+                    <div class="metrics">
+                        <span class="metric-badge">✓ 99.9% uptime</span>
+                        <span class="metric-badge">✓ Multi-doc analysis</span>
+                    </div>
+                </div>
+                <div class="project-links">
+                    <a href="https://www.ai-research-copilot.com/" class="btn btn-primary" target="_blank">Live Demo</a>
+                    <a href="https://github.com/willckim/ai-research-copilot" class="btn btn-outline" target="_blank">GitHub</a>
+                </div>
+            </div>
+            <p class="project-desc">
+                Enterprise document analysis platform for extracting insights from PDFs and research papers. 
+                Upload documents, ask questions, and receive data-driven answers with source citations—perfect for 
+                market research, competitive analysis, and report synthesis.
+            </p>
+            <p class="project-proof">
+                FastAPI backend with vector search (pgvector), deployed on Render with Vercel frontend. 
+                Processes documents through semantic chunking and retrieval pipelines for accurate Q&A.
+            </p>
+            <div class="tech-tags">
+                <span class="tag">Document Analysis</span>
+                <span class="tag">Data Extraction</span>
+                <span class="tag">FastAPI</span>
+                <span class="tag">Vector Search</span>
+                <span class="tag">Business Intelligence</span>
+                <span class="tag">Research Automation</span>
+            </div>
+            <ul class="project-bullets">
+                <li>Automated document processing pipeline extracting key data points and insights.</li>
+                <li>Built Q&A system for instant access to information across multiple documents.</li>
+                <li>Implemented citation tracking for audit trails and source verification.</li>
+            </ul>
+        </div>
+    </section>
+    <!-- ALL PROJECTS -->
+    <section id="projects" class="container">
+        <h2 class="section-title">Additional Projects</h2>
+        
         <div class="projects-grid">
             <div class="project-card-small">
-                <span class="in-progress-badge">🚧 IN PROGRESS</span>
-                <h3 class="project-title-small">DocParser AI - Data Extraction</h3>
+                <h3 class="project-title-small">KPIFlow AI – Self-Service Analytics</h3>
                 <p class="project-desc-small">
-                    Automated document processing system extracting structured data from invoices, receipts, 
-                    and contracts using OCR and AI. Converts unstructured documents into analyzable datasets 
-                    with 95%+ accuracy.
+                    Self-service analytics platform enabling non-technical users to upload CSV/Excel files and instantly 
+                    generate KPI dashboards with automated insights, trend analysis, and exportable visualizations.
                 </p>
                 <div class="tech-tags-small">
                     <span class="tag-small">Python</span>
-                    <span class="tag-small">OCR</span>
+                    <span class="tag-small">Pandas</span>
+                    <span class="tag-small">Streamlit</span>
+                    <span class="tag-small">Plotly</span>
+                    <span class="tag-small">Data Viz</span>
+                    <span class="tag-small">BI</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://kpiflow-ai.streamlit.app/" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
+                    <a href="https://github.com/willckim/kpiflow-ai" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
+                </div>
+            </div>
+
+            <div class="project-card-small">
+                <h3 class="project-title-small">AI Financial Scenarios – CFO Forecasting</h3>
+                <div class="metrics-small">
+                    <span class="metric-badge-small">~40% faster iterations</span>
+                </div>
+                <p class="project-desc-small">
+                    Financial scenario modeling tool for CFO-level forecasting. Upload historical data, adjust assumptions, 
+                    and generate comprehensive forecasts with executive summaries and scenario comparisons.
+                </p>
+                <div class="tech-tags-small">
+                    <span class="tag-small">Financial Modeling</span>
+                    <span class="tag-small">Python</span>
+                    <span class="tag-small">Pandas</span>
+                    <span class="tag-small">Forecasting</span>
+                    <span class="tag-small">Scenario Analysis</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://www.ai-financial-scenarios.com/fin-scenarios" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
+                    <a href="https://github.com/willckim/ai-financial-scenarios" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
+                </div>
+            </div>
+
+            <div class="project-card-small">
+                <h3 class="project-title-small">FinSight LLM – Finance Q&A Platform</h3>
+                <div class="metrics-small">
+                    <span class="metric-badge-small">+25–30% accuracy</span>
+                </div>
+                <p class="project-desc-small">
+                    Finance-specific Q&A system providing instant answers to financial questions. Optimized for 
+                    analyzing financial statements, understanding metrics, and explaining complex financial concepts.
+                </p>
+                <div class="tech-tags-small">
+                    <span class="tag-small">Finance</span>
+                    <span class="tag-small">Q&A System</span>
+                    <span class="tag-small">Data Analysis</span>
+                    <span class="tag-small">Next.js</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://www.finsight-llm.com/" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
+                    <a href="https://github.com/willckim/domain-ft-llm" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
+                </div>
+            </div>
+
+            <div class="project-card-small">
+                <h3 class="project-title-small">SplitChamp AI – Receipt Data Extraction</h3>
+                <div class="metrics-small">
+                    <span class="metric-badge-small">95%+ accuracy</span>
+                </div>
+                <p class="project-desc-small">
+                    Automated receipt data extraction app parsing restaurant receipts into structured data with 
+                    line items, taxes, and tips. Mobile-first design with instant processing capabilities.
+                </p>
+                <div class="tech-tags-small">
                     <span class="tag-small">Data Extraction</span>
-                    <span class="tag-small">Azure AI</span>
+                    <span class="tag-small">OCR</span>
+                    <span class="tag-small">React Native</span>
                     <span class="tag-small">Automation</span>
                 </div>
-            </div>
-
-            <div class="project-card-small">
-                <span class="in-progress-badge">🚧 IN PROGRESS</span>
-                <h3 class="project-title-small">IdeaPitcher - Business Intelligence</h3>
-                <p class="project-desc-small">
-                    Product pitch deck generator with automated market analysis, competitive positioning, 
-                    and financial projections. Synthesizes business data into executive presentations 
-                    with charts and insights.
-                </p>
-                <div class="tech-tags-small">
-                    <span class="tag-small">Python</span>
-                    <span class="tag-small">Market Research</span>
-                    <span class="tag-small">Competitive Analysis</span>
-                    <span class="tag-small">Presentation</span>
-                    <span class="tag-small">Business Strategy</span>
+                <div class="project-links">
+                    <a href="https://play.google.com/apps/testing/com.willckim.splitchamp" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Try It</a>
+                    <a href="https://github.com/willckim/splitchamp-ai" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
                 </div>
             </div>
 
             <div class="project-card-small">
-                <span class="in-progress-badge">🚧 IN PROGRESS</span>
-                <h3 class="project-title-small">PocketCoach - Health Analytics</h3>
+                <h3 class="project-title-small">GhostTab AI – Productivity Analytics</h3>
                 <p class="project-desc-small">
-                    Fitness tracking app with personalized analytics dashboard showing workout trends, 
-                    nutrition patterns, and progress metrics. Provides data-driven recommendations 
-                    based on user behavior analysis.
+                    Chrome extension for tracking and analyzing productivity patterns. Automated content summarization, 
+                    focus time tracking, and tab management with visual analytics dashboards.
                 </p>
                 <div class="tech-tags-small">
-                    <span class="tag-small">React Native</span>
-                    <span class="tag-small">Data Tracking</span>
                     <span class="tag-small">Analytics</span>
-                    <span class="tag-small">Metrics</span>
-                    <span class="tag-small">Visualization</span>
+                    <span class="tag-small">Chrome Extension</span>
+                    <span class="tag-small">Data Tracking</span>
+                    <span class="tag-small">Automation</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://chromewebstore.google.com/detail/ghosttab-ai/hbjipanckkfgcooblddagommcmklnija" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Chrome Store</a>
+                    <a href="https://github.com/willckim/Ghosttab-AI" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
                 </div>
             </div>
         </div>
     </section>
-
     <!-- HIGHLIGHTS -->
     <section id="highlights" class="container">
-        <h2 class="section-title">Core Competencies</h2>
+        <h2 class="section-title">Professional Highlights</h2>
         
         <div class="highlights-grid">
             <div class="highlight-card">
                 <h3>What I Do</h3>
                 <p>
-                    I build <strong>end-to-end analytics solutions</strong> that transform raw data into 
-                    actionable business insights. From SQL queries and ETL pipelines to interactive dashboards 
-                    and automated reporting, I focus on delivering <strong>accurate, timely, and impactful 
-                    analysis</strong> that drives decision-making.
+                    Build <strong>end-to-end analytics solutions</strong> that transform raw data into actionable business insights.
+                    From SQL queries and ETL pipelines to interactive dashboards and automated reporting, I focus on 
+                    <strong>accuracy, clarity, and business impact</strong>. Every analysis drives <strong>data-informed decisions</strong>.
                 </p>
             </div>
 
             <div class="highlight-card">
-                <h3>Technical Skills</h3>
+                <h3>Toolbox</h3>
                 <ul>
-                    <li><strong>Analytics Tools:</strong> SQL, Python (Pandas, NumPy), Excel (Pivot Tables, VLOOKUP, Macros)</li>
-                    <li><strong>Visualization:</strong> Power BI, Tableau, Plotly, Matplotlib, Streamlit</li>
-                    <li><strong>Data Warehousing:</strong> Snowflake, BigQuery, Azure SQL, ETL/ELT pipelines</li>
-                    <li><strong>Business Skills:</strong> Financial Analysis, KPI Development, Variance Analysis, Forecasting, Market Research</li>
-                    <li><strong>Programming:</strong> Python, SQL, JavaScript/TypeScript, DAX, Power Query (M)</li>
+                    <li><strong>Analytics Tools:</strong> SQL, Python (Pandas, NumPy), Excel (Pivot Tables, VLOOKUP, Macros, VBA)</li>
+                    <li><strong>Visualization:</strong> Power BI, Tableau, Plotly, Matplotlib, Seaborn, Streamlit</li>
+                    <li><strong>Data Warehousing:</strong> Snowflake, BigQuery, Azure SQL, PostgreSQL, ETL/ELT pipelines</li>
+                    <li><strong>Business Skills:</strong> Financial Analysis, KPI Development, Variance Analysis, Forecasting, Market Research, A/B Testing</li>
+                    <li><strong>Languages:</strong> Python, SQL, JavaScript/TypeScript, DAX, Power Query (M), HTML/CSS</li>
                 </ul>
             </div>
 
@@ -794,7 +1023,7 @@
                 <strong style="color: #667eea;">business impact</strong>. My approach is pragmatic: understand 
                 the business question, find the right data, analyze it thoroughly, and present insights in a way 
                 that drives action. Whether it's building financial models, creating dashboards, or automating 
-                reporting workflows, I focus on <strong style="color: #667eea;">measurable business outcomes</strong>.
+                reporting workflows, the goal stays the same: <strong style="color: #667eea;">measurable business outcomes</strong>.
             </p>
         </div>
     </section>
@@ -836,7 +1065,7 @@
     </section>
 
     <footer>
-        <p>© 2025 William Kim • Data & Business Analyst • Available for Full-Time Opportunities</p>
+        <p>© 2025 William Kim • Music: Lost Sky - Fearless pt.II (feat. Chris Linton) [NCS Release] • <a href="http://ncs.io/Fearless2" target="_blank">Free Download</a></p>
     </footer>
 </body>
 </html>
