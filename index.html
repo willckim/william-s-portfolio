@@ -686,12 +686,12 @@
     </header>
 
     <section class="hero">
-        <div class="status-badge">Available for new opportunities</div>
+        <div class="status-badge">Currently Building</div>
         <h1>Finance × Engineering × AI</h1>
         <p class="hero-subtitle">
             <strong>Staff Accountant at Ortho Molecular Products</strong> by day, <strong>AI engineer and full-stack developer</strong> by craft.
             With a B.S. in Computer Science from Pitt and hands-on experience building LLM orchestration engines, RAG pipelines,
-            and production cloud systems—I bridge the gap between <strong>business operations</strong> and <strong>cutting-edge technology</strong>.
+            and production cloud systems. I bridge the gap between <strong>business operations</strong> and <strong>cutting-edge technology</strong>.
             The rare hybrid who speaks both GAAP and GPU.
         </p>
 
@@ -708,25 +708,16 @@
                 </svg>
                 <span><strong>IBM</strong> Applied AI</span>
             </a>
-            <a href="https://credentials.edx.org/credentials/8b25ad43d6134401ab3190b0a039b723/" class="cert-badge" target="_blank">
+            <a href="#" class="cert-badge">
                 <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
-                <span><strong>IBM</strong> Generative AI for Software Developers</span>
-            </a>
-            <a href="https://credentials.databricks.com/e34f4848-d941-4a9e-8ef6-fa59298ac56e" class="cert-badge" target="_blank">
-                <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span><strong>Databricks</strong> GenAI</span>
+                <span><strong>Generative AI</strong> for Cybersecurity</span>
             </a>
         </div>
 
         <div class="cta-buttons">
-            <a href="https://www.dataopscopilot.com/" class="btn btn-primary" target="_blank">
-                ✨ Try DataOps Copilot →
-            </a>
-            <a href="/resume.pdf" class="btn btn-outline" download>
+            <a href="/resume.pdf" class="btn btn-primary" download>
                 📄 Resume
             </a>
             <a href="https://www.linkedin.com/in/william-c-kim/" class="btn btn-outline" target="_blank">
@@ -745,130 +736,11 @@
     <!-- FEATURED PROJECTS -->
     <section id="featured" class="container">
         <h2 class="section-title">Featured Projects</h2>
-        
-        <div class="project-card">
-            <div class="project-header">
-                <div>
-                    <h3 class="project-title">LLM Orchestration Engine — Multi-Model Routing System</h3>
-                    <div class="metrics">
-                        <span class="metric-badge">✓ AWS-Inspired Architecture</span>
-                        <span class="metric-badge">✓ Real-time Observability</span>
-                    </div>
-                </div>
-                <div class="project-links">
-                    <a href="https://www.llmorchestrationengine.com/" class="btn btn-primary" target="_blank">Live Demo</a>
-                    <a href="https://github.com/willckim/LLM-Orchestration-Engine" class="btn btn-outline" target="_blank">GitHub</a>
-                </div>
-            </div>
-            <p class="project-desc">
-                Provider-agnostic LLM orchestration backend that intelligently routes requests across OpenAI, Azure, local ONNX models, 
-                and AWS Bedrock based on task type, cost, and latency. Features real-time metrics dashboard with p50/p95 latency tracking, 
-                provider distribution, error rates, and cost estimation per request.
-            </p>
-            <p class="project-proof">
-                Designed using AWS patterns (API Gateway → Lambda-style routing → DynamoDB-style logs → CloudWatch-style metrics) 
-                with deploy-ready Docker backend and Vercel dashboard.
-            </p>
-            <div class="tech-tags">
-                <span class="tag">Python</span>
-                <span class="tag">FastAPI</span>
-                <span class="tag">Docker</span>
-                <span class="tag">OpenAI</span>
-                <span class="tag">Azure</span>
-                <span class="tag">ONNX</span>
-                <span class="tag">AWS Patterns</span>
-                <span class="tag">Observability</span>
-            </div>
-            <ul class="project-bullets">
-                <li>Built provider-agnostic router selecting optimal LLM based on task type, cost, and latency constraints.</li>
-                <li>Developed real-time metrics layer with p50/p95 latency, provider usage, and estimated cost per request.</li>
-                <li>Implemented CloudWatch-style observability with error tracking and performance monitoring dashboard.</li>
-            </ul>
-        </div>
 
         <div class="project-card">
             <div class="project-header">
                 <div>
-                    <h3 class="project-title">DataOps Copilot — AI Data Profiling & Quality Tool</h3>
-                    <div class="metrics">
-                        <span class="metric-badge">✓ Multi-provider LLM</span>
-                        <span class="metric-badge">✓ Schema Inference</span>
-                    </div>
-                </div>
-                <div class="project-links">
-                    <a href="https://www.dataopscopilot.com/" class="btn btn-primary" target="_blank">Live Demo</a>
-                    <a href="https://github.com/willckim/DataOps-Copilot" class="btn btn-outline" target="_blank">GitHub</a>
-                </div>
-            </div>
-            <p class="project-desc">
-                AI-powered data profiling platform that ingests CSV/Excel/JSON files and automatically runs schema inference, 
-                anomaly detection, and data-quality profiling at scale. Generates structured insights, risk flags, and 
-                column-level intelligence for analysts through multi-provider LLM routing.
-            </p>
-            <p class="project-proof">
-                Deployed containerized FastAPI backend to Cloud Run using Postgres + DuckDB for fast, columnar analytics. 
-                Built React/Next.js front-end for interactive data exploration.
-            </p>
-            <div class="tech-tags">
-                <span class="tag">FastAPI</span>
-                <span class="tag">DuckDB</span>
-                <span class="tag">PostgreSQL</span>
-                <span class="tag">Cloud Run</span>
-                <span class="tag">React</span>
-                <span class="tag">Next.js</span>
-                <span class="tag">OpenAI</span>
-                <span class="tag">Claude</span>
-                <span class="tag">Gemini</span>
-            </div>
-            <ul class="project-bullets">
-                <li>Built pipeline for automatic type inference, anomaly detection, and schema profiling at scale.</li>
-                <li>Implemented multi-provider LLM routing (OpenAI, Claude, Gemini) for structured insights generation.</li>
-                <li>Deployed scalable service with low-latency columnar analytics for interactive exploration.</li>
-            </ul>
-        </div>
-
-        <div class="project-card">
-            <div class="project-header">
-                <div>
-                    <h3 class="project-title">ClaimsInvestigator AI — Insurance Claims Analysis Assistant</h3>
-                    <div class="metrics">
-                        <span class="metric-badge">✓ Structured Investigation Plans</span>
-                        <span class="metric-badge">✓ Multi-provider Support</span>
-                    </div>
-                </div>
-                <div class="project-links">
-                    <a href="https://www.claiminvestigator-ai.com/" class="btn btn-primary" target="_blank">Live Demo</a>
-                    <a href="https://github.com/willckim/ClaimInvestigator-AI" class="btn btn-outline" target="_blank">GitHub</a>
-                </div>
-            </div>
-            <p class="project-desc">
-                AI workflow that processes first-notice-of-loss (FNOL) narratives and policy JSON to generate structured 
-                investigation plans with prioritized actions. Features a reasoning module that identifies liability flags, 
-                coverage issues, and key facts needing follow-up.
-            </p>
-            <p class="project-proof">
-                REST APIs generate tasks, summaries, and next-step recommendations using configurable LLM providers. 
-                Modular components support multi-provider prompts, output formats, and reusable templates.
-            </p>
-            <div class="tech-tags">
-                <span class="tag">Python</span>
-                <span class="tag">FastAPI</span>
-                <span class="tag">LLM Reasoning</span>
-                <span class="tag">Insurance Domain</span>
-                <span class="tag">REST APIs</span>
-                <span class="tag">Document Processing</span>
-            </div>
-            <ul class="project-bullets">
-                <li>Developed AI workflow converting messy FNOL narratives + policy JSON into structured investigation plans.</li>
-                <li>Engineered reasoning module identifying liability flags, coverage issues, and required follow-ups.</li>
-                <li>Created file-note generator composing professional claim summaries and recommended next steps.</li>
-            </ul>
-        </div>
-
-        <div class="project-card">
-            <div class="project-header">
-                <div>
-                    <h3 class="project-title">FP&A AI Dashboard – Automated Financial Analysis</h3>
+                    <h3 class="project-title">FP&A AI Dashboard: Automated Financial Analysis</h3>
                     <div class="metrics">
                         <span class="metric-badge">✓ 80% time reduction</span>
                         <span class="metric-badge">✓ Automated reporting</span>
@@ -879,11 +751,11 @@
                 </div>
             </div>
             <p class="project-desc">
-                Complete Financial Planning & Analysis platform with automated variance analysis, rolling 3–6 month forecasts, 
+                Complete Financial Planning & Analysis platform with automated variance analysis, rolling 3-6 month forecasts,
                 and AI-generated executive briefs. Reduces manual reporting time by 80% with CSV/PPTX export capabilities.
             </p>
             <p class="project-proof">
-                Python-based analytics engine with Pandas for data transformation, statistical modeling for forecasting, 
+                Python-based analytics engine with Pandas for data transformation, statistical modeling for forecasting,
                 and Power BI integration for stakeholder dashboards.
             </p>
             <div class="tech-tags">
@@ -917,11 +789,11 @@
                 </div>
             </div>
             <p class="project-desc">
-                Complete sales analytics solution from data warehouse to visualization. Built ETL pipelines in Snowflake, 
+                Complete sales analytics solution from data warehouse to visualization. Built ETL pipelines in Snowflake,
                 designed dimensional data models, and created interactive Power BI dashboards with KPIs and drilldowns.
             </p>
             <p class="project-proof">
-                SQL-based data transformations in Snowflake with star schema modeling. Power BI dashboards with DAX calculations, 
+                SQL-based data transformations in Snowflake with star schema modeling. Power BI dashboards with DAX calculations,
                 automated refresh schedules, and role-based access control.
             </p>
             <div class="tech-tags">
@@ -943,38 +815,81 @@
         <div class="project-card">
             <div class="project-header">
                 <div>
-                    <h3 class="project-title">AI Research Copilot – Document Intelligence Platform</h3>
+                    <h3 class="project-title">LLM Orchestration Engine: Multi-Model Routing System</h3>
                     <div class="metrics">
-                        <span class="metric-badge">✓ 99.9% uptime</span>
-                        <span class="metric-badge">✓ Multi-doc analysis</span>
+                        <span class="metric-badge">✓ AWS-Inspired Architecture</span>
+                        <span class="metric-badge">✓ Real-time Observability</span>
                     </div>
                 </div>
                 <div class="project-links">
-                    <a href="https://www.ai-research-copilot.com/" class="btn btn-primary" target="_blank">Live Demo</a>
-                    <a href="https://github.com/willckim/ai-research-copilot" class="btn btn-outline" target="_blank">GitHub</a>
+                    <a href="https://www.llmorchestrationengine.com/" class="btn btn-primary" target="_blank">Live Demo</a>
+                    <a href="https://github.com/willckim/LLM-Orchestration-Engine" class="btn btn-outline" target="_blank">GitHub</a>
                 </div>
             </div>
             <p class="project-desc">
-                Enterprise document analysis platform for extracting insights from PDFs and research papers. 
-                Upload documents, ask questions, and receive data-driven answers with source citations—perfect for 
-                market research, competitive analysis, and report synthesis.
+                Provider-agnostic LLM orchestration backend that intelligently routes requests across OpenAI, Azure, local ONNX models,
+                and AWS Bedrock based on task type, cost, and latency. Features real-time metrics dashboard with p50/p95 latency tracking,
+                provider distribution, error rates, and cost estimation per request.
             </p>
             <p class="project-proof">
-                FastAPI backend with vector search (pgvector), deployed on Render with Vercel frontend. 
-                Processes documents through semantic chunking and retrieval pipelines for accurate Q&A.
+                Designed using AWS patterns (API Gateway, Lambda-style routing, DynamoDB-style logs, CloudWatch-style metrics)
+                with deploy-ready Docker backend and Vercel dashboard.
             </p>
             <div class="tech-tags">
-                <span class="tag">RAG</span>
-                <span class="tag">Embeddings</span>
-                <span class="tag">pgvector</span>
+                <span class="tag">Python</span>
                 <span class="tag">FastAPI</span>
-                <span class="tag">Vector Search</span>
-                <span class="tag">Document Processing</span>
+                <span class="tag">Docker</span>
+                <span class="tag">OpenAI</span>
+                <span class="tag">Azure</span>
+                <span class="tag">ONNX</span>
+                <span class="tag">AWS Patterns</span>
+                <span class="tag">Observability</span>
             </div>
             <ul class="project-bullets">
-                <li>Automated document processing pipeline extracting key data points and insights.</li>
-                <li>Built Q&A system for instant access to information across multiple documents.</li>
-                <li>Implemented citation tracking for audit trails and source verification.</li>
+                <li>Built provider-agnostic router selecting optimal LLM based on task type, cost, and latency constraints.</li>
+                <li>Developed real-time metrics layer with p50/p95 latency, provider usage, and estimated cost per request.</li>
+                <li>Implemented CloudWatch-style observability with error tracking and performance monitoring dashboard.</li>
+            </ul>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <div>
+                    <h3 class="project-title">DataOps Copilot: AI Data Profiling & Quality Tool</h3>
+                    <div class="metrics">
+                        <span class="metric-badge">✓ Multi-provider LLM</span>
+                        <span class="metric-badge">✓ Schema Inference</span>
+                    </div>
+                </div>
+                <div class="project-links">
+                    <a href="https://www.dataopscopilot.com/" class="btn btn-primary" target="_blank">Live Demo</a>
+                    <a href="https://github.com/willckim/DataOps-Copilot" class="btn btn-outline" target="_blank">GitHub</a>
+                </div>
+            </div>
+            <p class="project-desc">
+                AI-powered data profiling platform that ingests CSV/Excel/JSON files and automatically runs schema inference,
+                anomaly detection, and data-quality profiling at scale. Generates structured insights, risk flags, and
+                column-level intelligence for analysts through multi-provider LLM routing.
+            </p>
+            <p class="project-proof">
+                Deployed containerized FastAPI backend to Cloud Run using Postgres + DuckDB for fast, columnar analytics.
+                Built React/Next.js front-end for interactive data exploration.
+            </p>
+            <div class="tech-tags">
+                <span class="tag">FastAPI</span>
+                <span class="tag">DuckDB</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">Cloud Run</span>
+                <span class="tag">React</span>
+                <span class="tag">Next.js</span>
+                <span class="tag">OpenAI</span>
+                <span class="tag">Claude</span>
+                <span class="tag">Gemini</span>
+            </div>
+            <ul class="project-bullets">
+                <li>Built pipeline for automatic type inference, anomaly detection, and schema profiling at scale.</li>
+                <li>Implemented multi-provider LLM routing (OpenAI, Claude, Gemini) for structured insights generation.</li>
+                <li>Deployed scalable service with low-latency columnar analytics for interactive exploration.</li>
             </ul>
         </div>
     </section>
@@ -985,7 +900,52 @@
         
         <div class="projects-grid">
             <div class="project-card-small">
-                <h3 class="project-title-small">KPIFlow AI – Self-Service Analytics</h3>
+                <h3 class="project-title-small">ClaimsInvestigator AI: Claims Analysis</h3>
+                <div class="metrics-small">
+                    <span class="metric-badge-small">Structured Investigation Plans</span>
+                </div>
+                <p class="project-desc-small">
+                    AI workflow that processes first-notice-of-loss narratives and policy data to generate structured
+                    investigation plans with prioritized actions, liability flags, and coverage issue detection.
+                </p>
+                <div class="tech-tags-small">
+                    <span class="tag-small">Python</span>
+                    <span class="tag-small">FastAPI</span>
+                    <span class="tag-small">LLM Reasoning</span>
+                    <span class="tag-small">Insurance</span>
+                    <span class="tag-small">REST APIs</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://www.claiminvestigator-ai.com/" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
+                    <a href="https://github.com/willckim/ClaimInvestigator-AI" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
+                </div>
+            </div>
+
+            <div class="project-card-small">
+                <h3 class="project-title-small">AI Research Copilot: Document Intelligence</h3>
+                <div class="metrics-small">
+                    <span class="metric-badge-small">99.9% uptime</span>
+                </div>
+                <p class="project-desc-small">
+                    Enterprise document analysis platform for extracting insights from PDFs and research papers.
+                    Upload documents, ask questions, and get data-driven answers with source citations.
+                </p>
+                <div class="tech-tags-small">
+                    <span class="tag-small">RAG</span>
+                    <span class="tag-small">Embeddings</span>
+                    <span class="tag-small">pgvector</span>
+                    <span class="tag-small">FastAPI</span>
+                    <span class="tag-small">Vector Search</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://www.ai-research-copilot.com/" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
+                    <a href="https://github.com/willckim/ai-research-copilot" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
+                </div>
+            </div>
+
+            <div class="project-card-small">
+                <h3 class="project-title-small">KPIFlow AI: Self-Service Analytics</h3>
+
                 <p class="project-desc-small">
                     Self-service analytics platform enabling non-technical users to upload CSV/Excel files and instantly 
                     generate KPI dashboards with automated insights, trend analysis, and exportable visualizations.
@@ -1005,7 +965,7 @@
             </div>
 
             <div class="project-card-small">
-                <h3 class="project-title-small">AI Financial Scenarios – CFO Forecasting</h3>
+                <h3 class="project-title-small">AI Financial Scenarios: CFO Forecasting</h3>
                 <div class="metrics-small">
                     <span class="metric-badge-small">~40% faster iterations</span>
                 </div>
@@ -1027,9 +987,9 @@
             </div>
 
             <div class="project-card-small">
-                <h3 class="project-title-small">FinSight LLM – Finance Q&A Platform</h3>
+                <h3 class="project-title-small">FinSight LLM: Finance Q&A Platform</h3>
                 <div class="metrics-small">
-                    <span class="metric-badge-small">+25–30% accuracy</span>
+                    <span class="metric-badge-small">+25-30% accuracy</span>
                 </div>
                 <p class="project-desc-small">
                     Finance-specific Q&A system providing instant answers to financial questions. Optimized for 
@@ -1048,7 +1008,7 @@
             </div>
 
             <div class="project-card-small">
-                <h3 class="project-title-small">SplitChamp AI – Receipt Data Extraction</h3>
+                <h3 class="project-title-small">SplitChamp AI: Receipt Data Extraction</h3>
                 <div class="metrics-small">
                     <span class="metric-badge-small">95%+ accuracy</span>
                 </div>
@@ -1069,7 +1029,7 @@
             </div>
 
             <div class="project-card-small">
-                <h3 class="project-title-small">GhostTab AI – Productivity Analytics</h3>
+                <h3 class="project-title-small">GhostTab AI: Productivity Analytics</h3>
                 <p class="project-desc-small">
                     Chrome extension for tracking and analyzing productivity patterns. Automated content summarization,
                     focus time tracking, and tab management with visual analytics dashboards.
@@ -1087,7 +1047,7 @@
             </div>
 
             <div class="project-card-small">
-                <h3 class="project-title-small">Odyx HQ – Agentic Browser Automation</h3>
+                <h3 class="project-title-small">Odyx HQ: Agentic Browser Automation</h3>
                 <div class="metrics-small">
                     <span class="metric-badge-small">Claude-Powered</span>
                 </div>
@@ -1109,7 +1069,7 @@
             </div>
 
             <div class="project-card-small">
-                <h3 class="project-title-small">Rift Architect – AI Gaming Coach</h3>
+                <h3 class="project-title-small">Rift Architect: AI Gaming Coach</h3>
                 <div class="metrics-small">
                     <span class="metric-badge-small">4 Specialized Agents</span>
                 </div>
@@ -1130,13 +1090,13 @@
             </div>
 
             <div class="project-card-small">
-                <h3 class="project-title-small">Purelytics – AI Ingredient Analyzer</h3>
+                <h3 class="project-title-small">Purelytics: AI Ingredient Analyzer</h3>
                 <div class="metrics-small">
                     <span class="metric-badge-small">Multi-AI Fallback</span>
                 </div>
                 <p class="project-desc-small">
                     React Native mobile app that uses AI vision to scan product ingredient labels and deliver health assessments
-                    with a 0–100 scoring system. Suggests category-matched healthier alternatives with pricing data.
+                    with a 0-100 scoring system. Suggests category-matched healthier alternatives with pricing data.
                 </p>
                 <div class="tech-tags-small">
                     <span class="tag-small">React Native</span>
@@ -1152,7 +1112,7 @@
             </div>
 
             <div class="project-card-small">
-                <h3 class="project-title-small">HYROX Pace – Race Prediction Engine</h3>
+                <h3 class="project-title-small">HYROX Pace: Race Prediction Engine</h3>
                 <div class="metrics-small">
                     <span class="metric-badge-small">200K+ race results</span>
                 </div>
@@ -1182,10 +1142,17 @@
             <div class="highlight-card">
                 <h3>What I Do</h3>
                 <p>
-                    <strong>Staff Accountant at Ortho Molecular Products</strong> in Barrington, handling financial operations
-                    and reporting. Outside of work, I build <strong>production-ready AI applications</strong>,
+                    <strong>Staff Accountant at Ortho Molecular Products</strong> in Barrington, where I prepare and maintain
+                    financial and business transactions grounded in accounting principles and theory. I support the Fast Close
+                    process through reconciliations, assist with internal audits to ensure accurate financial reporting, and
+                    maintain fixed asset schedules with depreciation tracking. I also compile data for annual reviews and
+                    corporate tax filings, handle sales tax remittals, and continuously identify process improvements to
+                    streamline department operations.
+                </p>
+                <p style="margin-top: 1rem;">
+                    Outside of work, I build <strong>production-ready AI applications</strong>,
                     <strong>full-stack systems</strong>, and <strong>data-driven tools</strong>. From LLM orchestration engines
-                    and multi-agent systems to mobile apps and browser automation—I bring a rare combination of
+                    and multi-agent systems to mobile apps and browser automation, I bring a rare combination of
                     <strong>financial acumen and engineering depth</strong>.
                 </p>
             </div>
@@ -1216,12 +1183,11 @@
 
             <div class="highlight-card">
                 <h3>Education & Certification</h3>
-                <p><strong>University of Pittsburgh</strong> — B.S. in Computer Science (April 2024)</p>
+                <p><strong>University of Pittsburgh</strong> | B.S. in Computer Science (April 2024)</p>
                 <ul style="margin-top: 1rem;">
-                    <li>AWS Cloud Solutions Architecture — <em>edX Credential</em></li>
-                    <li>IBM Applied AI Developer — <em>Issued Oct 2025</em></li>
-                    <li>IBM Generative AI for Software Developers — <em>Issued Oct 2025</em></li>
-                    <li>Databricks Generative AI Fundamentals — <em>Issued Oct 2024</em></li>
+                    <li>AWS Cloud Solutions Architecture | <em>Issued Jan 2026</em></li>
+                    <li>IBM Applied AI Developer | <em>Issued Oct 2025</em></li>
+                    <li>Generative AI for Cybersecurity | <em>Issued Jan 2026</em></li>
                 </ul>
             </div>
         </div>
@@ -1233,11 +1199,11 @@
         <div class="project-card">
             <p class="project-desc" style="font-size: 1.1rem;">
                 I'm a <strong style="color: #667eea;">Staff Accountant at Ortho Molecular Products</strong> with a
-                <strong style="color: #667eea;">B.S. in Computer Science</strong> from the University of Pittsburgh—and I never stopped building.
+                <strong style="color: #667eea;">B.S. in Computer Science</strong> from the University of Pittsburgh, and I never stopped building.
                 While I handle financial reporting and operations during the day, I continuously ship AI-powered applications,
                 full-stack systems, and multi-agent platforms on my own time. I'm the person who automates the spreadsheet,
                 then builds the AI that replaces the automation. As AI reshapes every industry, having someone who
-                understands both the <strong style="color: #667eea;">numbers and the neural nets</strong> isn't just useful—it's a
+                understands both the <strong style="color: #667eea;">numbers and the neural nets</strong> isn't just useful, it's a
                 competitive advantage. Finance, engineering, AI: <strong style="color: #667eea;">I don't pick one lane</strong>.
             </p>
         </div>
