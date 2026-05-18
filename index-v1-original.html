@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>William Kim - Staff Accountant, AI Engineer & Software Developer</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 30px 80px rgba(0, 0, 0, 0.2);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2d3748;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Animated Background Blobs */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.3;
+            animation: blob 20s ease-in-out infinite;
+        }
+        
+        .blob-1 {
+            width: 500px;
+            height: 500px;
+            background: #667eea;
+            top: -200px;
+            left: -100px;
+        }
+        
+        .blob-2 {
+            width: 400px;
+            height: 400px;
+            background: #f093fb;
+            top: 100px;
+            right: -100px;
+            animation-delay: 7s;
+        }
+        
+        .blob-3 {
+            width: 450px;
+            height: 450px;
+            background: #4facfe;
+            bottom: -150px;
+            left: 30%;
+            animation-delay: 14s;
+        }
+        
+        @keyframes blob {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+            }
+            33% {
+                transform: translate(50px, -80px) scale(1.1);
+            }
+            66% {
+                transform: translate(-40px, 40px) scale(0.9);
+            }
+        }
+        
+        /* Header */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+        
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        /* Hero Section */
+        .hero {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 8rem 2rem;
+            text-align: center;
+            animation: fadeInUp 1s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.5rem;
+            background: rgba(102, 126, 234, 0.1);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 50px;
+            color: #667eea;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
+            }
+        }
+        
+        .status-badge::before {
+            content: '●';
+            color: #43e97b;
+            font-size: 1.2rem;
+            animation: blink 2s ease-in-out infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
+        }
+        
+        h1 {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #1a202c 0%, #667eea 50%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: #4a5568;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            line-height: 1.8;
+        }
+        
+        .hero-subtitle strong {
+            color: #667eea;
+            font-weight: 700;
+        }
+        
+        /* Certification Badges */
+        .cert-badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+        }
+        
+        .cert-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 2px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            color: #2d3748;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .cert-badge:hover {
+            transform: translateY(-3px) scale(1.05);
+            border-color: #667eea;
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+        }
+        
+        .cert-icon {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .cert-badge:hover .cert-icon {
+            transform: rotate(12deg);
+        }
+        
+        /* CTA Buttons */
+        .cta-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-outline {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        
+        /* Sections */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .section-title {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1a202c 0%, #667eea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 3rem;
+        }
+        
+        /* Project Cards */
+        .project-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 24px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: -1;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: #667eea;
+        }
+        
+        .project-card:hover::before {
+            opacity: 0.05;
+        }
+        
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .project-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 1rem;
+        }
+        
+        .metrics {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        
+        .metric-badge {
+            padding: 0.4rem 1rem;
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(67, 233, 123, 0.3);
+        }
+        
+        .project-desc {
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+        
+        .project-proof {
+            color: #718096;
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .project-bullets {
+            list-style: disc;
+            padding-left: 1.5rem;
+            margin: 1rem 0;
+            color: #4a5568;
+        }
+        
+        .project-bullets li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .tech-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .tag {
+            padding: 0.4rem 1rem;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .tag:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        /* Projects Grid */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .project-card-small {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .project-card-small:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+        
+        .project-title-small {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.75rem;
+        }
+        
+        .metrics-small {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 0.75rem;
+        }
+        
+        .metric-badge-small {
+            padding: 0.3rem 0.75rem;
+            background: rgba(67, 233, 123, 0.2);
+            color: #10b981;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border: 1px solid rgba(67, 233, 123, 0.3);
+        }
+        
+        .project-desc-small {
+            font-size: 0.9rem;
+            color: #4a5568;
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+        
+        .tech-tags-small {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0.75rem 0;
+        }
+        
+        .tag-small {
+            padding: 0.25rem 0.75rem;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+        
+        /* Highlights */
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .highlight-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .highlight-card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .highlight-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .highlight-card p, .highlight-card ul {
+            color: #4a5568;
+            line-height: 1.7;
+        }
+        
+        .highlight-card ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .highlight-card li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .check {
+            color: #10b981;
+            font-weight: bold;
+        }
+        
+        /* Contact */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .contact-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+            background: white;
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            border-radius: 16px;
+            text-decoration: none;
+            color: #2d3748;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .contact-icon {
+            width: 24px;
+            height: 24px;
+            color: #667eea;
+        }
+        
+        /* Footer */
+        footer {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            text-align: center;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero {
+                padding: 4rem 1.5rem;
+            }
+            
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        ::selection {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-animation">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <header>
+        <nav>
+            <div class="logo">William Kim</div>
+            <ul class="nav-links">
+                <li><a href="#featured">Featured</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#highlights">Highlights</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="status-badge">Currently Building</div>
+        <h1>Finance × Engineering × AI</h1>
+        <p class="hero-subtitle">
+            <strong>Staff Accountant at Ortho Molecular Products</strong> by day, <strong>AI engineer and full-stack developer</strong> by craft.
+            With a B.S. in Computer Science from Pitt and hands-on experience building LLM orchestration engines, RAG pipelines,
+            and production cloud systems. I bridge the gap between <strong>business operations</strong> and <strong>cutting-edge technology</strong>.
+            The rare hybrid who speaks both GAAP and GPU.
+        </p>
+
+        <div class="cert-badges">
+            <a href="https://credentials.edx.org/credentials/7fb7942917134311a35206438331fce2/" class="cert-badge" target="_blank">
+                <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span><strong>AWS</strong> Cloud Solutions Architecture</span>
+            </a>
+            <a href="https://credentials.edx.org/credentials/e2bf6e539d774ac4ae66bf7dc2ecea53/" class="cert-badge" target="_blank">
+                <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span><strong>IBM</strong> Applied AI</span>
+            </a>
+            <a href="#" class="cert-badge">
+                <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+                <span><strong>Generative AI</strong> for Cybersecurity</span>
+            </a>
+        </div>
+
+        <div class="cta-buttons">
+            <a href="/resume.pdf" class="btn btn-primary" download>
+                📄 Resume
+            </a>
+            <a href="https://www.linkedin.com/in/william-c-kim/" class="btn btn-outline" target="_blank">
+                💼 LinkedIn
+            </a>
+            <a href="https://github.com/willckim" class="btn btn-outline" target="_blank">
+                👨‍💻 GitHub
+            </a>
+        </div>
+
+        <p style="margin-top: 2rem; color: #718096; font-size: 0.9rem;">
+            Accounting & Finance • Python • TypeScript • FastAPI • React/Next.js • PostgreSQL • Docker • AWS/GCP/Azure • LLMs • RAG • SQL • Power BI • Data Pipelines
+        </p>
+    </section>
+
+    <!-- FEATURED PROJECTS -->
+    <section id="featured" class="container">
+        <h2 class="section-title">Featured Projects</h2>
+
+        <div class="project-card">
+            <div class="project-header">
+                <div>
+                    <h3 class="project-title">Purelytics: AI Ingredient Analyzer</h3>
+                    <div class="metrics">
+                        <span class="metric-badge">✓ Multi-AI Fallback</span>
+                        <span class="metric-badge">✓ Vision-Based Scanning</span>
+                    </div>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/willckim/Purelytics" class="btn btn-outline" target="_blank">GitHub</a>
+                </div>
+            </div>
+            <p class="project-desc">
+                React Native mobile app that uses AI vision to scan product ingredient labels and deliver health assessments
+                with a color-coded 0-100 scoring system. Supports 12+ product categories with specialized supplement analysis
+                including bioavailability and interaction warnings. Suggests category-matched healthier alternatives with pricing data.
+            </p>
+            <p class="project-proof">
+                Multi-AI provider fallback hierarchy (Claude, Gemini, GPT-4o) ensures reliability with zero backend infrastructure.
+                Built with Expo SDK 54, React Navigation, and on-device credential storage.
+            </p>
+            <div class="tech-tags">
+                <span class="tag">React Native</span>
+                <span class="tag">Expo</span>
+                <span class="tag">Claude</span>
+                <span class="tag">GPT-4o</span>
+                <span class="tag">Gemini</span>
+                <span class="tag">Vision AI</span>
+                <span class="tag">Brave Search API</span>
+            </div>
+            <ul class="project-bullets">
+                <li>Built vision-based scanning pipeline that photographs ingredient labels for instant AI health evaluation.</li>
+                <li>Implemented multi-AI provider fallback (Claude, Gemini, GPT-4o) for high-availability analysis.</li>
+                <li>Created family profiles with health-specific filtering and a full scan archive history.</li>
+            </ul>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <div>
+                    <h3 class="project-title">Odyx HQ: Agentic Browser Automation</h3>
+                    <div class="metrics">
+                        <span class="metric-badge">✓ Claude-Powered</span>
+                        <span class="metric-badge">✓ Self-Healing Selectors</span>
+                    </div>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/willckim/Odyx-HQ" class="btn btn-outline" target="_blank">GitHub</a>
+                </div>
+            </div>
+            <p class="project-desc">
+                Universal agentic Chrome extension that navigates, fills forms, and executes payments on any website
+                through a conversational side panel. Features an Action Tree that sends a pruned DOM representation (under 4K tokens)
+                to Claude for planning, with human-in-the-loop confirmation for sensitive operations like payments and authentication.
+            </p>
+            <p class="project-proof">
+                Manifest V3 Chrome extension with React 19 frontend, Express/Prisma/PostgreSQL backend, Redis-backed JWT auth,
+                and Stripe shared payment tokens. Multi-stage Docker containerization for deployment.
+            </p>
+            <div class="tech-tags">
+                <span class="tag">TypeScript</span>
+                <span class="tag">React 19</span>
+                <span class="tag">Claude API</span>
+                <span class="tag">Chrome Extension</span>
+                <span class="tag">Prisma</span>
+                <span class="tag">PostgreSQL</span>
+                <span class="tag">Redis</span>
+                <span class="tag">Stripe</span>
+            </div>
+            <ul class="project-bullets">
+                <li>Built Action Tree system that prunes and flattens DOM into under 4K tokens for efficient AI planning.</li>
+                <li>Implemented self-healing selector strategy with Claude Computer Use as fallback when selectors fail.</li>
+                <li>Created tier-based RBAC (Free/Pro/Enterprise) with comprehensive audit logging.</li>
+            </ul>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <div>
+                    <h3 class="project-title">Rift Architect: Multi-Agent AI Gaming Coach</h3>
+                    <div class="metrics">
+                        <span class="metric-badge">✓ 4 Specialized Agents</span>
+                        <span class="metric-badge">✓ Vanguard Compliant</span>
+                    </div>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/willckim/Rift-Architect" class="btn btn-outline" target="_blank">GitHub</a>
+                </div>
+            </div>
+            <p class="project-desc">
+                Multi-agent AI orchestrator for League of Legends that provides real-time coaching across champion select,
+                in-game, and post-game phases. Four specialized Claude-powered agents handle drafting recommendations,
+                macro strategy calls, enemy cooldown tracking with haste adjustments, and post-game wellness analysis.
+            </p>
+            <p class="project-proof">
+                Electron desktop app with automated client detection via lockfile polling, serial API queue with token-bucket
+                rate limiting, and interactive draggable overlays with persistent positioning.
+            </p>
+            <div class="tech-tags">
+                <span class="tag">Electron</span>
+                <span class="tag">Node.js</span>
+                <span class="tag">Claude SDK</span>
+                <span class="tag">SQLite</span>
+                <span class="tag">Riot API</span>
+                <span class="tag">Multi-Agent</span>
+            </div>
+            <ul class="project-bullets">
+                <li>Built 4 specialized Claude-powered agents: Drafting Oracle, Macro Strategist, Spell Tracker, and Tilt Guard.</li>
+                <li>Implemented serial API queue with token-bucket limiter and 80% auto-pause to stay within rate limits.</li>
+                <li>Created interactive overlays with screen-saver window level escalation for fullscreen visibility.</li>
+            </ul>
+        </div>
+
+        <div class="project-card">
+            <div class="project-header">
+                <div>
+                    <h3 class="project-title">HYROX Pace: Race Prediction Engine</h3>
+                    <div class="metrics">
+                        <span class="metric-badge">✓ 200K+ Race Results</span>
+                        <span class="metric-badge">✓ Wearable Integration</span>
+                    </div>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/willckim/HYROX-Pace" class="btn btn-outline" target="_blank">GitHub</a>
+                </div>
+            </div>
+            <p class="project-desc">
+                Race prediction, pacing, and live execution app for HYROX athletes. 100% deterministic simulation engine
+                built on 200,000+ race results, championship timing data, and physiological research. Delivers three-tier
+                finish time predictions (conservative, likely, aggressive) with segment-by-segment pacing and risk analysis.
+            </p>
+            <p class="project-proof">
+                FastAPI async backend with Pydantic v2 and SQLAlchemy. React Native/Expo frontend with Zustand state management.
+                Apple Health and Google Fit integration with 30-second HR polling and redline alerts.
+            </p>
+            <div class="tech-tags">
+                <span class="tag">TypeScript</span>
+                <span class="tag">Python</span>
+                <span class="tag">FastAPI</span>
+                <span class="tag">React Native</span>
+                <span class="tag">Expo</span>
+                <span class="tag">Zustand</span>
+                <span class="tag">SQLAlchemy</span>
+            </div>
+            <ul class="project-bullets">
+                <li>Built deterministic simulation engine with fatigue accumulation modeling and compromised running post-stations.</li>
+                <li>Implemented live race tracking with wearable HR integration and visual redline alerts at 95%+ max HR.</li>
+                <li>Created three-tier prediction system with segment-by-segment pacing and contextual execution cues.</li>
+            </ul>
+        </div>
+
+    </section>
+
+    <!-- ALL PROJECTS -->
+    <section id="projects" class="container">
+        <h2 class="section-title">Additional Projects</h2>
+
+        <div class="projects-grid">
+            <div class="project-card-small">
+                <h3 class="project-title-small">LLM Orchestration Engine: Multi-Model Routing</h3>
+                <div class="metrics-small">
+                    <span class="metric-badge-small">AWS-Inspired Architecture</span>
+                </div>
+                <p class="project-desc-small">
+                    Provider-agnostic LLM orchestration backend that routes requests across OpenAI, Azure, ONNX, and AWS Bedrock
+                    based on task type, cost, and latency. Real-time metrics dashboard with p50/p95 latency tracking.
+                </p>
+                <div class="tech-tags-small">
+                    <span class="tag-small">Python</span>
+                    <span class="tag-small">FastAPI</span>
+                    <span class="tag-small">Docker</span>
+                    <span class="tag-small">OpenAI</span>
+                    <span class="tag-small">AWS Patterns</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://www.llmorchestrationengine.com/" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
+                    <a href="https://github.com/willckim/LLM-Orchestration-Engine" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
+                </div>
+            </div>
+
+            <div class="project-card-small">
+                <h3 class="project-title-small">DataOps Copilot: AI Data Profiling & Quality</h3>
+                <div class="metrics-small">
+                    <span class="metric-badge-small">Multi-provider LLM</span>
+                </div>
+                <p class="project-desc-small">
+                    AI-powered data profiling platform that ingests CSV/Excel/JSON files and runs schema inference,
+                    anomaly detection, and data-quality profiling at scale through multi-provider LLM routing.
+                </p>
+                <div class="tech-tags-small">
+                    <span class="tag-small">FastAPI</span>
+                    <span class="tag-small">DuckDB</span>
+                    <span class="tag-small">PostgreSQL</span>
+                    <span class="tag-small">Cloud Run</span>
+                    <span class="tag-small">React</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://www.dataopscopilot.com/" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
+                    <a href="https://github.com/willckim/DataOps-Copilot" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
+                </div>
+            </div>
+
+            <div class="project-card-small">
+                <h3 class="project-title-small">FP&A AI Dashboard: Financial Analysis</h3>
+                <div class="metrics-small">
+                    <span class="metric-badge-small">80% time reduction</span>
+                </div>
+                <p class="project-desc-small">
+                    Complete FP&A platform with automated variance analysis, rolling 3-6 month forecasts,
+                    and AI-generated executive briefs. Reduces manual reporting time by 80%.
+                </p>
+                <div class="tech-tags-small">
+                    <span class="tag-small">Python</span>
+                    <span class="tag-small">Pandas</span>
+                    <span class="tag-small">Financial Modeling</span>
+                    <span class="tag-small">Power BI</span>
+                    <span class="tag-small">Forecasting</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://github.com/willckim/fpna-ai-dashboard" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
+                </div>
+            </div>
+
+            <div class="project-card-small">
+                <h3 class="project-title-small">Snowflake + Power BI Sales Analytics</h3>
+                <div class="metrics-small">
+                    <span class="metric-badge-small">End-to-end pipeline</span>
+                </div>
+                <p class="project-desc-small">
+                    Complete sales analytics solution from data warehouse to visualization. ETL pipelines in Snowflake,
+                    star schema data models, and interactive Power BI dashboards with KPIs and drilldowns.
+                </p>
+                <div class="tech-tags-small">
+                    <span class="tag-small">Snowflake</span>
+                    <span class="tag-small">SQL</span>
+                    <span class="tag-small">ETL</span>
+                    <span class="tag-small">Power BI</span>
+                    <span class="tag-small">DAX</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://app.snowflake.com/zmydbpf/fq34862/w3u0HWZNPryg/query" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
+                    <a href="https://github.com/willckim/snowflake-powerbi-sales-dashboard" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
+                </div>
+            </div>
+
+            <div class="project-card-small">
+                <h3 class="project-title-small">ClaimsInvestigator AI: Claims Analysis</h3>
+                <div class="metrics-small">
+                    <span class="metric-badge-small">Structured Investigation Plans</span>
+                </div>
+                <p class="project-desc-small">
+                    AI workflow that processes first-notice-of-loss narratives and policy data to generate structured
+                    investigation plans with prioritized actions, liability flags, and coverage issue detection.
+                </p>
+                <div class="tech-tags-small">
+                    <span class="tag-small">Python</span>
+                    <span class="tag-small">FastAPI</span>
+                    <span class="tag-small">LLM Reasoning</span>
+                    <span class="tag-small">Insurance</span>
+                    <span class="tag-small">REST APIs</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://www.claiminvestigator-ai.com/" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
+                    <a href="https://github.com/willckim/ClaimInvestigator-AI" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HIGHLIGHTS -->
+    <section id="highlights" class="container">
+        <h2 class="section-title">Professional Highlights</h2>
+        
+        <div class="highlights-grid">
+            <div class="highlight-card">
+                <h3>What I Do</h3>
+                <p>
+                    <strong>Staff Accountant at Ortho Molecular Products</strong> in Barrington, where I prepare and maintain
+                    financial and business transactions grounded in accounting principles and theory. I support the Fast Close
+                    process through reconciliations, assist with internal audits to ensure accurate financial reporting, and
+                    maintain fixed asset schedules with depreciation tracking. I also compile data for annual reviews and
+                    corporate tax filings, handle sales tax remittals, and continuously identify process improvements to
+                    streamline department operations.
+                </p>
+                <p style="margin-top: 1rem;">
+                    Outside of work, I build <strong>production-ready AI applications</strong>,
+                    <strong>full-stack systems</strong>, and <strong>data-driven tools</strong>. From LLM orchestration engines
+                    and multi-agent systems to mobile apps and browser automation, I bring a rare combination of
+                    <strong>financial acumen and engineering depth</strong>.
+                </p>
+            </div>
+
+            <div class="highlight-card">
+                <h3>Toolbox</h3>
+                <ul>
+                    <li><strong>Finance:</strong> GAAP, Financial Reporting, Variance Analysis, Forecasting, FP&A, GL Reconciliation</li>
+                    <li><strong>AI/ML:</strong> PyTorch, HuggingFace, LoRA/PEFT, RAG, Embeddings, ONNX Runtime, OCR, Prompt Engineering</li>
+                    <li><strong>Backend:</strong> Python, FastAPI, Node.js, PostgreSQL, DuckDB, Redis, Docker, REST APIs</li>
+                    <li><strong>Frontend:</strong> React, Next.js, Expo/React Native, Tailwind CSS, TypeScript</li>
+                    <li><strong>Cloud/DevOps:</strong> AWS, GCP, Azure, Vercel, Cloud Run, GitHub Actions, CI/CD</li>
+                    <li><strong>Data/Analytics:</strong> SQL, Pandas, Snowflake, Power BI, Tableau, DAX, ETL Pipelines</li>
+                    <li><strong>Languages:</strong> Python, TypeScript/JavaScript, SQL, Java, C++, C#</li>
+                </ul>
+            </div>
+
+            <div class="highlight-card">
+                <h3>Key Achievements</h3>
+                <ul>
+                    <li><span class="check">✓</span><strong>Multi-provider LLM orchestration</strong> with intelligent routing based on cost, latency, and task type</li>
+                    <li><span class="check">✓</span><strong>80% reduction</strong> in manual reporting time through automated FP&A dashboards</li>
+                    <li><span class="check">✓</span><strong>End-to-end ownership</strong> of data pipelines from extraction to visualization</li>
+                    <li><span class="check">✓</span><strong>Production deployments</strong> on AWS, GCP Cloud Run, and Vercel with CI/CD</li>
+                    <li><span class="check">✓</span><strong>95%+ accuracy</strong> in automated data extraction and processing systems</li>
+                </ul>
+            </div>
+
+            <div class="highlight-card">
+                <h3>Education & Certification</h3>
+                <p><strong>University of Pittsburgh</strong> | B.S. in Computer Science (April 2024)</p>
+                <ul style="margin-top: 1rem;">
+                    <li>AWS Cloud Solutions Architecture | <em>Issued Jan 2026</em></li>
+                    <li>IBM Applied AI Developer | <em>Issued Oct 2025</em></li>
+                    <li>Generative AI for Cybersecurity | <em>Issued Jan 2026</em></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="container">
+        <h2 class="section-title">About Me</h2>
+        <div class="project-card">
+            <p class="project-desc" style="font-size: 1.1rem;">
+                I'm a <strong style="color: #667eea;">Staff Accountant at Ortho Molecular Products</strong> with a
+                <strong style="color: #667eea;">B.S. in Computer Science</strong> from the University of Pittsburgh, and I never stopped building.
+                While I handle financial reporting and operations during the day, I continuously ship AI-powered applications,
+                full-stack systems, and multi-agent platforms on my own time. I'm the person who automates the spreadsheet,
+                then builds the AI that replaces the automation. As AI reshapes every industry, having someone who
+                understands both the <strong style="color: #667eea;">numbers and the neural nets</strong> isn't just useful, it's a
+                competitive advantage. Finance, engineering, AI: <strong style="color: #667eea;">I don't pick one lane</strong>.
+            </p>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="container">
+        <h2 class="section-title">Get In Touch</h2>
+        <div class="contact-grid">
+            <a href="mailto:williamcjk11@gmail.com" class="contact-card">
+                <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span>williamcjk11@gmail.com</span>
+            </a>
+            <a href="tel:+17734154606" class="contact-card">
+                <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                <span>(773) 415-4606</span>
+            </a>
+            <a href="https://www.linkedin.com/in/william-c-kim/" class="contact-card" target="_blank">
+                <svg class="contact-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                </svg>
+                <span>LinkedIn</span>
+            </a>
+            <a href="https://github.com/willckim" class="contact-card" target="_blank">
+                <svg class="contact-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+                <span>GitHub</span>
+            </a>
+        </div>
+        <div style="text-align: center; margin-top: 2rem;">
+            <a href="/resume.pdf" class="btn btn-primary" download>
+                📥 Download Full Resume
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 William Kim • Music: Lost Sky - Fearless pt.II (feat. Chris Linton) [NCS Release] • <a href="http://ncs.io/Fearless2" target="_blank">Free Download</a></p>
+    </footer>
+</body>
+</html>

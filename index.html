@@ -1,1125 +1,1178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>William Kim - Staff Accountant, AI Engineer & Software Developer</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-        
-        :root {
-            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.15);
-            --shadow-xl: 0 30px 80px rgba(0, 0, 0, 0.2);
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #2d3748;
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-        
-        /* Animated Background Blobs */
-        .bg-animation {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            overflow: hidden;
-        }
-        
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.3;
-            animation: blob 20s ease-in-out infinite;
-        }
-        
-        .blob-1 {
-            width: 500px;
-            height: 500px;
-            background: #667eea;
-            top: -200px;
-            left: -100px;
-        }
-        
-        .blob-2 {
-            width: 400px;
-            height: 400px;
-            background: #f093fb;
-            top: 100px;
-            right: -100px;
-            animation-delay: 7s;
-        }
-        
-        .blob-3 {
-            width: 450px;
-            height: 450px;
-            background: #4facfe;
-            bottom: -150px;
-            left: 30%;
-            animation-delay: 14s;
-        }
-        
-        @keyframes blob {
-            0%, 100% {
-                transform: translate(0, 0) scale(1);
-            }
-            33% {
-                transform: translate(50px, -80px) scale(1.1);
-            }
-            66% {
-                transform: translate(-40px, 40px) scale(0.9);
-            }
-        }
-        
-        /* Header */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-        
-        nav {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 1.5rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: var(--gradient-1);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-            list-style: none;
-        }
-        
-        .nav-links a {
-            text-decoration: none;
-            color: #4a5568;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--gradient-1);
-            transition: width 0.3s ease;
-        }
-        
-        .nav-links a:hover {
-            color: #667eea;
-        }
-        
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-        
-        /* Hero Section */
-        .hero {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 8rem 2rem;
-            text-align: center;
-            animation: fadeInUp 1s ease-out;
-        }
-        
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1.5rem;
-            background: rgba(102, 126, 234, 0.1);
-            border: 2px solid rgba(102, 126, 234, 0.3);
-            border-radius: 50px;
-            color: #667eea;
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 2rem;
-            animation: pulse 2s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.4);
-            }
-            50% {
-                box-shadow: 0 0 0 10px rgba(102, 126, 234, 0);
-            }
-        }
-        
-        .status-badge::before {
-            content: '●';
-            color: #43e97b;
-            font-size: 1.2rem;
-            animation: blink 2s ease-in-out infinite;
-        }
-        
-        @keyframes blink {
-            0%, 50%, 100% { opacity: 1; }
-            25%, 75% { opacity: 0.3; }
-        }
-        
-        h1 {
-            font-size: 4.5rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #1a202c 0%, #667eea 50%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 1.5rem;
-            line-height: 1.2;
-        }
-        
-        .hero-subtitle {
-            font-size: 1.3rem;
-            color: #4a5568;
-            max-width: 800px;
-            margin: 0 auto 2rem;
-            line-height: 1.8;
-        }
-        
-        .hero-subtitle strong {
-            color: #667eea;
-            font-weight: 700;
-        }
-        
-        /* Certification Badges */
-        .cert-badges {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem;
-            margin: 3rem 0;
-        }
-        
-        .cert-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.75rem 1.5rem;
-            background: white;
-            border: 2px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50px;
-            font-size: 0.9rem;
-            text-decoration: none;
-            color: #2d3748;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        }
-        
-        .cert-badge:hover {
-            transform: translateY(-3px) scale(1.05);
-            border-color: #667eea;
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
-        }
-        
-        .cert-icon {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.3s ease;
-        }
-        
-        .cert-badge:hover .cert-icon {
-            transform: rotate(12deg);
-        }
-        
-        /* CTA Buttons */
-        .cta-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-        
-        .btn {
-            padding: 1rem 2rem;
-            font-size: 1rem;
-            font-weight: 600;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            border: none;
-            cursor: pointer;
-        }
-        
-        .btn-primary {
-            background: var(--gradient-1);
-            color: white;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        }
-        
-        .btn-primary:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
-        }
-        
-        .btn-outline {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
-        }
-        
-        .btn-outline:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-        }
-        
-        /* Sections */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 4rem 2rem;
-        }
-        
-        .section-title {
-            font-size: 3rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, #1a202c 0%, #667eea 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 3rem;
-        }
-        
-        /* Project Cards */
-        .project-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(0, 0, 0, 0.08);
-            border-radius: 24px;
-            padding: 2.5rem;
-            margin-bottom: 2rem;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .project-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-1);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: -1;
-        }
-        
-        .project-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: var(--shadow-xl);
-            border-color: #667eea;
-        }
-        
-        .project-card:hover::before {
-            opacity: 0.05;
-        }
-        
-        .project-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-        
-        .project-title {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 1rem;
-        }
-        
-        .metrics {
-            display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-        }
-        
-        .metric-badge {
-            padding: 0.4rem 1rem;
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-            color: white;
-            border-radius: 50px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(67, 233, 123, 0.3);
-        }
-        
-        .project-desc {
-            color: #4a5568;
-            line-height: 1.8;
-            margin-bottom: 1rem;
-        }
-        
-        .project-proof {
-            color: #718096;
-            font-size: 0.9rem;
-            font-style: italic;
-            margin-bottom: 1rem;
-        }
-        
-        .project-bullets {
-            list-style: disc;
-            padding-left: 1.5rem;
-            margin: 1rem 0;
-            color: #4a5568;
-        }
-        
-        .project-bullets li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .tech-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin: 1.5rem 0;
-        }
-        
-        .tag {
-            padding: 0.4rem 1rem;
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .tag:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-        }
-        
-        .project-links {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        /* Projects Grid */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-        }
-        
-        .project-card-small {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(0, 0, 0, 0.08);
-            border-radius: 20px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-        }
-        
-        .project-card-small:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-            border-color: #667eea;
-        }
-        
-        .project-title-small {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 0.75rem;
-        }
-        
-        .metrics-small {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            margin-bottom: 0.75rem;
-        }
-        
-        .metric-badge-small {
-            padding: 0.3rem 0.75rem;
-            background: rgba(67, 233, 123, 0.2);
-            color: #10b981;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            border: 1px solid rgba(67, 233, 123, 0.3);
-        }
-        
-        .project-desc-small {
-            font-size: 0.9rem;
-            color: #4a5568;
-            line-height: 1.6;
-            margin-bottom: 0.75rem;
-        }
-        
-        .tech-tags-small {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.4rem;
-            margin: 0.75rem 0;
-        }
-        
-        .tag-small {
-            padding: 0.25rem 0.75rem;
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            font-weight: 500;
-            border: 1px solid rgba(102, 126, 234, 0.2);
-        }
-        
-        /* Highlights */
-        .highlights-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-        }
-        
-        .highlight-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(0, 0, 0, 0.08);
-            border-radius: 20px;
-            padding: 2rem;
-            transition: all 0.3s ease;
-        }
-        
-        .highlight-card:hover {
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-        
-        .highlight-card h3 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #667eea;
-            margin-bottom: 1rem;
-        }
-        
-        .highlight-card p, .highlight-card ul {
-            color: #4a5568;
-            line-height: 1.7;
-        }
-        
-        .highlight-card ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .highlight-card li {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.5rem;
-            margin-bottom: 0.75rem;
-        }
-        
-        .check {
-            color: #10b981;
-            font-weight: bold;
-        }
-        
-        /* Contact */
-        .contact-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-        
-        .contact-card {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1.5rem;
-            background: white;
-            border: 2px solid rgba(0, 0, 0, 0.08);
-            border-radius: 16px;
-            text-decoration: none;
-            color: #2d3748;
-            transition: all 0.3s ease;
-        }
-        
-        .contact-card:hover {
-            border-color: #667eea;
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
-        }
-        
-        .contact-icon {
-            width: 24px;
-            height: 24px;
-            color: #667eea;
-        }
-        
-        /* Footer */
-        footer {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 2rem;
-            text-align: center;
-            color: #718096;
-            font-size: 0.9rem;
-        }
-        
-        footer a {
-            color: #667eea;
-            text-decoration: none;
-        }
-        
-        footer a:hover {
-            text-decoration: underline;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero {
-                padding: 4rem 1.5rem;
-            }
-            
-            .nav-links {
-                gap: 1rem;
-            }
-            
-            .section-title {
-                font-size: 2rem;
-            }
-            
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        
-        ::selection {
-            background: #667eea;
-            color: white;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>William Kim — Staff Accountant / AI Engineer</title>
+<meta name="description" content="William Kim — Finance, engineering, and AI. Staff Accountant at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  /* ---------- TOKENS ---------- */
+  :root {
+    --bg: #f5f1ea;
+    --bg-elev: #efeae0;
+    --ink: #19170f;
+    --ink-2: #2b2820;
+    --muted: #6a6557;
+    --line: #19170f1a;
+    --line-2: #19170f0d;
+    --accent: #b6451a;       /* rust */
+    --accent-ink: #ffffff;
+    --good: #2f6f4f;
+    --maxw: 1280px;
+    --gutter: clamp(20px, 4vw, 56px);
+    --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  [data-theme="dark"] {
+    --bg: #0f0e0c;
+    --bg-elev: #16140f;
+    --ink: #f4efe4;
+    --ink-2: #d9d3c5;
+    --muted: #8a8474;
+    --line: #f4efe41a;
+    --line-2: #f4efe40d;
+  }
+  [data-accent="rust"]    { --accent: #b6451a; }
+  [data-accent="forest"]  { --accent: #2f6a3a; }
+  [data-accent="cobalt"]  { --accent: #2b4ed1; }
+  [data-accent="ink"]     { --accent: #19170f; }
+  [data-theme="dark"][data-accent="ink"] { --accent: #f4efe4; --accent-ink: #0f0e0c; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    transition: background-color .4s ease, color .4s ease;
+  }
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+
+  /* ---------- LAYOUT ---------- */
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+  .row { display: flex; align-items: center; }
+  .col { display: flex; flex-direction: column; }
+
+  /* ---------- TOPBAR ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in oklab, var(--bg) 86%, transparent);
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+    max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter);
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+  }
+  .brand-mark {
+    width: 22px; height: 22px; border-radius: 4px;
+    background: var(--ink); color: var(--bg);
+    display: grid; place-items: center; font-weight: 700;
+    font-family: var(--sans); font-size: 12px;
+  }
+  .brand-name { font-weight: 500; }
+  .brand-name em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--muted); }
+  .topnav { display: flex; gap: 28px; font-size: 13px; }
+  .topnav a {
+    color: var(--ink-2);
+    position: relative; padding: 4px 0;
+    transition: color .2s ease;
+  }
+  .topnav a:hover { color: var(--accent); }
+  .topnav .count { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 4px; }
+
+  @media (max-width: 720px) {
+    .topnav { display: none; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: clamp(56px, 9vw, 140px) 0 clamp(40px, 6vw, 80px);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+  }
+  .status-row {
+    display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: clamp(40px, 6vw, 72px);
+  }
+  .status-row .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--good);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--good) 60%, transparent);
+    animation: pulse 2.4s ease-in-out infinite;
+    display: inline-block; margin-right: 8px; vertical-align: middle;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--good) 60%, transparent); }
+    50%      { box-shadow: 0 0 0 6px color-mix(in oklab, var(--good) 0%, transparent); }
+  }
+  .status-row .sep { opacity: .4; }
+
+  h1.headline {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: clamp(48px, 8.4vw, 132px);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    max-width: 16ch;
+  }
+  h1.headline em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+  h1.headline .x {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--muted);
+    padding: 0 0.08em;
+  }
+  .hero-foot {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 4vw, 64px);
+    align-items: end;
+    margin-top: clamp(40px, 6vw, 80px);
+    padding-top: clamp(24px, 3vw, 36px);
+    border-top: 1px solid var(--line);
+  }
+  .hero-foot .lede {
+    font-size: clamp(16px, 1.4vw, 19px);
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+  .hero-foot .lede em { font-family: var(--serif); font-style: italic; color: var(--accent); }
+  .hero-actions {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: flex-end;
+  }
+  @media (max-width: 760px) {
+    .hero-foot { grid-template-columns: 1fr; }
+    .hero-actions { justify-content: flex-start; }
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    font: 500 13px/1 var(--sans);
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: border-color .2s ease, background-color .2s ease, color .2s ease, transform .2s ease;
+  }
+  .btn:hover { border-color: var(--ink); transform: translateY(-1px); }
+  .btn .arrow { transition: transform .25s ease; }
+  .btn:hover .arrow { transform: translate(2px, -2px); }
+  .btn.primary {
+    background: var(--ink); color: var(--bg); border-color: var(--ink);
+  }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+  /* ---------- TICKER ---------- */
+  .ticker {
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    padding: 18px 0;
+    background: var(--bg-elev);
+  }
+  .ticker-track {
+    display: flex; gap: 56px; width: max-content;
+    animation: slide 60s linear infinite;
+    will-change: transform;
+  }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  .ticker-item {
+    font-family: var(--mono); font-size: 13px; letter-spacing: 0.02em;
+    color: var(--ink-2);
+    display: inline-flex; align-items: center; gap: 56px;
+    white-space: nowrap;
+  }
+  .ticker-item::after {
+    content: "✦";
+    color: var(--accent);
+    margin-left: 56px;
+    font-family: var(--serif);
+  }
+  @keyframes slide {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section.block {
+    padding: clamp(72px, 10vw, 140px) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: clamp(24px, 4vw, 64px);
+    align-items: end;
+    margin-bottom: clamp(40px, 6vw, 72px);
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h2.section-title {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: clamp(32px, 4.6vw, 64px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    max-width: 18ch;
+  }
+  h2.section-title em {
+    font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--accent);
+  }
+  .section-head .right {
+    color: var(--ink-2);
+    font-size: 15px; line-height: 1.6;
+    max-width: 48ch;
+    justify-self: end;
+  }
+  @media (max-width: 760px) {
+    .section-head { grid-template-columns: 1fr; align-items: start; }
+    .section-head .right { justify-self: start; }
+  }
+
+  /* ---------- FEATURED — Editorial Index ---------- */
+  .index { border-top: 1px solid var(--line); }
+  .index-row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: clamp(20px, 4vw, 56px);
+    align-items: start;
+    padding: clamp(24px, 3vw, 36px) 0;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    position: relative;
+    transition: padding .35s ease;
+  }
+  .index-row::before {
+    content: "";
+    position: absolute; left: 0; top: 0; height: 100%; width: 0;
+    background: var(--accent);
+    transition: width .35s ease;
+  }
+  .index-row:hover { padding-left: 12px; }
+  .index-row:hover::before { width: 3px; }
+  .idx-num {
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
+    padding-top: 6px;
+  }
+  .idx-main { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .idx-title-line {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 14px 24px;
+  }
+  .idx-title {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: clamp(22px, 2.6vw, 34px);
+    line-height: 1.12;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    transition: color .25s ease;
+  }
+  .idx-row .idx-title:hover, .index-row:hover .idx-title { color: var(--accent); }
+  .idx-kicker {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(16px, 1.5vw, 22px);
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .idx-meta {
+    display: flex; flex-wrap: wrap; gap: 8px 18px;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .idx-meta .pill {
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: var(--ink-2);
+  }
+  .idx-meta .pill.good { color: var(--good); border-color: color-mix(in oklab, var(--good) 30%, var(--line)); }
+  .idx-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .5s ease;
+  }
+  .idx-body {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: clamp(20px, 3vw, 48px);
+    padding: 18px 0 8px;
+  }
+  @media (max-width: 760px) { .idx-body { grid-template-columns: 1fr; } }
+  .idx-desc { color: var(--ink-2); font-size: 15px; line-height: 1.65; max-width: 56ch; }
+  .idx-desc + .idx-desc { margin-top: 12px; color: var(--muted); font-size: 14px; }
+  .idx-bullets {
+    margin-top: 14px;
+    display: flex; flex-direction: column; gap: 8px;
+    color: var(--ink-2); font-size: 14px;
+  }
+  .idx-bullets div { padding-left: 18px; position: relative; }
+  .idx-bullets div::before {
+    content: "—"; position: absolute; left: 0; color: var(--accent);
+  }
+  .idx-stack {
+    display: flex; flex-wrap: wrap; gap: 6px 8px;
+    font-family: var(--mono); font-size: 11px;
+  }
+  .idx-stack span {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 5px 8px;
+    color: var(--ink-2);
+    background: color-mix(in oklab, var(--bg-elev) 60%, transparent);
+  }
+  .idx-actions { display: flex; gap: 8px; flex-shrink: 0; padding-top: 6px; }
+  .idx-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: grid; place-items: center;
+    color: var(--ink-2);
+    transition: border-color .2s ease, background-color .2s ease, color .2s ease;
+  }
+  .idx-icon:hover { border-color: var(--ink); color: var(--ink); }
+  .idx-icon svg { width: 14px; height: 14px; }
+  .idx-expand-btn {
+    align-self: start;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink-2);
+    display: grid; place-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform .35s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .index-row.open .idx-expand-btn {
+    transform: rotate(45deg);
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .idx-expand-btn svg { width: 14px; height: 14px; }
+
+  /* ---------- ADDITIONAL PROJECTS GRID ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .card {
+    background: var(--bg);
+    padding: clamp(20px, 2.5vw, 32px);
+    grid-column: span 4;
+    display: flex; flex-direction: column; gap: 14px;
+    transition: background-color .25s ease;
+    min-height: 280px;
+  }
+  .card:hover { background: var(--bg-elev); }
+  @media (max-width: 1000px) { .card { grid-column: span 6; } }
+  @media (max-width: 640px)  { .card { grid-column: span 12; } }
+
+  .card-tag {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .card-tag span.dot { color: var(--accent); }
+  .card-title {
+    font-family: var(--sans); font-weight: 500;
+    font-size: 20px; line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .card-desc { color: var(--muted); font-size: 14px; line-height: 1.55; }
+  .card-stack {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    font-family: var(--mono); font-size: 10px; color: var(--ink-2);
+    margin-top: auto;
+  }
+  .card-stack span { border: 1px solid var(--line); padding: 3px 7px; border-radius: 3px; }
+  .card-links { display: flex; gap: 14px; font-family: var(--mono); font-size: 11px; }
+  .card-links a {
+    color: var(--ink-2);
+    display: inline-flex; align-items: center; gap: 6px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+  }
+  .card-links a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ---------- ABOUT split ---------- */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 5vw, 96px);
+  }
+  @media (max-width: 800px) { .about-grid { grid-template-columns: 1fr; } }
+  .about-lede {
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: clamp(22px, 2.4vw, 32px);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .about-lede em { font-family: var(--serif); font-style: italic; color: var(--accent); }
+  .toolbox {
+    display: flex; flex-direction: column; gap: 22px;
+  }
+  .tool-row {
+    display: grid; grid-template-columns: 130px 1fr;
+    gap: 16px; align-items: baseline;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tool-row:last-child { border-bottom: none; }
+  .tool-label {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .tool-list { color: var(--ink-2); font-size: 14px; line-height: 1.7; }
+
+  /* ---------- CERTS ---------- */
+  .certs {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  @media (max-width: 760px) { .certs { grid-template-columns: 1fr; } }
+  .cert {
+    padding: 18px;
+    border: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 6px;
+    transition: border-color .2s ease, transform .2s ease;
+  }
+  .cert:hover { border-color: var(--ink); transform: translateY(-2px); }
+  .cert .issuer {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .cert .cname {
+    font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.3;
+  }
+  .cert .when { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* ---------- CONTACT ---------- */
+  .contact-big {
+    display: block;
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: clamp(36px, 6vw, 96px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    transition: color .25s ease;
+  }
+  .contact-big em { font-family: var(--serif); font-style: italic; color: var(--accent); }
+  .contact-big:hover { color: var(--accent); }
+  .contact-big .arr { display: inline-block; transform: translateY(-0.08em); transition: transform .3s ease; }
+  .contact-big:hover .arr { transform: translate(8px, -0.18em); }
+  .contact-list {
+    margin-top: clamp(40px, 6vw, 72px);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: var(--line);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 800px) { .contact-list { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .contact-list { grid-template-columns: 1fr; } }
+  .contact-cell {
+    background: var(--bg);
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 6px;
+    transition: background-color .25s ease;
+  }
+  .contact-cell:hover { background: var(--bg-elev); }
+  .contact-cell .label {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .contact-cell .value { font-size: 14px; color: var(--ink); }
+
+  /* ---------- FOOTER ---------- */
+  footer.foot {
+    padding: 40px 0 28px;
+    display: flex; flex-wrap: wrap; gap: 14px;
+    justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  footer.foot .copy em { font-family: var(--serif); font-style: italic; font-size: 13px; }
+
+  /* ---------- TWEAKS PANEL ---------- */
+  .tweaks {
+    position: fixed; right: 16px; bottom: 16px; z-index: 100;
+    width: 240px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+    display: none;
+    font-size: 12px;
+  }
+  .tweaks.open { display: block; }
+  .tweaks h4 {
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted); margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .tweaks .close { cursor: pointer; color: var(--muted); }
+  .tweaks .close:hover { color: var(--ink); }
+  .tweaks .group { margin-bottom: 14px; }
+  .tweaks .group:last-child { margin-bottom: 0; }
+  .tweaks .gl {
+    font-family: var(--mono); font-size: 10px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
+  }
+  .tweaks .swatches { display: flex; gap: 8px; }
+  .tweaks .sw {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 1px solid var(--line); cursor: pointer;
+    transition: transform .15s ease;
+  }
+  .tweaks .sw:hover { transform: scale(1.08); }
+  .tweaks .sw.active { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .tweaks .seg {
+    display: flex; border: 1px solid var(--line); border-radius: 999px;
+    padding: 3px; gap: 3px;
+  }
+  .tweaks .seg button {
+    flex: 1; padding: 6px 10px; border: none; background: transparent;
+    color: var(--ink-2); font-family: var(--sans); font-size: 12px;
+    border-radius: 999px; cursor: pointer;
+  }
+  .tweaks .seg button.active { background: var(--ink); color: var(--bg); }
+
+  .tweaks-toggle {
+    position: fixed; right: 16px; bottom: 16px; z-index: 99;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--ink); color: var(--bg);
+    border: none; cursor: pointer;
+    display: grid; place-items: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+    transition: transform .2s ease, background-color .25s ease;
+  }
+  .tweaks-toggle:hover { transform: scale(1.06); background: var(--accent); }
+  .tweaks-toggle svg { width: 18px; height: 18px; }
+
+  /* utility */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+</style>
 </head>
-<body>
-    <div class="bg-animation">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
+<body data-theme="light" data-accent="rust">
+
+  <!-- ---------- TOPBAR ---------- -->
+  <header class="topbar">
+    <div class="inner">
+      <a href="#top" class="brand">
+        <span class="brand-mark">W</span>
+        <span class="brand-name">William Kim <em>— portfolio</em></span>
+      </a>
+      <nav class="topnav">
+        <a href="#work">Work <span class="count">04</span></a>
+        <a href="#more">More <span class="count">05</span></a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
     </div>
+  </header>
 
-    <header>
-        <nav>
-            <div class="logo">William Kim</div>
-            <ul class="nav-links">
-                <li><a href="#featured">Featured</a></li>
-                <li><a href="#projects">Projects</a></li>
-                <li><a href="#highlights">Highlights</a></li>
-                <li><a href="#about">About</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+  <!-- ---------- HERO ---------- -->
+  <section id="top" class="hero" data-screen-label="01 Hero">
+    <div class="wrap">
+      <div class="status-row">
+        <span><span class="dot"></span>Currently shipping &nbsp;·&nbsp; Barrington, IL</span>
+        <span class="sep">/</span>
+        <span>Staff Accountant @ Ortho Molecular Products</span>
+        <span class="sep">/</span>
+        <span>B.S. Computer Science, Pitt '24</span>
+      </div>
 
-    <section class="hero">
-        <div class="status-badge">Currently Building</div>
-        <h1>Finance × Engineering × AI</h1>
-        <p class="hero-subtitle">
-            <strong>Staff Accountant at Ortho Molecular Products</strong> by day, <strong>AI engineer and full-stack developer</strong> by craft.
-            With a B.S. in Computer Science from Pitt and hands-on experience building LLM orchestration engines, RAG pipelines,
-            and production cloud systems. I bridge the gap between <strong>business operations</strong> and <strong>cutting-edge technology</strong>.
-            The rare hybrid who speaks both GAAP and GPU.
+      <h1 class="headline">
+        Finance <span class="x">×</span> <em>Engineering</em> <span class="x">×</span> AI.
+      </h1>
+
+      <div class="hero-foot">
+        <p class="lede">
+          I write <em>journal entries</em> by day and <em>orchestration engines</em> by craft — a hybrid who ships
+          LLM pipelines, multi-agent systems and production cloud apps with the same rigor I bring to a Fast Close.
+          Fluent in <em>GAAP</em> and <em>GPU</em>.
+        </p>
+        <div class="hero-actions">
+          <a href="/resume.pdf" class="btn primary" download>
+            Résumé <span class="arrow">↗</span>
+          </a>
+          <a href="https://www.linkedin.com/in/william-c-kim/" class="btn" target="_blank" rel="noopener">
+            LinkedIn <span class="arrow">↗</span>
+          </a>
+          <a href="https://github.com/willckim" class="btn" target="_blank" rel="noopener">
+            GitHub <span class="arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- TICKER ---------- -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-item">Python · TypeScript · FastAPI · React / Next.js · React Native · PostgreSQL · DuckDB · Redis · Docker · AWS · GCP · Azure · LLM Orchestration · RAG · Embeddings · ONNX · Power BI · Snowflake · SQL · DAX · ETL Pipelines · GAAP · FP&amp;A · Variance Analysis</span>
+      <span class="ticker-item">Python · TypeScript · FastAPI · React / Next.js · React Native · PostgreSQL · DuckDB · Redis · Docker · AWS · GCP · Azure · LLM Orchestration · RAG · Embeddings · ONNX · Power BI · Snowflake · SQL · DAX · ETL Pipelines · GAAP · FP&amp;A · Variance Analysis</span>
+    </div>
+  </div>
+
+  <!-- ---------- FEATURED — INDEX ---------- -->
+  <section id="work" class="block" data-screen-label="02 Featured">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">§ 01 — Selected work</div>
+          <h2 class="section-title">Featured <em>projects</em></h2>
+        </div>
+        <div class="right">
+          Production builds across AI orchestration, agentic automation, mobile, and finance ops.
+          Click any row to expand the case notes.
+        </div>
+      </div>
+
+      <div class="index">
+        <!-- 01 -->
+        <article class="index-row" data-row>
+          <div class="idx-num">01</div>
+          <div class="idx-main">
+            <div class="idx-title-line">
+              <h3 class="idx-title">Purelytics</h3>
+              <span class="idx-kicker">AI ingredient analyzer · React Native</span>
+            </div>
+            <div class="idx-meta">
+              <span class="pill">2025</span>
+              <span class="pill good">✓ Multi-AI fallback</span>
+              <span class="pill good">✓ Vision scanning</span>
+            </div>
+            <div class="idx-detail">
+              <div>
+                <div class="idx-body">
+                  <div>
+                    <p class="idx-desc">
+                      React Native mobile app that uses on-device vision to scan product ingredient labels and deliver
+                      health assessments with a color-coded 0–100 scoring system. Supports 12+ product categories with
+                      specialized supplement analysis including bioavailability and interaction warnings, and surfaces
+                      category-matched healthier alternatives with pricing data.
+                    </p>
+                    <p class="idx-desc">
+                      Multi-AI provider fallback hierarchy (Claude → Gemini → GPT-4o) ensures reliability with zero
+                      backend infrastructure. Built with Expo SDK 54, React Navigation, and on-device credential storage.
+                    </p>
+                    <div class="idx-bullets">
+                      <div>Vision-based scanning pipeline that photographs ingredient labels for instant evaluation</div>
+                      <div>Multi-AI provider fallback for high-availability analysis</div>
+                      <div>Family profiles with health-specific filtering and full scan archive</div>
+                    </div>
+                  </div>
+                  <div class="idx-stack">
+                    <span>React Native</span><span>Expo</span><span>Claude</span><span>GPT-4o</span>
+                    <span>Gemini</span><span>Vision AI</span><span>Brave Search API</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="idx-actions">
+            <a class="idx-icon" href="https://github.com/willckim/Purelytics" target="_blank" rel="noopener" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
+            </a>
+          </div>
+          <button class="idx-expand-btn" aria-label="Expand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </article>
+
+        <!-- 02 -->
+        <article class="index-row" data-row>
+          <div class="idx-num">02</div>
+          <div class="idx-main">
+            <div class="idx-title-line">
+              <h3 class="idx-title">Odyx HQ</h3>
+              <span class="idx-kicker">Agentic browser automation · Claude-powered</span>
+            </div>
+            <div class="idx-meta">
+              <span class="pill">2025</span>
+              <span class="pill good">✓ Self-healing selectors</span>
+              <span class="pill good">✓ Human-in-the-loop</span>
+            </div>
+            <div class="idx-detail">
+              <div>
+                <div class="idx-body">
+                  <div>
+                    <p class="idx-desc">
+                      Universal agentic Chrome extension that navigates, fills forms, and executes payments on any
+                      website through a conversational side panel. An Action Tree pipes a pruned DOM (&lt; 4K tokens) to
+                      Claude for planning, with human-in-the-loop confirmation for sensitive operations.
+                    </p>
+                    <p class="idx-desc">
+                      Manifest V3 extension with React 19, Express / Prisma / PostgreSQL backend, Redis-backed JWT auth,
+                      Stripe shared payment tokens, and multi-stage Docker containerization for deployment.
+                    </p>
+                    <div class="idx-bullets">
+                      <div>Action Tree system that prunes the DOM into &lt; 4K tokens for efficient planning</div>
+                      <div>Self-healing selector strategy with Computer Use as fallback</div>
+                      <div>Tier-based RBAC (Free / Pro / Enterprise) with audit logging</div>
+                    </div>
+                  </div>
+                  <div class="idx-stack">
+                    <span>TypeScript</span><span>React 19</span><span>Claude API</span><span>Chrome Extension</span>
+                    <span>Prisma</span><span>PostgreSQL</span><span>Redis</span><span>Stripe</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="idx-actions">
+            <a class="idx-icon" href="https://github.com/willckim/Odyx-HQ" target="_blank" rel="noopener" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
+            </a>
+          </div>
+          <button class="idx-expand-btn" aria-label="Expand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </article>
+
+        <!-- 03 -->
+        <article class="index-row" data-row>
+          <div class="idx-num">03</div>
+          <div class="idx-main">
+            <div class="idx-title-line">
+              <h3 class="idx-title">Rift Architect</h3>
+              <span class="idx-kicker">Multi-agent AI coach · Electron desktop</span>
+            </div>
+            <div class="idx-meta">
+              <span class="pill">2025</span>
+              <span class="pill good">✓ 4 specialized agents</span>
+              <span class="pill good">✓ Vanguard compliant</span>
+            </div>
+            <div class="idx-detail">
+              <div>
+                <div class="idx-body">
+                  <div>
+                    <p class="idx-desc">
+                      Multi-agent AI orchestrator for League of Legends that provides real-time coaching across
+                      champion select, in-game, and post-game phases. Four specialized Claude-powered agents handle
+                      drafting, macro strategy, enemy cooldown tracking with haste adjustments, and post-game wellness.
+                    </p>
+                    <p class="idx-desc">
+                      Electron desktop app with automated client detection via lockfile polling, a serial API queue
+                      with token-bucket rate limiting, and interactive draggable overlays with persistent positioning.
+                    </p>
+                    <div class="idx-bullets">
+                      <div>Drafting Oracle · Macro Strategist · Spell Tracker · Tilt Guard</div>
+                      <div>Serial API queue with 80% auto-pause to stay inside rate limits</div>
+                      <div>Screen-saver window level escalation for fullscreen visibility</div>
+                    </div>
+                  </div>
+                  <div class="idx-stack">
+                    <span>Electron</span><span>Node.js</span><span>Claude SDK</span><span>SQLite</span>
+                    <span>Riot API</span><span>Multi-Agent</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="idx-actions">
+            <a class="idx-icon" href="https://github.com/willckim/Rift-Architect" target="_blank" rel="noopener" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
+            </a>
+          </div>
+          <button class="idx-expand-btn" aria-label="Expand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </article>
+
+        <!-- 04 -->
+        <article class="index-row" data-row>
+          <div class="idx-num">04</div>
+          <div class="idx-main">
+            <div class="idx-title-line">
+              <h3 class="idx-title">HYROX Pace</h3>
+              <span class="idx-kicker">Race prediction engine · FastAPI + React Native</span>
+            </div>
+            <div class="idx-meta">
+              <span class="pill">2025</span>
+              <span class="pill good">✓ 200K+ race results</span>
+              <span class="pill good">✓ Wearable integration</span>
+            </div>
+            <div class="idx-detail">
+              <div>
+                <div class="idx-body">
+                  <div>
+                    <p class="idx-desc">
+                      Race prediction, pacing, and live execution app for HYROX athletes. A 100% deterministic simulation
+                      engine built on 200,000+ race results, championship timing data, and physiological research.
+                      Delivers three-tier finish-time predictions (conservative, likely, aggressive) with
+                      segment-by-segment pacing and risk analysis.
+                    </p>
+                    <p class="idx-desc">
+                      FastAPI async backend with Pydantic v2 and SQLAlchemy. React Native / Expo frontend with Zustand.
+                      Apple Health and Google Fit integration with 30-second HR polling and redline alerts.
+                    </p>
+                    <div class="idx-bullets">
+                      <div>Deterministic engine with fatigue accumulation and compromised post-station running</div>
+                      <div>Live race tracking with wearable HR and visual redline alerts at 95%+ max HR</div>
+                      <div>Three-tier prediction system with segment pacing and contextual execution cues</div>
+                    </div>
+                  </div>
+                  <div class="idx-stack">
+                    <span>TypeScript</span><span>Python</span><span>FastAPI</span><span>React Native</span>
+                    <span>Expo</span><span>Zustand</span><span>SQLAlchemy</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="idx-actions">
+            <a class="idx-icon" href="https://github.com/willckim/HYROX-Pace" target="_blank" rel="noopener" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
+            </a>
+          </div>
+          <button class="idx-expand-btn" aria-label="Expand">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- MORE ---------- -->
+  <section id="more" class="block" data-screen-label="03 More">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">§ 02 — Index</div>
+          <h2 class="section-title">More <em>builds</em></h2>
+        </div>
+        <div class="right">
+          A working set across orchestration, data ops, FP&amp;A, analytics, and claims. Mostly shipped, some live demos.
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> LIVE — Orchestration</div>
+          <div class="card-title">LLM Orchestration Engine — multi-model routing</div>
+          <div class="card-desc">
+            Provider-agnostic backend that routes requests across OpenAI, Azure, ONNX, and AWS Bedrock by task,
+            cost and latency. Real-time p50/p95 dashboard.
+          </div>
+          <div class="card-stack"><span>Python</span><span>FastAPI</span><span>Docker</span><span>OpenAI</span><span>AWS</span></div>
+          <div class="card-links">
+            <a href="https://www.llmorchestrationengine.com/" target="_blank" rel="noopener">Demo ↗</a>
+            <a href="https://github.com/willckim/LLM-Orchestration-Engine" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> LIVE — Data Ops</div>
+          <div class="card-title">DataOps Copilot — AI profiling &amp; quality</div>
+          <div class="card-desc">
+            Ingests CSV / Excel / JSON and runs schema inference, anomaly detection and data-quality profiling
+            at scale through multi-provider LLM routing.
+          </div>
+          <div class="card-stack"><span>FastAPI</span><span>DuckDB</span><span>PostgreSQL</span><span>Cloud Run</span><span>React</span></div>
+          <div class="card-links">
+            <a href="https://www.dataopscopilot.com/" target="_blank" rel="noopener">Demo ↗</a>
+            <a href="https://github.com/willckim/DataOps-Copilot" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> FP&amp;A</div>
+          <div class="card-title">FP&amp;A AI Dashboard</div>
+          <div class="card-desc">
+            Automated variance analysis, rolling 3–6 month forecasts and AI-generated executive briefs — cuts
+            manual reporting time by ~80%.
+          </div>
+          <div class="card-stack"><span>Python</span><span>Pandas</span><span>Power BI</span><span>Forecasting</span></div>
+          <div class="card-links">
+            <a href="https://github.com/willckim/fpna-ai-dashboard" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> LIVE — Analytics</div>
+          <div class="card-title">Snowflake + Power BI Sales Analytics</div>
+          <div class="card-desc">
+            End-to-end pipeline: ETL into a star-schema warehouse and interactive dashboards with KPI drilldowns.
+          </div>
+          <div class="card-stack"><span>Snowflake</span><span>SQL</span><span>ETL</span><span>Power BI</span><span>DAX</span></div>
+          <div class="card-links">
+            <a href="https://app.snowflake.com/zmydbpf/fq34862/w3u0HWZNPryg/query" target="_blank" rel="noopener">Demo ↗</a>
+            <a href="https://github.com/willckim/snowflake-powerbi-sales-dashboard" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> LIVE — Claims AI</div>
+          <div class="card-title">ClaimsInvestigator AI</div>
+          <div class="card-desc">
+            Processes first-notice-of-loss narratives and policy data to generate structured investigation plans
+            with prioritized actions and coverage-issue flags.
+          </div>
+          <div class="card-stack"><span>Python</span><span>FastAPI</span><span>LLM Reasoning</span><span>REST</span></div>
+          <div class="card-links">
+            <a href="https://www.claiminvestigator-ai.com/" target="_blank" rel="noopener">Demo ↗</a>
+            <a href="https://github.com/willckim/ClaimInvestigator-AI" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="card" style="background: var(--bg-elev);">
+          <div class="card-tag" style="color: var(--accent);">→ Index continues</div>
+          <div class="card-title" style="font-family: var(--serif); font-style: italic; font-weight: 400;">
+            A few more on GitHub.
+          </div>
+          <div class="card-desc">
+            Smaller utilities, experiments, and finance automations live in the repo list — feel free to poke around.
+          </div>
+          <div class="card-stack" style="margin-top: auto;"><span>+ more</span></div>
+          <div class="card-links">
+            <a href="https://github.com/willckim" target="_blank" rel="noopener">All repos ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- ABOUT ---------- -->
+  <section id="about" class="block" data-screen-label="04 About">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">§ 03 — Profile</div>
+          <h2 class="section-title">A rare <em>hybrid</em>.</h2>
+        </div>
+        <div class="right">
+          The person who automates the spreadsheet, then builds the AI that replaces the automation.
+        </div>
+      </div>
+
+      <div class="about-grid">
+        <p class="about-lede">
+          Staff Accountant at <em>Ortho Molecular Products</em> in Barrington — supporting the Fast Close,
+          reconciliations, internal audits, fixed assets, sales tax remittals and corporate tax filings.
+          Off the clock I ship production AI: <em>LLM orchestration</em>, multi-agent systems, mobile apps,
+          and browser automation. Numbers <em>and</em> neural nets.
         </p>
 
-        <div class="cert-badges">
-            <a href="https://credentials.edx.org/credentials/7fb7942917134311a35206438331fce2/" class="cert-badge" target="_blank">
-                <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span><strong>AWS</strong> Cloud Solutions Architecture</span>
-            </a>
-            <a href="https://credentials.edx.org/credentials/e2bf6e539d774ac4ae66bf7dc2ecea53/" class="cert-badge" target="_blank">
-                <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span><strong>IBM</strong> Applied AI</span>
-            </a>
-            <a href="#" class="cert-badge">
-                <svg class="cert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-                <span><strong>Generative AI</strong> for Cybersecurity</span>
-            </a>
+        <div class="toolbox">
+          <div class="tool-row">
+            <div class="tool-label">Finance</div>
+            <div class="tool-list">GAAP · Financial Reporting · Variance Analysis · Forecasting · FP&amp;A · GL Reconciliation</div>
+          </div>
+          <div class="tool-row">
+            <div class="tool-label">AI / ML</div>
+            <div class="tool-list">PyTorch · HuggingFace · LoRA / PEFT · RAG · Embeddings · ONNX · OCR · Prompt Engineering</div>
+          </div>
+          <div class="tool-row">
+            <div class="tool-label">Backend</div>
+            <div class="tool-list">Python · FastAPI · Node.js · PostgreSQL · DuckDB · Redis · Docker · REST</div>
+          </div>
+          <div class="tool-row">
+            <div class="tool-label">Frontend</div>
+            <div class="tool-list">React · Next.js · Expo / React Native · TypeScript · Tailwind</div>
+          </div>
+          <div class="tool-row">
+            <div class="tool-label">Cloud</div>
+            <div class="tool-list">AWS · GCP · Azure · Vercel · Cloud Run · GitHub Actions</div>
+          </div>
+          <div class="tool-row">
+            <div class="tool-label">Data</div>
+            <div class="tool-list">SQL · Pandas · Snowflake · Power BI · Tableau · DAX · ETL</div>
+          </div>
         </div>
+      </div>
 
-        <div class="cta-buttons">
-            <a href="/resume.pdf" class="btn btn-primary" download>
-                📄 Resume
-            </a>
-            <a href="https://www.linkedin.com/in/william-c-kim/" class="btn btn-outline" target="_blank">
-                💼 LinkedIn
-            </a>
-            <a href="https://github.com/willckim" class="btn btn-outline" target="_blank">
-                👨‍💻 GitHub
-            </a>
+      <div class="eyebrow" style="margin-top: clamp(56px, 8vw, 96px); margin-bottom: 12px;">§ 04 — Certifications</div>
+      <div class="certs">
+        <a class="cert" href="https://credentials.edx.org/credentials/7fb7942917134311a35206438331fce2/" target="_blank" rel="noopener">
+          <div class="issuer">AWS</div>
+          <div class="cname">Cloud Solutions Architecture</div>
+          <div class="when">Issued Jan 2026</div>
+        </a>
+        <a class="cert" href="https://credentials.edx.org/credentials/e2bf6e539d774ac4ae66bf7dc2ecea53/" target="_blank" rel="noopener">
+          <div class="issuer">IBM</div>
+          <div class="cname">Applied AI Developer</div>
+          <div class="when">Issued Oct 2025</div>
+        </a>
+        <div class="cert">
+          <div class="issuer">Specialization</div>
+          <div class="cname">Generative AI for Cybersecurity</div>
+          <div class="when">Issued Jan 2026</div>
         </div>
+      </div>
+    </div>
+  </section>
 
-        <p style="margin-top: 2rem; color: #718096; font-size: 0.9rem;">
-            Accounting & Finance • Python • TypeScript • FastAPI • React/Next.js • PostgreSQL • Docker • AWS/GCP/Azure • LLMs • RAG • SQL • Power BI • Data Pipelines
-        </p>
-    </section>
-
-    <!-- FEATURED PROJECTS -->
-    <section id="featured" class="container">
-        <h2 class="section-title">Featured Projects</h2>
-
-        <div class="project-card">
-            <div class="project-header">
-                <div>
-                    <h3 class="project-title">Purelytics: AI Ingredient Analyzer</h3>
-                    <div class="metrics">
-                        <span class="metric-badge">✓ Multi-AI Fallback</span>
-                        <span class="metric-badge">✓ Vision-Based Scanning</span>
-                    </div>
-                </div>
-                <div class="project-links">
-                    <a href="https://github.com/willckim/Purelytics" class="btn btn-outline" target="_blank">GitHub</a>
-                </div>
-            </div>
-            <p class="project-desc">
-                React Native mobile app that uses AI vision to scan product ingredient labels and deliver health assessments
-                with a color-coded 0-100 scoring system. Supports 12+ product categories with specialized supplement analysis
-                including bioavailability and interaction warnings. Suggests category-matched healthier alternatives with pricing data.
-            </p>
-            <p class="project-proof">
-                Multi-AI provider fallback hierarchy (Claude, Gemini, GPT-4o) ensures reliability with zero backend infrastructure.
-                Built with Expo SDK 54, React Navigation, and on-device credential storage.
-            </p>
-            <div class="tech-tags">
-                <span class="tag">React Native</span>
-                <span class="tag">Expo</span>
-                <span class="tag">Claude</span>
-                <span class="tag">GPT-4o</span>
-                <span class="tag">Gemini</span>
-                <span class="tag">Vision AI</span>
-                <span class="tag">Brave Search API</span>
-            </div>
-            <ul class="project-bullets">
-                <li>Built vision-based scanning pipeline that photographs ingredient labels for instant AI health evaluation.</li>
-                <li>Implemented multi-AI provider fallback (Claude, Gemini, GPT-4o) for high-availability analysis.</li>
-                <li>Created family profiles with health-specific filtering and a full scan archive history.</li>
-            </ul>
+  <!-- ---------- CONTACT ---------- -->
+  <section id="contact" class="block" data-screen-label="05 Contact" style="border-bottom: none;">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">§ 05 — Get in touch</div>
+          <h2 class="section-title">Let's <em>build</em> something.</h2>
         </div>
-
-        <div class="project-card">
-            <div class="project-header">
-                <div>
-                    <h3 class="project-title">Odyx HQ: Agentic Browser Automation</h3>
-                    <div class="metrics">
-                        <span class="metric-badge">✓ Claude-Powered</span>
-                        <span class="metric-badge">✓ Self-Healing Selectors</span>
-                    </div>
-                </div>
-                <div class="project-links">
-                    <a href="https://github.com/willckim/Odyx-HQ" class="btn btn-outline" target="_blank">GitHub</a>
-                </div>
-            </div>
-            <p class="project-desc">
-                Universal agentic Chrome extension that navigates, fills forms, and executes payments on any website
-                through a conversational side panel. Features an Action Tree that sends a pruned DOM representation (under 4K tokens)
-                to Claude for planning, with human-in-the-loop confirmation for sensitive operations like payments and authentication.
-            </p>
-            <p class="project-proof">
-                Manifest V3 Chrome extension with React 19 frontend, Express/Prisma/PostgreSQL backend, Redis-backed JWT auth,
-                and Stripe shared payment tokens. Multi-stage Docker containerization for deployment.
-            </p>
-            <div class="tech-tags">
-                <span class="tag">TypeScript</span>
-                <span class="tag">React 19</span>
-                <span class="tag">Claude API</span>
-                <span class="tag">Chrome Extension</span>
-                <span class="tag">Prisma</span>
-                <span class="tag">PostgreSQL</span>
-                <span class="tag">Redis</span>
-                <span class="tag">Stripe</span>
-            </div>
-            <ul class="project-bullets">
-                <li>Built Action Tree system that prunes and flattens DOM into under 4K tokens for efficient AI planning.</li>
-                <li>Implemented self-healing selector strategy with Claude Computer Use as fallback when selectors fail.</li>
-                <li>Created tier-based RBAC (Free/Pro/Enterprise) with comprehensive audit logging.</li>
-            </ul>
+        <div class="right">
+          Open to hybrid finance × engineering roles, AI consulting, and contract builds.
         </div>
+      </div>
 
-        <div class="project-card">
-            <div class="project-header">
-                <div>
-                    <h3 class="project-title">Rift Architect: Multi-Agent AI Gaming Coach</h3>
-                    <div class="metrics">
-                        <span class="metric-badge">✓ 4 Specialized Agents</span>
-                        <span class="metric-badge">✓ Vanguard Compliant</span>
-                    </div>
-                </div>
-                <div class="project-links">
-                    <a href="https://github.com/willckim/Rift-Architect" class="btn btn-outline" target="_blank">GitHub</a>
-                </div>
-            </div>
-            <p class="project-desc">
-                Multi-agent AI orchestrator for League of Legends that provides real-time coaching across champion select,
-                in-game, and post-game phases. Four specialized Claude-powered agents handle drafting recommendations,
-                macro strategy calls, enemy cooldown tracking with haste adjustments, and post-game wellness analysis.
-            </p>
-            <p class="project-proof">
-                Electron desktop app with automated client detection via lockfile polling, serial API queue with token-bucket
-                rate limiting, and interactive draggable overlays with persistent positioning.
-            </p>
-            <div class="tech-tags">
-                <span class="tag">Electron</span>
-                <span class="tag">Node.js</span>
-                <span class="tag">Claude SDK</span>
-                <span class="tag">SQLite</span>
-                <span class="tag">Riot API</span>
-                <span class="tag">Multi-Agent</span>
-            </div>
-            <ul class="project-bullets">
-                <li>Built 4 specialized Claude-powered agents: Drafting Oracle, Macro Strategist, Spell Tracker, and Tilt Guard.</li>
-                <li>Implemented serial API queue with token-bucket limiter and 80% auto-pause to stay within rate limits.</li>
-                <li>Created interactive overlays with screen-saver window level escalation for fullscreen visibility.</li>
-            </ul>
-        </div>
+      <a href="mailto:williamcjk11@gmail.com" class="contact-big">
+        williamcjk11<em>@</em>gmail.com <span class="arr">↗</span>
+      </a>
 
-        <div class="project-card">
-            <div class="project-header">
-                <div>
-                    <h3 class="project-title">HYROX Pace: Race Prediction Engine</h3>
-                    <div class="metrics">
-                        <span class="metric-badge">✓ 200K+ Race Results</span>
-                        <span class="metric-badge">✓ Wearable Integration</span>
-                    </div>
-                </div>
-                <div class="project-links">
-                    <a href="https://github.com/willckim/HYROX-Pace" class="btn btn-outline" target="_blank">GitHub</a>
-                </div>
-            </div>
-            <p class="project-desc">
-                Race prediction, pacing, and live execution app for HYROX athletes. 100% deterministic simulation engine
-                built on 200,000+ race results, championship timing data, and physiological research. Delivers three-tier
-                finish time predictions (conservative, likely, aggressive) with segment-by-segment pacing and risk analysis.
-            </p>
-            <p class="project-proof">
-                FastAPI async backend with Pydantic v2 and SQLAlchemy. React Native/Expo frontend with Zustand state management.
-                Apple Health and Google Fit integration with 30-second HR polling and redline alerts.
-            </p>
-            <div class="tech-tags">
-                <span class="tag">TypeScript</span>
-                <span class="tag">Python</span>
-                <span class="tag">FastAPI</span>
-                <span class="tag">React Native</span>
-                <span class="tag">Expo</span>
-                <span class="tag">Zustand</span>
-                <span class="tag">SQLAlchemy</span>
-            </div>
-            <ul class="project-bullets">
-                <li>Built deterministic simulation engine with fatigue accumulation modeling and compromised running post-stations.</li>
-                <li>Implemented live race tracking with wearable HR integration and visual redline alerts at 95%+ max HR.</li>
-                <li>Created three-tier prediction system with segment-by-segment pacing and contextual execution cues.</li>
-            </ul>
-        </div>
+      <div class="contact-list">
+        <a class="contact-cell" href="tel:+17734154606">
+          <div class="label">Phone</div>
+          <div class="value">(773) 415-4606</div>
+        </a>
+        <a class="contact-cell" href="https://www.linkedin.com/in/william-c-kim/" target="_blank" rel="noopener">
+          <div class="label">LinkedIn</div>
+          <div class="value">william-c-kim</div>
+        </a>
+        <a class="contact-cell" href="https://github.com/willckim" target="_blank" rel="noopener">
+          <div class="label">GitHub</div>
+          <div class="value">willckim</div>
+        </a>
+        <a class="contact-cell" href="/resume.pdf" download>
+          <div class="label">Résumé</div>
+          <div class="value">Download PDF ↓</div>
+        </a>
+      </div>
+    </div>
+  </section>
 
-    </section>
+  <!-- ---------- FOOTER ---------- -->
+  <footer class="foot">
+    <div class="wrap" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; width: 100%;">
+      <div class="copy">© 2026 William Kim · <em>Built from scratch in HTML &amp; CSS.</em></div>
+      <div>Last update — May 2026</div>
+    </div>
+  </footer>
 
-    <!-- ALL PROJECTS -->
-    <section id="projects" class="container">
-        <h2 class="section-title">Additional Projects</h2>
+  <!-- ---------- TWEAKS ---------- -->
+  <button class="tweaks-toggle" id="tweaksToggle" aria-label="Tweaks">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  </button>
 
-        <div class="projects-grid">
-            <div class="project-card-small">
-                <h3 class="project-title-small">LLM Orchestration Engine: Multi-Model Routing</h3>
-                <div class="metrics-small">
-                    <span class="metric-badge-small">AWS-Inspired Architecture</span>
-                </div>
-                <p class="project-desc-small">
-                    Provider-agnostic LLM orchestration backend that routes requests across OpenAI, Azure, ONNX, and AWS Bedrock
-                    based on task type, cost, and latency. Real-time metrics dashboard with p50/p95 latency tracking.
-                </p>
-                <div class="tech-tags-small">
-                    <span class="tag-small">Python</span>
-                    <span class="tag-small">FastAPI</span>
-                    <span class="tag-small">Docker</span>
-                    <span class="tag-small">OpenAI</span>
-                    <span class="tag-small">AWS Patterns</span>
-                </div>
-                <div class="project-links">
-                    <a href="https://www.llmorchestrationengine.com/" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
-                    <a href="https://github.com/willckim/LLM-Orchestration-Engine" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
-                </div>
-            </div>
+  <aside class="tweaks" id="tweaksPanel">
+    <h4>
+      <span>Tweaks</span>
+      <span class="close" id="tweaksClose">close</span>
+    </h4>
+    <div class="group">
+      <div class="gl">Theme</div>
+      <div class="seg" id="themeSeg">
+        <button data-theme="light" class="active">Paper</button>
+        <button data-theme="dark">Ink</button>
+      </div>
+    </div>
+    <div class="group">
+      <div class="gl">Accent</div>
+      <div class="swatches" id="accentSwatches">
+        <div class="sw active" data-accent="rust"   style="background:#b6451a"></div>
+        <div class="sw"        data-accent="forest" style="background:#2f6a3a"></div>
+        <div class="sw"        data-accent="cobalt" style="background:#2b4ed1"></div>
+        <div class="sw"        data-accent="ink"    style="background:#19170f"></div>
+      </div>
+    </div>
+  </aside>
 
-            <div class="project-card-small">
-                <h3 class="project-title-small">DataOps Copilot: AI Data Profiling & Quality</h3>
-                <div class="metrics-small">
-                    <span class="metric-badge-small">Multi-provider LLM</span>
-                </div>
-                <p class="project-desc-small">
-                    AI-powered data profiling platform that ingests CSV/Excel/JSON files and runs schema inference,
-                    anomaly detection, and data-quality profiling at scale through multi-provider LLM routing.
-                </p>
-                <div class="tech-tags-small">
-                    <span class="tag-small">FastAPI</span>
-                    <span class="tag-small">DuckDB</span>
-                    <span class="tag-small">PostgreSQL</span>
-                    <span class="tag-small">Cloud Run</span>
-                    <span class="tag-small">React</span>
-                </div>
-                <div class="project-links">
-                    <a href="https://www.dataopscopilot.com/" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
-                    <a href="https://github.com/willckim/DataOps-Copilot" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
-                </div>
-            </div>
+<script>
+  // Expandable project rows — animate max-height to scrollHeight
+  document.querySelectorAll('[data-row]').forEach(row => {
+    const detail = row.querySelector('.idx-detail');
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;
+      const isOpen = row.classList.toggle('open');
+      if (isOpen) {
+        detail.style.maxHeight = detail.scrollHeight + 'px';
+      } else {
+        detail.style.maxHeight = '0px';
+      }
+    });
+  });
+  // Recompute open rows on resize
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.index-row.open .idx-detail').forEach(d => {
+      d.style.maxHeight = d.scrollHeight + 'px';
+    });
+  });
 
-            <div class="project-card-small">
-                <h3 class="project-title-small">FP&A AI Dashboard: Financial Analysis</h3>
-                <div class="metrics-small">
-                    <span class="metric-badge-small">80% time reduction</span>
-                </div>
-                <p class="project-desc-small">
-                    Complete FP&A platform with automated variance analysis, rolling 3-6 month forecasts,
-                    and AI-generated executive briefs. Reduces manual reporting time by 80%.
-                </p>
-                <div class="tech-tags-small">
-                    <span class="tag-small">Python</span>
-                    <span class="tag-small">Pandas</span>
-                    <span class="tag-small">Financial Modeling</span>
-                    <span class="tag-small">Power BI</span>
-                    <span class="tag-small">Forecasting</span>
-                </div>
-                <div class="project-links">
-                    <a href="https://github.com/willckim/fpna-ai-dashboard" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
-                </div>
-            </div>
+  // Tweaks
+  const toggleBtn = document.getElementById('tweaksToggle');
+  const panel = document.getElementById('tweaksPanel');
+  const closeBtn = document.getElementById('tweaksClose');
+  toggleBtn.addEventListener('click', () => panel.classList.toggle('open'));
+  closeBtn.addEventListener('click', () => panel.classList.remove('open'));
 
-            <div class="project-card-small">
-                <h3 class="project-title-small">Snowflake + Power BI Sales Analytics</h3>
-                <div class="metrics-small">
-                    <span class="metric-badge-small">End-to-end pipeline</span>
-                </div>
-                <p class="project-desc-small">
-                    Complete sales analytics solution from data warehouse to visualization. ETL pipelines in Snowflake,
-                    star schema data models, and interactive Power BI dashboards with KPIs and drilldowns.
-                </p>
-                <div class="tech-tags-small">
-                    <span class="tag-small">Snowflake</span>
-                    <span class="tag-small">SQL</span>
-                    <span class="tag-small">ETL</span>
-                    <span class="tag-small">Power BI</span>
-                    <span class="tag-small">DAX</span>
-                </div>
-                <div class="project-links">
-                    <a href="https://app.snowflake.com/zmydbpf/fq34862/w3u0HWZNPryg/query" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
-                    <a href="https://github.com/willckim/snowflake-powerbi-sales-dashboard" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
-                </div>
-            </div>
-
-            <div class="project-card-small">
-                <h3 class="project-title-small">ClaimsInvestigator AI: Claims Analysis</h3>
-                <div class="metrics-small">
-                    <span class="metric-badge-small">Structured Investigation Plans</span>
-                </div>
-                <p class="project-desc-small">
-                    AI workflow that processes first-notice-of-loss narratives and policy data to generate structured
-                    investigation plans with prioritized actions, liability flags, and coverage issue detection.
-                </p>
-                <div class="tech-tags-small">
-                    <span class="tag-small">Python</span>
-                    <span class="tag-small">FastAPI</span>
-                    <span class="tag-small">LLM Reasoning</span>
-                    <span class="tag-small">Insurance</span>
-                    <span class="tag-small">REST APIs</span>
-                </div>
-                <div class="project-links">
-                    <a href="https://www.claiminvestigator-ai.com/" class="btn btn-primary" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">Live Demo</a>
-                    <a href="https://github.com/willckim/ClaimInvestigator-AI" class="btn btn-outline" target="_blank" style="font-size: 0.9rem; padding: 0.75rem 1.5rem;">GitHub</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- HIGHLIGHTS -->
-    <section id="highlights" class="container">
-        <h2 class="section-title">Professional Highlights</h2>
-        
-        <div class="highlights-grid">
-            <div class="highlight-card">
-                <h3>What I Do</h3>
-                <p>
-                    <strong>Staff Accountant at Ortho Molecular Products</strong> in Barrington, where I prepare and maintain
-                    financial and business transactions grounded in accounting principles and theory. I support the Fast Close
-                    process through reconciliations, assist with internal audits to ensure accurate financial reporting, and
-                    maintain fixed asset schedules with depreciation tracking. I also compile data for annual reviews and
-                    corporate tax filings, handle sales tax remittals, and continuously identify process improvements to
-                    streamline department operations.
-                </p>
-                <p style="margin-top: 1rem;">
-                    Outside of work, I build <strong>production-ready AI applications</strong>,
-                    <strong>full-stack systems</strong>, and <strong>data-driven tools</strong>. From LLM orchestration engines
-                    and multi-agent systems to mobile apps and browser automation, I bring a rare combination of
-                    <strong>financial acumen and engineering depth</strong>.
-                </p>
-            </div>
-
-            <div class="highlight-card">
-                <h3>Toolbox</h3>
-                <ul>
-                    <li><strong>Finance:</strong> GAAP, Financial Reporting, Variance Analysis, Forecasting, FP&A, GL Reconciliation</li>
-                    <li><strong>AI/ML:</strong> PyTorch, HuggingFace, LoRA/PEFT, RAG, Embeddings, ONNX Runtime, OCR, Prompt Engineering</li>
-                    <li><strong>Backend:</strong> Python, FastAPI, Node.js, PostgreSQL, DuckDB, Redis, Docker, REST APIs</li>
-                    <li><strong>Frontend:</strong> React, Next.js, Expo/React Native, Tailwind CSS, TypeScript</li>
-                    <li><strong>Cloud/DevOps:</strong> AWS, GCP, Azure, Vercel, Cloud Run, GitHub Actions, CI/CD</li>
-                    <li><strong>Data/Analytics:</strong> SQL, Pandas, Snowflake, Power BI, Tableau, DAX, ETL Pipelines</li>
-                    <li><strong>Languages:</strong> Python, TypeScript/JavaScript, SQL, Java, C++, C#</li>
-                </ul>
-            </div>
-
-            <div class="highlight-card">
-                <h3>Key Achievements</h3>
-                <ul>
-                    <li><span class="check">✓</span><strong>Multi-provider LLM orchestration</strong> with intelligent routing based on cost, latency, and task type</li>
-                    <li><span class="check">✓</span><strong>80% reduction</strong> in manual reporting time through automated FP&A dashboards</li>
-                    <li><span class="check">✓</span><strong>End-to-end ownership</strong> of data pipelines from extraction to visualization</li>
-                    <li><span class="check">✓</span><strong>Production deployments</strong> on AWS, GCP Cloud Run, and Vercel with CI/CD</li>
-                    <li><span class="check">✓</span><strong>95%+ accuracy</strong> in automated data extraction and processing systems</li>
-                </ul>
-            </div>
-
-            <div class="highlight-card">
-                <h3>Education & Certification</h3>
-                <p><strong>University of Pittsburgh</strong> | B.S. in Computer Science (April 2024)</p>
-                <ul style="margin-top: 1rem;">
-                    <li>AWS Cloud Solutions Architecture | <em>Issued Jan 2026</em></li>
-                    <li>IBM Applied AI Developer | <em>Issued Oct 2025</em></li>
-                    <li>Generative AI for Cybersecurity | <em>Issued Jan 2026</em></li>
-                </ul>
-            </div>
-        </div>
-    </section>
-
-    <!-- ABOUT -->
-    <section id="about" class="container">
-        <h2 class="section-title">About Me</h2>
-        <div class="project-card">
-            <p class="project-desc" style="font-size: 1.1rem;">
-                I'm a <strong style="color: #667eea;">Staff Accountant at Ortho Molecular Products</strong> with a
-                <strong style="color: #667eea;">B.S. in Computer Science</strong> from the University of Pittsburgh, and I never stopped building.
-                While I handle financial reporting and operations during the day, I continuously ship AI-powered applications,
-                full-stack systems, and multi-agent platforms on my own time. I'm the person who automates the spreadsheet,
-                then builds the AI that replaces the automation. As AI reshapes every industry, having someone who
-                understands both the <strong style="color: #667eea;">numbers and the neural nets</strong> isn't just useful, it's a
-                competitive advantage. Finance, engineering, AI: <strong style="color: #667eea;">I don't pick one lane</strong>.
-            </p>
-        </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact" class="container">
-        <h2 class="section-title">Get In Touch</h2>
-        <div class="contact-grid">
-            <a href="mailto:williamcjk11@gmail.com" class="contact-card">
-                <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                <span>williamcjk11@gmail.com</span>
-            </a>
-            <a href="tel:+17734154606" class="contact-card">
-                <svg class="contact-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-                <span>(773) 415-4606</span>
-            </a>
-            <a href="https://www.linkedin.com/in/william-c-kim/" class="contact-card" target="_blank">
-                <svg class="contact-icon" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                </svg>
-                <span>LinkedIn</span>
-            </a>
-            <a href="https://github.com/willckim" class="contact-card" target="_blank">
-                <svg class="contact-icon" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                </svg>
-                <span>GitHub</span>
-            </a>
-        </div>
-        <div style="text-align: center; margin-top: 2rem;">
-            <a href="/resume.pdf" class="btn btn-primary" download>
-                📥 Download Full Resume
-            </a>
-        </div>
-    </section>
-
-    <footer>
-        <p>© 2026 William Kim • Music: Lost Sky - Fearless pt.II (feat. Chris Linton) [NCS Release] • <a href="http://ncs.io/Fearless2" target="_blank">Free Download</a></p>
-    </footer>
+  document.querySelectorAll('#themeSeg button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#themeSeg button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      document.body.dataset.theme = b.dataset.theme;
+    });
+  });
+  document.querySelectorAll('#accentSwatches .sw').forEach(s => {
+    s.addEventListener('click', () => {
+      document.querySelectorAll('#accentSwatches .sw').forEach(x => x.classList.remove('active'));
+      s.classList.add('active');
+      document.body.dataset.accent = s.dataset.accent;
+    });
+  });
+</script>
 </body>
 </html>
