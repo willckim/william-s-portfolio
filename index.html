@@ -108,7 +108,23 @@
     padding: clamp(56px, 9vw, 140px) 0 clamp(40px, 6vw, 80px);
     border-bottom: 1px solid var(--line);
     position: relative;
+    overflow: hidden;
   }
+  /* ---------- HERO 3D (WebGL crystal) ---------- */
+  .hero-3d {
+    position: absolute;
+    right: 3%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26%;
+    height: 50%;
+    z-index: 0;
+    pointer-events: none;
+  }
+  @media (max-width: 900px) { .hero-3d { width: 32%; height: 38%; opacity: 0.8; } }
+  @media (max-width: 600px) { .hero-3d { width: 42%; height: 30%; opacity: 0.5; right: 0; top: 38%; } }
+  .hero-3d canvas { width: 100% !important; height: 100% !important; display: block; }
+  .hero-inner { position: relative; z-index: 1; }
   .status-row {
     display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center;
     font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
@@ -493,6 +509,14 @@
   .cert .when { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
 
   /* ---------- CONTACT ---------- */
+  .contact-stage {
+    display: grid; grid-template-columns: 1fr auto;
+    gap: clamp(24px, 4vw, 56px); align-items: center;
+  }
+  @media (max-width: 720px) { .contact-stage { grid-template-columns: 1fr; } }
+  .contact-3d { width: 180px; height: 180px; justify-self: end; pointer-events: none; }
+  @media (max-width: 720px) { .contact-3d { justify-self: start; width: 120px; height: 120px; } }
+  .contact-3d canvas { width: 100% !important; height: 100% !important; display: block; }
   .contact-big {
     display: block;
     font-family: var(--sans);
@@ -623,7 +647,8 @@
 
   <!-- ---------- HERO ---------- -->
   <section id="top" class="hero" data-screen-label="01 Hero">
-    <div class="wrap">
+    <div class="hero-3d"><canvas id="hero-canvas"></canvas></div>
+    <div class="hero-inner wrap">
       <div class="status-row">
         <span><span class="dot"></span>Currently shipping &nbsp;·&nbsp; Barrington, IL</span>
         <span class="sep">/</span>
@@ -1088,9 +1113,12 @@
         </div>
       </div>
 
-      <a href="mailto:williamcjk11@gmail.com" class="contact-big">
-        williamcjk11<em>@</em>gmail.com <span class="arr">↗</span>
-      </a>
+      <div class="contact-stage">
+        <a href="mailto:williamcjk11@gmail.com" class="contact-big">
+          williamcjk11<em>@</em>gmail.com <span class="arr">↗</span>
+        </a>
+        <div class="contact-3d"><canvas id="contact-canvas"></canvas></div>
+      </div>
 
       <div class="contact-list">
         <a class="contact-cell" href="tel:+17734154606">
@@ -1116,7 +1144,7 @@
   <!-- ---------- FOOTER ---------- -->
   <footer class="foot">
     <div class="wrap" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; width: 100%;">
-      <div class="copy">© 2026 William Kim · <em>Built from scratch in HTML &amp; CSS.</em></div>
+      <div class="copy">© 2026 William Kim · <em>Built from scratch in HTML, CSS &amp; WebGL.</em></div>
       <div>Last update · May 2026</div>
     </div>
   </footer>
@@ -1150,8 +1178,16 @@
         <div class="sw"        data-accent="ink"    style="background:#19170f"></div>
       </div>
     </div>
+    <div class="group">
+      <div class="gl">Hero 3D</div>
+      <div class="seg" id="heroSeg">
+        <button data-hero="on" class="active">On</button>
+        <button data-hero="off">Off</button>
+      </div>
+    </div>
   </aside>
 
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
 <script>
   // Expandable project rows — animate max-height to scrollHeight
   document.querySelectorAll('[data-row]').forEach(row => {
@@ -1194,6 +1230,245 @@
       document.body.dataset.accent = s.dataset.accent;
     });
   });
+  document.querySelectorAll('#heroSeg button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#heroSeg button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      const w = document.querySelector('.hero-3d');
+      if (w) w.style.display = b.dataset.hero === 'on' ? 'block' : 'none';
+    });
+  });
+
+  // ---- Shared helper: read a CSS custom-property hex and build a THREE.Color.
+  // Parses the existing --accent / --ink tokens directly (matches the design's
+  // numeric 0-1 path, so the accent reads the same and recolors live with theme).
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function cssColor(varName, fallback) {
+    let hex = (getComputedStyle(document.body).getPropertyValue(varName).trim() || fallback).replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    return new THREE.Color(
+      parseInt(hex.slice(0, 2), 16) / 255,
+      parseInt(hex.slice(2, 4), 16) / 255,
+      parseInt(hex.slice(4, 6), 16) / 255
+    );
+  }
+
+  // ---- Hero crystal — faceted octahedron, thin-film iridescence, mouse-reactive.
+  (function initHero() {
+    if (typeof THREE === 'undefined') return;
+    const canvas = document.getElementById('hero-canvas');
+    const wrap = document.querySelector('.hero-3d');
+    const hero = document.querySelector('.hero');
+    if (!canvas || !wrap || !hero) return;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+    camera.position.set(0, 0, 4.2);
+
+    const mat = new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: { value: 0 },
+        uAccent: { value: cssColor('--accent', '#b6451a') },
+        uMouse: { value: new THREE.Vector2(0, 0) },
+        uOpacity: { value: 0.92 },
+      },
+      vertexShader: `
+        varying vec3 vNormal;
+        varying vec3 vPos;
+        uniform vec2 uMouse;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          mv.x += uMouse.x * 0.15;
+          mv.y += uMouse.y * 0.15;
+          vPos = mv.xyz;
+          gl_Position = projectionMatrix * mv;
+        }
+      `,
+      fragmentShader: `
+        precision highp float;
+        varying vec3 vNormal;
+        varying vec3 vPos;
+        uniform vec3 uAccent;
+        uniform float uTime;
+        uniform float uOpacity;
+        vec3 spectrum(float t) {
+          vec3 a = vec3(0.55, 0.42, 0.32);
+          vec3 b = vec3(0.45, 0.35, 0.30);
+          vec3 c = vec3(1.00, 1.00, 1.00);
+          vec3 d = vec3(0.00, 0.10, 0.20);
+          return a + b * cos(6.2831 * (c * t + d));
+        }
+        void main() {
+          vec3 viewDir = normalize(-vPos);
+          float fres = 1.0 - max(dot(vNormal, viewDir), 0.0);
+          float fresSharp = pow(fres, 2.2);
+          float t = fres * 0.8 + uTime * 0.04 + vNormal.y * 0.15;
+          vec3 irid = spectrum(t);
+          vec3 warm = vec3(0.96, 0.92, 0.84);
+          vec3 cool = vec3(0.10, 0.09, 0.07);
+          vec3 base = mix(cool, warm, vNormal.y * 0.5 + 0.5);
+          vec3 col  = mix(base, irid, 0.40);
+          col       = mix(col, uAccent, fresSharp * 0.75);
+          col += vec3(fresSharp * 0.20);
+          gl_FragColor = vec4(col, uOpacity);
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+    });
+    const mesh = new THREE.Mesh(new THREE.OctahedronGeometry(1.05, 0), mat);
+    scene.add(mesh);
+
+    const wire = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.OctahedronGeometry(1.055, 0)),
+      new THREE.LineBasicMaterial({ transparent: true, opacity: 0.30 })
+    );
+    scene.add(wire);
+    const ghost = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.OctahedronGeometry(0.65, 0)),
+      new THREE.LineBasicMaterial({ transparent: true, opacity: 0.15 })
+    );
+    scene.add(ghost);
+
+    const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+    window.addEventListener('mousemove', (e) => {
+      const r = hero.getBoundingClientRect();
+      mouse.tx = ((e.clientX - r.left) / r.width) * 2 - 1;
+      mouse.ty = -((e.clientY - r.top) / r.height) * 2 + 1;
+    });
+
+    function resize() {
+      const r = wrap.getBoundingClientRect();
+      const w = Math.max(r.width, 1), h = Math.max(r.height, 1);
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    new ResizeObserver(resize).observe(wrap);
+
+    function paint(t) {
+      mat.uniforms.uTime.value = t;
+      mat.uniforms.uAccent.value = cssColor('--accent', '#b6451a');
+      const ink = cssColor('--ink', '#19170f');
+      wire.material.color.copy(ink);
+      ghost.material.color.copy(ink);
+      mat.uniforms.uMouse.value.set(mouse.x, mouse.y);
+      mesh.rotation.x = t * 0.10 + mouse.y * 0.25;
+      mesh.rotation.y = t * 0.14 + mouse.x * 0.4;
+      mesh.rotation.z = Math.sin(t * 0.2) * 0.08;
+      wire.rotation.copy(mesh.rotation);
+      ghost.rotation.x = -t * 0.16;
+      ghost.rotation.y = -t * 0.22;
+      renderer.render(scene, camera);
+    }
+
+    if (reduceMotion) { paint(2.2); return; }
+    const clock = new THREE.Clock();
+    (function loop() {
+      mouse.x += (mouse.tx - mouse.x) * 0.05;
+      mouse.y += (mouse.ty - mouse.y) * 0.05;
+      paint(clock.getElapsedTime());
+      requestAnimationFrame(loop);
+    })();
+  })();
+
+  // ---- Contact crystal — smaller sibling, same shader language.
+  (function initContact() {
+    if (typeof THREE === 'undefined') return;
+    const canvas = document.getElementById('contact-canvas');
+    const wrap = canvas && canvas.parentElement;
+    if (!canvas || !wrap) return;
+
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+    camera.position.set(0, 0, 3.6);
+
+    const mat = new THREE.ShaderMaterial({
+      uniforms: { uTime: { value: 0 }, uAccent: { value: cssColor('--accent', '#b6451a') } },
+      vertexShader: `
+        varying vec3 vNormal; varying vec3 vPos;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          vPos = mv.xyz;
+          gl_Position = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        precision highp float;
+        varying vec3 vNormal; varying vec3 vPos;
+        uniform vec3 uAccent; uniform float uTime;
+        vec3 spectrum(float t) {
+          vec3 a = vec3(0.55, 0.42, 0.32);
+          vec3 b = vec3(0.45, 0.35, 0.30);
+          vec3 c = vec3(1.00, 1.00, 1.00);
+          vec3 d = vec3(0.00, 0.10, 0.20);
+          return a + b * cos(6.2831 * (c * t + d));
+        }
+        void main() {
+          vec3 viewDir = normalize(-vPos);
+          float fres = 1.0 - max(dot(vNormal, viewDir), 0.0);
+          float fresSharp = pow(fres, 2.2);
+          float t = fres * 0.8 + uTime * 0.04 + vNormal.y * 0.15;
+          vec3 irid = spectrum(t);
+          vec3 base = mix(vec3(0.10,0.09,0.07), vec3(0.96,0.92,0.84), vNormal.y * 0.5 + 0.5);
+          vec3 col = mix(base, irid, 0.40);
+          col = mix(col, uAccent, fresSharp * 0.75);
+          col += vec3(fresSharp * 0.20);
+          gl_FragColor = vec4(col, 0.92);
+        }`,
+      transparent: true,
+      depthWrite: false,
+    });
+    const core = new THREE.Mesh(new THREE.OctahedronGeometry(1.0, 0), mat);
+    scene.add(core);
+    const edges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.OctahedronGeometry(1.005, 0)),
+      new THREE.LineBasicMaterial({ transparent: true, opacity: 0.30 })
+    );
+    scene.add(edges);
+    const ghost = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.OctahedronGeometry(0.6, 0)),
+      new THREE.LineBasicMaterial({ transparent: true, opacity: 0.15 })
+    );
+    scene.add(ghost);
+
+    function resize() {
+      const r = wrap.getBoundingClientRect();
+      const w = Math.max(r.width, 1), h = Math.max(r.height, 1);
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    new ResizeObserver(resize).observe(wrap);
+
+    function paint(t) {
+      mat.uniforms.uTime.value = t;
+      mat.uniforms.uAccent.value = cssColor('--accent', '#b6451a');
+      const ink = cssColor('--ink', '#19170f');
+      edges.material.color.copy(ink);
+      ghost.material.color.copy(ink);
+      core.rotation.x = t * 0.16;
+      core.rotation.y = t * 0.22;
+      edges.rotation.copy(core.rotation);
+      ghost.rotation.x = -t * 0.18;
+      ghost.rotation.y = -t * 0.24;
+      renderer.render(scene, camera);
+    }
+
+    if (reduceMotion) { paint(2.2); return; }
+    const clock = new THREE.Clock();
+    (function loop() {
+      paint(clock.getElapsedTime());
+      requestAnimationFrame(loop);
+    })();
+  })();
 </script>
 </body>
 </html>
