@@ -124,6 +124,14 @@
   @media (max-width: 900px) { .hero-3d { width: 32%; height: 38%; opacity: 0.8; } }
   @media (max-width: 600px) { .hero-3d { width: 42%; height: 30%; opacity: 0.5; right: 0; top: 38%; } }
   .hero-3d canvas { width: 100% !important; height: 100% !important; display: block; }
+  /* ---------- HERO quantum field (WebGL particles) ---------- */
+  #quantum-scene {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    opacity: 0; transition: opacity 1.2s ease;
+  }
+  #quantum-scene.ready { opacity: 1; }
+  #quantum-scene canvas { width: 100%; height: 100%; display: block; }
   .hero-inner { position: relative; z-index: 1; }
   .status-row {
     display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center;
@@ -647,6 +655,7 @@
 
   <!-- ---------- HERO ---------- -->
   <section id="top" class="hero" data-screen-label="01 Hero">
+    <div id="quantum-scene" aria-hidden="true"></div>
     <div class="hero-3d"><canvas id="hero-canvas"></canvas></div>
     <div class="hero-inner wrap">
       <div class="status-row">
@@ -1249,8 +1258,11 @@
     b.addEventListener('click', () => {
       document.querySelectorAll('#heroSeg button').forEach(x => x.classList.remove('active'));
       b.classList.add('active');
+      const show = b.dataset.hero === 'on' ? 'block' : 'none';
       const w = document.querySelector('.hero-3d');
-      if (w) w.style.display = b.dataset.hero === 'on' ? 'block' : 'none';
+      if (w) w.style.display = show;
+      const q = document.getElementById('quantum-scene');
+      if (q) q.style.display = show;
     });
   });
 
@@ -1276,7 +1288,10 @@
     const hero = document.querySelector('.hero');
     if (!canvas || !wrap || !hero) return;
 
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    } catch (e) { return; }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
@@ -1398,7 +1413,10 @@
     const wrap = canvas && canvas.parentElement;
     if (!canvas || !wrap) return;
 
-    const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    } catch (e) { return; }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
@@ -1483,6 +1501,157 @@
       paint(clock.getElapsedTime());
       requestAnimationFrame(loop);
     })();
+  })();
+
+  // ---- Hero quantum field — entangled particle pairs drifting behind the headline.
+  (function initQuantumField() {
+    if (typeof THREE === 'undefined' || reduceMotion) return;
+    const container = document.getElementById('quantum-scene');
+    const hero = document.querySelector('.hero');
+    if (!container || !hero) return;
+
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    } catch (e) { return; }
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    container.appendChild(renderer.domElement);
+
+    const mobile = window.innerWidth < 760;
+    const POINTS = mobile ? 250 : 600;
+    const PAIRS  = mobile ? 20 : 40;
+    const RADIUS = 14;
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+    camera.position.z = 26;
+
+    const field = new THREE.Group();
+    field.position.x = mobile ? 2 : 5; // bias right so the headline stays clear
+    scene.add(field);
+
+    // Loose sphere of points; base positions kept separate for the sine drift.
+    const base = new Float32Array(POINTS * 3);
+    const phase = new Float32Array(POINTS);
+    for (let i = 0; i < POINTS; i++) {
+      const u = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2;
+      const s = Math.sqrt(1 - u * u), r = RADIUS * Math.cbrt(Math.random());
+      base[i * 3]     = r * s * Math.cos(a);
+      base[i * 3 + 1] = r * s * Math.sin(a);
+      base[i * 3 + 2] = r * u;
+      phase[i] = Math.random() * Math.PI * 2;
+    }
+    const pos = new Float32Array(base);
+    const pointsGeo = new THREE.BufferGeometry();
+    pointsGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const pointsMat = new THREE.PointsMaterial({ size: 0.06, transparent: true, opacity: 0.55 });
+    field.add(new THREE.Points(pointsGeo, pointsMat));
+
+    // Entangled pairs — distinct point indices joined by thin accent lines.
+    const pairIdx = [];
+    const used = new Set();
+    while (pairIdx.length < PAIRS * 2) {
+      const i = Math.floor(Math.random() * POINTS);
+      if (!used.has(i)) { used.add(i); pairIdx.push(i); }
+    }
+    const linePos = new Float32Array(PAIRS * 2 * 3);
+    const lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute('position', new THREE.BufferAttribute(linePos, 3));
+    const lineMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.35 });
+    field.add(new THREE.LineSegments(lineGeo, lineMat));
+
+    // Flash overlay — one pair at a time eases to full opacity, then back.
+    const flashGeo = new THREE.BufferGeometry();
+    flashGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3));
+    const flashPointMat = new THREE.PointsMaterial({ size: 0.06, transparent: true, opacity: 0, depthWrite: false });
+    const flashLineMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
+    field.add(new THREE.Points(flashGeo, flashPointMat));
+    field.add(new THREE.Line(flashGeo, flashLineMat));
+
+    const RISE = 300, HOLD = 300, FALL = 700;
+    const easeOut = x => 1 - Math.pow(1 - x, 3);
+    let firePair = -1, fireStart = 0, nextFire = performance.now() + 4000 + Math.random() * 2000;
+
+    const scrollLink = !mobile;
+    let camZ = 26, tiltX = 0;
+
+    function resize() {
+      const r = container.getBoundingClientRect();
+      const w = Math.max(r.width, 1), h = Math.max(r.height, 1);
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 200);
+    });
+
+    function frame(now) {
+      raf = requestAnimationFrame(frame);
+      const t = now * 0.001;
+
+      // Damped scroll link: slow push-in and tilt across the hero's height.
+      if (scrollLink) {
+        const ratio = Math.min(Math.max(window.scrollY / Math.max(hero.offsetHeight, 1), 0), 1);
+        camZ  += ((26 - 8 * ratio) - camZ) * 0.06;
+        tiltX += ((-0.15 * ratio) - tiltX) * 0.06;
+        camera.position.z = camZ;
+        field.rotation.x = tiltX;
+      }
+      field.rotation.y += 0.0008;
+
+      for (let i = 0; i < POINTS; i++) {
+        const p = phase[i], j = i * 3;
+        pos[j]     = base[j]     + Math.sin(t * 0.6 + p) * 0.02;
+        pos[j + 1] = base[j + 1] + Math.sin(t * 0.5 + p * 1.7) * 0.02;
+        pos[j + 2] = base[j + 2] + Math.sin(t * 0.7 + p * 2.3) * 0.02;
+      }
+      pointsGeo.attributes.position.needsUpdate = true;
+      for (let k = 0; k < PAIRS * 2; k++) {
+        const j = pairIdx[k] * 3;
+        linePos[k * 3] = pos[j]; linePos[k * 3 + 1] = pos[j + 1]; linePos[k * 3 + 2] = pos[j + 2];
+      }
+      lineGeo.attributes.position.needsUpdate = true;
+
+      if (firePair < 0 && now >= nextFire) { firePair = Math.floor(Math.random() * PAIRS); fireStart = now; }
+      if (firePair >= 0) {
+        const e = now - fireStart;
+        let g = 0;
+        if (e < RISE) g = easeOut(e / RISE);
+        else if (e < RISE + HOLD) g = 1;
+        else if (e < RISE + HOLD + FALL) g = 1 - easeOut((e - RISE - HOLD) / FALL);
+        else { firePair = -1; nextFire = now + 4000 + Math.random() * 2000; }
+        if (firePair >= 0) {
+          const fp = flashGeo.attributes.position.array;
+          const a = pairIdx[firePair * 2] * 3, b = pairIdx[firePair * 2 + 1] * 3;
+          fp[0] = pos[a]; fp[1] = pos[a + 1]; fp[2] = pos[a + 2];
+          fp[3] = pos[b]; fp[4] = pos[b + 1]; fp[5] = pos[b + 2];
+          flashGeo.attributes.position.needsUpdate = true;
+        }
+        flashPointMat.opacity = g;
+        flashPointMat.size = 0.06 + g * 0.06;
+        flashLineMat.opacity = g;
+      }
+
+      // Recolor from CSS tokens each frame so theme/accent changes apply live.
+      pointsMat.color.copy(cssColor('--ink', '#19170f'));
+      flashPointMat.color.copy(pointsMat.color);
+      lineMat.color.copy(cssColor('--accent', '#b6451a'));
+      flashLineMat.color.copy(lineMat.color);
+
+      renderer.render(scene, camera);
+      container.classList.add('ready');
+    }
+
+    // Render only while the hero is on screen.
+    let raf = 0, running = false;
+    new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !running) { running = true; raf = requestAnimationFrame(frame); }
+      else if (!entry.isIntersecting && running) { running = false; cancelAnimationFrame(raf); }
+    }).observe(hero);
   })();
 </script>
 </body>
