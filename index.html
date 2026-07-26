@@ -110,25 +110,17 @@
     position: relative;
     overflow: hidden;
   }
-  /* ---------- HERO 3D (WebGL crystal) ---------- */
-  .hero-3d {
-    position: absolute;
-    right: 3%;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 26%;
-    height: 50%;
-    z-index: 0;
-    pointer-events: none;
-  }
-  @media (max-width: 900px) { .hero-3d { width: 32%; height: 38%; opacity: 0.8; } }
-  @media (max-width: 600px) { .hero-3d { width: 42%; height: 30%; opacity: 0.5; right: 0; top: 38%; } }
-  .hero-3d canvas { width: 100% !important; height: 100% !important; display: block; }
-  /* ---------- HERO quantum field (WebGL particles) ---------- */
+  /* ---------- HERO field — ledger to graph (WebGL) ---------- */
+  /* The radial mask dissolves the field into the paper instead of clipping it
+     at a hard canvas edge. That soft boundary is most of the atmosphere. */
   #quantum-scene {
     position: absolute; inset: 0;
     z-index: 0; pointer-events: none;
-    opacity: 0; transition: opacity 1.2s ease;
+    opacity: 0; transition: opacity 1.4s ease;
+    -webkit-mask-image: radial-gradient(ellipse 82% 74% at 58% 50%,
+      #000 34%, transparent 84%);
+            mask-image: radial-gradient(ellipse 82% 74% at 58% 50%,
+      #000 34%, transparent 84%);
   }
   #quantum-scene.ready { opacity: 1; }
   #quantum-scene canvas { width: 100%; height: 100%; display: block; }
@@ -656,7 +648,6 @@
   <!-- ---------- HERO ---------- -->
   <section id="top" class="hero" data-screen-label="01 Hero">
     <div id="quantum-scene" aria-hidden="true"></div>
-    <div class="hero-3d"><canvas id="hero-canvas"></canvas></div>
     <div class="hero-inner wrap">
       <div class="status-row">
         <span><span class="dot"></span>Currently shipping &nbsp;·&nbsp; Barrington, IL</span>
@@ -1211,7 +1202,9 @@
     </div>
   </aside>
 
-  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
+          integrity="sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script>
   // Expandable project rows — animate max-height to scrollHeight
   document.querySelectorAll('[data-row]').forEach(row => {
@@ -1245,6 +1238,7 @@
       document.querySelectorAll('#themeSeg button').forEach(x => x.classList.remove('active'));
       b.classList.add('active');
       document.body.dataset.theme = b.dataset.theme;
+      heroField.refresh();
     });
   });
   document.querySelectorAll('#accentSwatches .sw').forEach(s => {
@@ -1252,17 +1246,16 @@
       document.querySelectorAll('#accentSwatches .sw').forEach(x => x.classList.remove('active'));
       s.classList.add('active');
       document.body.dataset.accent = s.dataset.accent;
+      heroField.refresh();
     });
   });
+  // Off tears the scene all the way down (buffers, programs, context), not just
+  // hides the canvas. On rebuilds it from scratch.
   document.querySelectorAll('#heroSeg button').forEach(b => {
     b.addEventListener('click', () => {
       document.querySelectorAll('#heroSeg button').forEach(x => x.classList.remove('active'));
       b.classList.add('active');
-      const show = b.dataset.hero === 'on' ? 'block' : 'none';
-      const w = document.querySelector('.hero-3d');
-      if (w) w.style.display = show;
-      const q = document.getElementById('quantum-scene');
-      if (q) q.style.display = show;
+      if (b.dataset.hero === 'on') heroField.mount(); else heroField.unmount();
     });
   });
 
@@ -1280,132 +1273,6 @@
     );
   }
 
-  // ---- Hero crystal — faceted octahedron, thin-film iridescence, mouse-reactive.
-  (function initHero() {
-    if (typeof THREE === 'undefined') return;
-    const canvas = document.getElementById('hero-canvas');
-    const wrap = document.querySelector('.hero-3d');
-    const hero = document.querySelector('.hero');
-    if (!canvas || !wrap || !hero) return;
-
-    let renderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
-    } catch (e) { return; }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
-    camera.position.set(0, 0, 4.2);
-
-    const mat = new THREE.ShaderMaterial({
-      uniforms: {
-        uTime: { value: 0 },
-        uAccent: { value: cssColor('--accent', '#b6451a') },
-        uMouse: { value: new THREE.Vector2(0, 0) },
-        uOpacity: { value: 0.92 },
-      },
-      vertexShader: `
-        varying vec3 vNormal;
-        varying vec3 vPos;
-        uniform vec2 uMouse;
-        void main() {
-          vNormal = normalize(normalMatrix * normal);
-          vec4 mv = modelViewMatrix * vec4(position, 1.0);
-          mv.x += uMouse.x * 0.15;
-          mv.y += uMouse.y * 0.15;
-          vPos = mv.xyz;
-          gl_Position = projectionMatrix * mv;
-        }
-      `,
-      fragmentShader: `
-        precision highp float;
-        varying vec3 vNormal;
-        varying vec3 vPos;
-        uniform vec3 uAccent;
-        uniform float uTime;
-        uniform float uOpacity;
-        vec3 spectrum(float t) {
-          vec3 a = vec3(0.55, 0.42, 0.32);
-          vec3 b = vec3(0.45, 0.35, 0.30);
-          vec3 c = vec3(1.00, 1.00, 1.00);
-          vec3 d = vec3(0.00, 0.10, 0.20);
-          return a + b * cos(6.2831 * (c * t + d));
-        }
-        void main() {
-          vec3 viewDir = normalize(-vPos);
-          float fres = 1.0 - max(dot(vNormal, viewDir), 0.0);
-          float fresSharp = pow(fres, 2.2);
-          float t = fres * 0.8 + uTime * 0.04 + vNormal.y * 0.15;
-          vec3 irid = spectrum(t);
-          vec3 warm = vec3(0.96, 0.92, 0.84);
-          vec3 cool = vec3(0.10, 0.09, 0.07);
-          vec3 base = mix(cool, warm, vNormal.y * 0.5 + 0.5);
-          vec3 col  = mix(base, irid, 0.40);
-          col       = mix(col, uAccent, fresSharp * 0.75);
-          col += vec3(fresSharp * 0.20);
-          gl_FragColor = vec4(col, uOpacity);
-        }
-      `,
-      transparent: true,
-      depthWrite: false,
-    });
-    const mesh = new THREE.Mesh(new THREE.OctahedronGeometry(1.05, 0), mat);
-    scene.add(mesh);
-
-    const wire = new THREE.LineSegments(
-      new THREE.EdgesGeometry(new THREE.OctahedronGeometry(1.055, 0)),
-      new THREE.LineBasicMaterial({ transparent: true, opacity: 0.30 })
-    );
-    scene.add(wire);
-    const ghost = new THREE.LineSegments(
-      new THREE.EdgesGeometry(new THREE.OctahedronGeometry(0.65, 0)),
-      new THREE.LineBasicMaterial({ transparent: true, opacity: 0.15 })
-    );
-    scene.add(ghost);
-
-    const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
-    window.addEventListener('mousemove', (e) => {
-      const r = hero.getBoundingClientRect();
-      mouse.tx = ((e.clientX - r.left) / r.width) * 2 - 1;
-      mouse.ty = -((e.clientY - r.top) / r.height) * 2 + 1;
-    });
-
-    function resize() {
-      const r = wrap.getBoundingClientRect();
-      const w = Math.max(r.width, 1), h = Math.max(r.height, 1);
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    }
-    resize();
-    new ResizeObserver(resize).observe(wrap);
-
-    function paint(t) {
-      mat.uniforms.uTime.value = t;
-      mat.uniforms.uAccent.value = cssColor('--accent', '#b6451a');
-      const ink = cssColor('--ink', '#19170f');
-      wire.material.color.copy(ink);
-      ghost.material.color.copy(ink);
-      mat.uniforms.uMouse.value.set(mouse.x, mouse.y);
-      mesh.rotation.x = t * 0.10 + mouse.y * 0.25;
-      mesh.rotation.y = t * 0.14 + mouse.x * 0.4;
-      mesh.rotation.z = Math.sin(t * 0.2) * 0.08;
-      wire.rotation.copy(mesh.rotation);
-      ghost.rotation.x = -t * 0.16;
-      ghost.rotation.y = -t * 0.22;
-      renderer.render(scene, camera);
-    }
-
-    if (reduceMotion) { paint(2.2); return; }
-    const clock = new THREE.Clock();
-    (function loop() {
-      mouse.x += (mouse.tx - mouse.x) * 0.05;
-      mouse.y += (mouse.ty - mouse.y) * 0.05;
-      paint(clock.getElapsedTime());
-      requestAnimationFrame(loop);
-    })();
-  })();
-
   // ---- Contact crystal — smaller sibling, same shader language.
   (function initContact() {
     if (typeof THREE === 'undefined') return;
@@ -1417,6 +1284,9 @@
     try {
       renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     } catch (e) { return; }
+    // r128 predates automatic colour management; this reproduces the encoding the
+    // crystal was authored against so it renders exactly as before.
+    renderer.outputEncoding = THREE.sRGBEncoding;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
@@ -1503,156 +1373,402 @@
     })();
   })();
 
-  // ---- Hero quantum field — entangled particle pairs drifting behind the headline.
-  (function initQuantumField() {
-    if (typeof THREE === 'undefined' || reduceMotion) return;
+  // ---- Hero field — a double-entry ledger that dissolves into an orchestration
+  // graph as you scroll, and settles back if you scroll up. Every point carries two
+  // positions and one blend uniform; that single trick is the whole scene. There is
+  // no second scene and nothing cross-fades.
+  const heroField = (function () {
     const container = document.getElementById('quantum-scene');
     const hero = document.querySelector('.hero');
-    if (!container || !hero) return;
+    let live = null;
 
-    let renderer;
-    try {
-      renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    } catch (e) { return; }
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    container.appendChild(renderer.domElement);
-
-    const mobile = window.innerWidth < 760;
-    const POINTS = mobile ? 250 : 600;
-    const PAIRS  = mobile ? 20 : 40;
-    const RADIUS = 14;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
-    camera.position.z = 26;
-
-    const field = new THREE.Group();
-    field.position.x = mobile ? 2 : 5; // bias right so the headline stays clear
-    scene.add(field);
-
-    // Loose sphere of points; base positions kept separate for the sine drift.
-    const base = new Float32Array(POINTS * 3);
-    const phase = new Float32Array(POINTS);
-    for (let i = 0; i < POINTS; i++) {
-      const u = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2;
-      const s = Math.sqrt(1 - u * u), r = RADIUS * Math.cbrt(Math.random());
-      base[i * 3]     = r * s * Math.cos(a);
-      base[i * 3 + 1] = r * s * Math.sin(a);
-      base[i * 3 + 2] = r * u;
-      phase[i] = Math.random() * Math.PI * 2;
+    // Probe first: THREE.WebGLRenderer logs its own console error before throwing,
+    // so asking here keeps the no-WebGL path genuinely silent.
+    function webglAvailable() {
+      try {
+        const probe = document.createElement('canvas');
+        return !!(window.WebGLRenderingContext &&
+          (probe.getContext('webgl') || probe.getContext('experimental-webgl')));
+      } catch (e) { return false; }
     }
-    const pos = new Float32Array(base);
-    const pointsGeo = new THREE.BufferGeometry();
-    pointsGeo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    const pointsMat = new THREE.PointsMaterial({ size: 0.06, transparent: true, opacity: 0.55 });
-    field.add(new THREE.Points(pointsGeo, pointsMat));
 
-    // Entangled pairs — distinct point indices joined by thin accent lines.
-    const pairIdx = [];
-    const used = new Set();
-    while (pairIdx.length < PAIRS * 2) {
-      const i = Math.floor(Math.random() * POINTS);
-      if (!used.has(i)) { used.add(i); pairIdx.push(i); }
-    }
-    const linePos = new Float32Array(PAIRS * 2 * 3);
-    const lineGeo = new THREE.BufferGeometry();
-    lineGeo.setAttribute('position', new THREE.BufferAttribute(linePos, 3));
-    const lineMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.35 });
-    field.add(new THREE.LineSegments(lineGeo, lineMat));
+    function build() {
+      if (!webglAvailable()) return null;   // hero simply has no canvas
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      } catch (e) { return null; }
 
-    // Flash overlay — one pair at a time eases to full opacity, then back.
-    const flashGeo = new THREE.BufferGeometry();
-    flashGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(6), 3));
-    const flashPointMat = new THREE.PointsMaterial({ size: 0.06, transparent: true, opacity: 0, depthWrite: false });
-    const flashLineMat = new THREE.LineBasicMaterial({ transparent: true, opacity: 0, depthWrite: false });
-    field.add(new THREE.Points(flashGeo, flashPointMat));
-    field.add(new THREE.Line(flashGeo, flashLineMat));
+      const mobile = window.innerWidth < 760;
+      const ROWS   = mobile ?  14 :  26;   // ruled lines on the page
+      const TARGET = mobile ? 260 : 620;   // total points
+      const NODES  = mobile ?  30 :  60;   // points promoted to graph nodes
+      const LINKS  = mobile ?  20 :  48;   // edges drawn between them
+      const GAP    = 0.62;                 // row spacing on y
+      const COL    = 8.0;                  // width of one column of figures
 
-    const RISE = 300, HOLD = 300, FALL = 700;
-    const easeOut = x => 1 - Math.pow(1 - x, 3);
-    let firePair = -1, fireStart = 0, nextFire = performance.now() + 4000 + Math.random() * 2000;
+      const dprCap = () => Math.min(window.devicePixelRatio, window.innerWidth < 760 ? 1.5 : 2);
+      renderer.setPixelRatio(dprCap());
+      container.appendChild(renderer.domElement);
 
-    const scrollLink = !mobile;
-    let camZ = 26, tiltX = 0;
+      const scene  = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+      camera.position.z = 26;
+      const field = new THREE.Group();
+      scene.add(field);
 
-    function resize() {
-      const r = container.getBoundingClientRect();
-      const w = Math.max(r.width, 1), h = Math.max(r.height, 1);
-      renderer.setSize(w, h, false);
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-    }
-    resize();
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(resize, 200);
-    });
-
-    function frame(now) {
-      raf = requestAnimationFrame(frame);
-      const t = now * 0.001;
-
-      // Damped scroll link: slow push-in and tilt across the hero's height.
-      if (scrollLink) {
-        const ratio = Math.min(Math.max(window.scrollY / Math.max(hero.offsetHeight, 1), 0), 1);
-        camZ  += ((26 - 8 * ratio) - camZ) * 0.06;
-        tiltX += ((-0.15 * ratio) - tiltX) * 0.06;
-        camera.position.z = camZ;
-        field.rotation.x = tiltX;
+      // --- Ledger layout. Two right-aligned runs per row, ragged lengths, so the
+      // rows read as figures of differing magnitude rather than a uniform grid.
+      const runs = [];
+      let total = 0;
+      for (let r = 0; r < ROWS; r++) {
+        const pair = [5 + Math.floor(Math.random() * 10), 5 + Math.floor(Math.random() * 10)];
+        runs.push(pair);
+        total += pair[0] + pair[1];
       }
-      field.rotation.y += 0.0008;
-
-      for (let i = 0; i < POINTS; i++) {
-        const p = phase[i], j = i * 3;
-        pos[j]     = base[j]     + Math.sin(t * 0.6 + p) * 0.02;
-        pos[j + 1] = base[j + 1] + Math.sin(t * 0.5 + p * 1.7) * 0.02;
-        pos[j + 2] = base[j + 2] + Math.sin(t * 0.7 + p * 2.3) * 0.02;
+      while (total !== TARGET) {           // land exactly on budget, stay ragged
+        const r = Math.floor(Math.random() * ROWS), c = Math.random() < 0.5 ? 0 : 1;
+        if (total < TARGET) { runs[r][c]++; total++; }
+        else if (runs[r][c] > 5) { runs[r][c]--; total--; }
       }
-      pointsGeo.attributes.position.needsUpdate = true;
-      for (let k = 0; k < PAIRS * 2; k++) {
-        const j = pairIdx[k] * 3;
-        linePos[k * 3] = pos[j]; linePos[k * 3 + 1] = pos[j + 1]; linePos[k * 3 + 2] = pos[j + 2];
-      }
-      lineGeo.attributes.position.needsUpdate = true;
+      let longest = 0;
+      runs.forEach(p => { longest = Math.max(longest, p[0], p[1]); });
+      const STEP = COL / Math.max(1, longest - 1);
 
-      if (firePair < 0 && now >= nextFire) { firePair = Math.floor(Math.random() * PAIRS); fireStart = now; }
-      if (firePair >= 0) {
-        const e = now - fireStart;
-        let g = 0;
-        if (e < RISE) g = easeOut(e / RISE);
-        else if (e < RISE + HOLD) g = 1;
-        else if (e < RISE + HOLD + FALL) g = 1 - easeOut((e - RISE - HOLD) / FALL);
-        else { firePair = -1; nextFire = now + 4000 + Math.random() * 2000; }
-        if (firePair >= 0) {
-          const fp = flashGeo.attributes.position.array;
-          const a = pairIdx[firePair * 2] * 3, b = pairIdx[firePair * 2 + 1] * 3;
-          fp[0] = pos[a]; fp[1] = pos[a + 1]; fp[2] = pos[a + 2];
-          fp[3] = pos[b]; fp[4] = pos[b + 1]; fp[5] = pos[b + 2];
-          flashGeo.attributes.position.needsUpdate = true;
+      const N      = TARGET;
+      const ledger = new Float32Array(N * 3);
+      const graph  = new Float32Array(N * 3);
+      const delay  = new Float32Array(N);
+      const seed   = new Float32Array(N);
+      const role   = new Float32Array(N);
+      const halfH  = (ROWS - 1) * GAP / 2;
+      // Sit the ledger above centre by a fraction of its own height, so its rule
+      // lands in the gap between the headline and the hero-foot divider rather
+      // than crossing the lede copy. Scales with the block, so mobile agrees.
+      const LIFT   = halfH * 0.55;
+
+      let i = 0;
+      for (let r = 0; r < ROWS; r++) {
+        const y    = halfH + LIFT - r * GAP;           // row 0 is the top row
+        const rowT = ROWS > 1 ? r / (ROWS - 1) : 0;    // top rows come apart first
+        for (let c = 0; c < 2; c++) {
+          const rightEdge = c === 0 ? -1 : 9;          // debit block | gutter | credit block
+          for (let k = 0; k < runs[r][c]; k++, i++) {
+            ledger[i * 3]     = rightEdge - k * STEP;  // right-aligned, like figures
+            ledger[i * 3 + 1] = y;
+            ledger[i * 3 + 2] = (Math.random() - 0.5) * 0.24;
+            delay[i] = rowT * 0.7 + Math.random() * 0.3;
+            seed[i]  = Math.random();
+          }
         }
-        flashPointMat.opacity = g;
-        flashPointMat.size = 0.06 + g * 0.06;
-        flashLineMat.opacity = g;
+      }
+      for (let j = 0; j < N; j++) {                    // loose sphere, biased right
+        const u  = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2;
+        const s  = Math.sqrt(1 - u * u), rr = 13 * Math.cbrt(Math.random());
+        graph[j * 3]     = 3 + rr * s * Math.cos(a);
+        graph[j * 3 + 1] = rr * s * Math.sin(a);
+        graph[j * 3 + 2] = rr * u;
       }
 
-      // Recolor from CSS tokens each frame so theme/accent changes apply live.
-      pointsMat.color.copy(cssColor('--ink', '#19170f'));
-      flashPointMat.color.copy(pointsMat.color);
-      lineMat.color.copy(cssColor('--accent', '#b6451a'));
-      flashLineMat.color.copy(lineMat.color);
+      const nodes = [], taken = {};
+      while (nodes.length < Math.min(NODES, N)) {
+        const j = Math.floor(Math.random() * N);
+        if (!taken[j]) { taken[j] = 1; nodes.push(j); role[j] = 1; }
+      }
 
-      renderer.render(scene, camera);
-      container.classList.add('ready');
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(ledger.slice(), 3));
+      geo.setAttribute('aLedger',  new THREE.BufferAttribute(ledger, 3));
+      geo.setAttribute('aGraph',   new THREE.BufferAttribute(graph, 3));
+      geo.setAttribute('aDelay',   new THREE.BufferAttribute(delay, 1));
+      geo.setAttribute('aSeed',    new THREE.BufferAttribute(seed, 1));
+      geo.setAttribute('aRole',    new THREE.BufferAttribute(role, 1));
+
+      // --- Edges. Pair each node with a near neighbour in graph space so the result
+      // reads as a graph rather than a ball of chords. Endpoints copy their source
+      // particle's delay and seed, so an edge tracks its two points exactly.
+      const eLedger = new Float32Array(LINKS * 2 * 3);
+      const eGraph  = new Float32Array(LINKS * 2 * 3);
+      const eDelay  = new Float32Array(LINKS * 2);
+      const eSeed   = new Float32Array(LINKS * 2);
+      const eT      = new Float32Array(LINKS * 2);
+      for (let e = 0; e < LINKS; e++) {
+        const a = nodes[Math.floor(Math.random() * nodes.length)];
+        let b = -1, best = Infinity;
+        for (let s = 0; s < 6; s++) {
+          const cand = nodes[Math.floor(Math.random() * nodes.length)];
+          if (cand === a) continue;
+          const dx = graph[cand * 3]     - graph[a * 3];
+          const dy = graph[cand * 3 + 1] - graph[a * 3 + 1];
+          const dz = graph[cand * 3 + 2] - graph[a * 3 + 2];
+          const d2 = dx * dx + dy * dy + dz * dz;
+          if (d2 < best) { best = d2; b = cand; }
+        }
+        if (b < 0) b = nodes[0] === a ? nodes[1] : nodes[0];
+        const ends = [a, b];
+        for (let end = 0; end < 2; end++) {
+          const src = ends[end], v = e * 2 + end;
+          eLedger[v * 3] = ledger[src * 3];
+          eLedger[v * 3 + 1] = ledger[src * 3 + 1];
+          eLedger[v * 3 + 2] = ledger[src * 3 + 2];
+          eGraph[v * 3] = graph[src * 3];
+          eGraph[v * 3 + 1] = graph[src * 3 + 1];
+          eGraph[v * 3 + 2] = graph[src * 3 + 2];
+          eDelay[v] = delay[src];
+          eSeed[v]  = seed[src];
+          eT[v]     = end;
+        }
+      }
+      const lineGeo = new THREE.BufferGeometry();
+      lineGeo.setAttribute('position', new THREE.BufferAttribute(eLedger.slice(), 3));
+      lineGeo.setAttribute('aLedger',  new THREE.BufferAttribute(eLedger, 3));
+      lineGeo.setAttribute('aGraph',   new THREE.BufferAttribute(eGraph, 3));
+      lineGeo.setAttribute('aDelay',   new THREE.BufferAttribute(eDelay, 1));
+      lineGeo.setAttribute('aSeed',    new THREE.BufferAttribute(eSeed, 1));
+      lineGeo.setAttribute('aT',       new THREE.BufferAttribute(eT, 1));
+
+      // One uniform object shared by both materials, so points and edges can never
+      // drift out of sync by a frame.
+      const uniforms = {
+        uMorph:      { value: 0 },
+        uTime:       { value: 0 },
+        uSize:       { value: 1.25 },
+        uPixelRatio: { value: renderer.getPixelRatio() },
+        uInk:        { value: new THREE.Color(0, 0, 0) },
+        uAccent:     { value: new THREE.Color(0, 0, 0) },
+        uNear:       { value: 12.0 },
+        uFar:        { value: 44.0 }
+      };
+
+      // The morph, written once and shared verbatim by both vertex shaders.
+      const MORPH = `
+        attribute vec3  aLedger;
+        attribute vec3  aGraph;
+        attribute float aDelay;
+        attribute float aSeed;
+        uniform   float uMorph;
+        uniform   float uTime;
+        float easedT() {
+          float t = clamp((uMorph - aDelay * 0.35) / 0.65, 0.0, 1.0);
+          return t * t * (3.0 - 2.0 * t);
+        }
+        vec3 morphed(float t) {
+          vec3 p = mix(aLedger, aGraph, t);
+          p.x += sin(uTime * 0.30 + aSeed * 6.283) * 0.06 * (1.0 - t);
+          p.y += cos(uTime * 0.24 + aSeed * 4.712) * 0.05 * (1.0 - t);
+          p += vec3(sin(uTime * 0.35 + aSeed * 6.283),
+                    cos(uTime * 0.27 + aSeed * 4.712),
+                    sin(uTime * 0.21 + aSeed * 3.141)) * 0.30 * t;
+          return p;
+        }
+      `;
+
+      const pointsMat = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.NormalBlending,   // additive blows out to white on paper
+        vertexShader: MORPH + `
+          attribute float aRole;
+          uniform float uSize;
+          uniform float uPixelRatio;
+          varying float vDepth;
+          varying float vRole;
+          varying float vT;
+          void main() {
+            float t = easedT();
+            vec4 mv = modelViewMatrix * vec4(morphed(t), 1.0);
+            vDepth = -mv.z;
+            vRole  = aRole;
+            vT     = t;
+            gl_PointSize = uSize * uPixelRatio
+                         * (1.0 + vRole * 0.45)
+                         * (62.0 / max(0.001, -mv.z));
+            gl_Position = projectionMatrix * mv;
+          }
+        `,
+        fragmentShader: `
+          precision mediump float;
+          uniform vec3  uInk;
+          uniform vec3  uAccent;
+          uniform float uNear;
+          uniform float uFar;
+          varying float vDepth;
+          varying float vRole;
+          varying float vT;
+          void main(){
+            vec2 c = gl_PointCoord - 0.5;
+            float d = length(c);
+            if (d > 0.5) discard;
+            float mask = smoothstep(0.5, 0.14, d);
+            float core = smoothstep(0.30, 0.0, d);
+            float fog  = 1.0 - clamp((vDepth - uNear) / (uFar - uNear), 0.0, 1.0);
+            vec3 col = mix(uInk, uAccent, vRole * (0.25 + 0.55 * vT));
+            float a = (mask * 0.32 + core * 0.52) * mix(0.09, 0.85, fog);
+            gl_FragColor = vec4(col, a);
+          }
+        `
+      });
+      const points = new THREE.Points(geo, pointsMat);
+      points.frustumCulled = false;       // bounds change every frame with the morph
+      field.add(points);
+
+      const lineMat = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.NormalBlending,
+        vertexShader: MORPH + `
+          attribute float aT;
+          varying float vT;
+          varying float vEdge;
+          void main() {
+            float t = easedT();
+            vT    = t;
+            vEdge = aT;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(morphed(t), 1.0);
+          }
+        `,
+        // Line width is 1px everywhere regardless of what you set, so alpha is the
+        // only control. Edges are absent in ledger form and arrive in the back half.
+        fragmentShader: `
+          precision mediump float;
+          uniform vec3 uAccent;
+          varying float vT;
+          varying float vEdge;
+          void main(){
+            float a = 0.14 * smoothstep(0.35, 0.85, vT);
+            a *= 1.0 - 0.25 * (1.0 - abs(vEdge - 0.5) * 2.0);
+            gl_FragColor = vec4(uAccent, a);
+          }
+        `
+      });
+      const links = new THREE.LineSegments(lineGeo, lineMat);
+      links.frustumCulled = false;
+      field.add(links);
+
+      // --- The rule. One accent line under the last row: the total rule an
+      // accountant draws under a balanced ledger. It is the only literal accounting
+      // artifact in the scene and the first thing visible on load.
+      const ruleY   = -halfH + LIFT - GAP * 0.85;
+      const ruleGeo = new THREE.BufferGeometry();
+      ruleGeo.setAttribute('position', new THREE.BufferAttribute(
+        new Float32Array([-9.2, ruleY, 0, 9.2, ruleY, 0]), 3));
+      const ruleMat = new THREE.LineBasicMaterial({
+        transparent: true, opacity: 0.55, depthWrite: false
+      });
+      const rule = new THREE.Line(ruleGeo, ruleMat);
+      rule.frustumCulled = false;
+      field.add(rule);
+
+      // Colours come from the live CSS tokens, never from hardcoded hex, so the
+      // scene follows the Theme and Accent controls.
+      function refreshColors() {
+        uniforms.uInk.value.copy(cssColor('--ink', '#19170f'));
+        uniforms.uAccent.value.copy(cssColor('--accent', '#b6451a'));
+        ruleMat.color.copy(uniforms.uAccent.value);
+      }
+      refreshColors();
+
+      const fine  = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const clock = new THREE.Clock();
+      const par   = { x: 0, y: 0, tx: 0, ty: 0 };
+      let raf = 0, running = false, onScreen = false;
+      let morph = 0, camZ = 26, tilt = 0;
+
+      function frame() {
+        raf = requestAnimationFrame(frame);
+        const t = clock.getElapsedTime();
+        uniforms.uTime.value = t;
+
+        // Desktop reads scroll across the hero. Mobile ignores it and breathes.
+        const target = mobile
+          ? 0.55 + Math.sin(t * 0.22) * 0.08
+          : Math.min(Math.max(window.scrollY / Math.max(hero.offsetHeight, 1), 0), 1);
+        morph += (target - morph) * 0.06;         // damped, not 1:1 with the wheel
+        uniforms.uMorph.value = morph;
+
+        ruleMat.opacity = 0.55 * Math.max(0, 1 - morph / 0.3);
+        rule.visible = ruleMat.opacity > 0.002;
+
+        camZ += ((26 - 6 * morph) - camZ) * 0.06;
+        camera.position.z = camZ;
+        tilt += ((-0.12 * morph) - tilt) * 0.06;
+
+        if (fine) {
+          par.x += (par.tx - par.x) * 0.045;
+          par.y += (par.ty - par.y) * 0.045;
+        }
+        field.rotation.x = tilt + par.y * 0.10;
+        field.rotation.y = par.x * 0.10;
+
+        renderer.render(scene, camera);
+        container.classList.add('ready');
+      }
+
+      function setRunning(on) {
+        if (on === running) return;
+        running = on;
+        if (on) { clock.getDelta(); raf = requestAnimationFrame(frame); }
+        else cancelAnimationFrame(raf);
+      }
+      function sync() { setRunning(onScreen && !document.hidden); }
+
+      function resize() {
+        const r = container.getBoundingClientRect();
+        const w = Math.max(r.width, 1), h = Math.max(r.height, 1);
+        renderer.setPixelRatio(dprCap());
+        renderer.setSize(w, h, false);
+        uniforms.uPixelRatio.value = renderer.getPixelRatio();
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+      }
+      resize();
+
+      let resizeTimer = 0;
+      function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 160); }
+      function onPointer(e) {
+        par.tx =  (e.clientX / window.innerWidth)  * 2 - 1;
+        par.ty = -((e.clientY / window.innerHeight) * 2 - 1);
+      }
+      window.addEventListener('resize', onResize);
+      document.addEventListener('visibilitychange', sync);
+      if (fine) window.addEventListener('pointermove', onPointer);
+
+      const io = new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; sync(); });
+      io.observe(hero);
+
+      function destroy() {
+        setRunning(false);
+        io.disconnect();
+        clearTimeout(resizeTimer);
+        window.removeEventListener('resize', onResize);
+        document.removeEventListener('visibilitychange', sync);
+        if (fine) window.removeEventListener('pointermove', onPointer);
+        geo.dispose(); lineGeo.dispose(); ruleGeo.dispose();
+        pointsMat.dispose(); lineMat.dispose(); ruleMat.dispose();
+        renderer.dispose();
+        if (renderer.forceContextLoss) renderer.forceContextLoss();
+        const el = renderer.domElement;
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+        container.classList.remove('ready');
+      }
+
+      return { destroy: destroy, refreshColors: refreshColors };
     }
 
-    // Render only while the hero is on screen.
-    let raf = 0, running = false;
-    new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting && !running) { running = true; raf = requestAnimationFrame(frame); }
-      else if (!entry.isIntersecting && running) { running = false; cancelAnimationFrame(raf); }
-    }).observe(hero);
+    return {
+      mount: function () {
+        if (live || reduceMotion || !container || !hero) return;
+        if (typeof THREE === 'undefined') return;
+        live = build();
+      },
+      unmount: function () { if (live) { live.destroy(); live = null; } },
+      refresh: function () { if (live) live.refreshColors(); }
+    };
   })();
+
+  heroField.mount();
 </script>
 </body>
 </html>
