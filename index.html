@@ -170,13 +170,18 @@
   /* ---------- HERO field — ledger to graph (WebGL) ---------- */
   /* The radial mask dissolves the field into the paper instead of clipping it
      at a hard canvas edge. That soft boundary is most of the atmosphere. */
+  /* The centre follows the ledger while it is at rest and returns to these
+     defaults as the graph forms. The defaults are the graph's own framing, so if
+     the script never updates them the dispersed state is unaffected. */
   #quantum-scene {
     position: absolute; inset: 0;
     z-index: 0; pointer-events: none;
     opacity: 0; transition: opacity 1.4s ease;
-    -webkit-mask-image: radial-gradient(ellipse 82% 74% at 58% 50%,
+    --mask-x: 58%;
+    --mask-y: 50%;
+    -webkit-mask-image: radial-gradient(ellipse 82% 74% at var(--mask-x) var(--mask-y),
       #000 34%, transparent 84%);
-            mask-image: radial-gradient(ellipse 82% 74% at 58% 50%,
+            mask-image: radial-gradient(ellipse 82% 74% at var(--mask-x) var(--mask-y),
       #000 34%, transparent 84%);
   }
   #quantum-scene.ready { opacity: 1; }
@@ -1556,12 +1561,21 @@
       } catch (e) { return null; }
 
       const mobile = window.innerWidth < 760;
-      const ROWS   = mobile ?  14 :  26;   // ruled lines on the page
-      const TARGET = mobile ? 260 : 620;   // total points
+      const ROWS   = mobile ?  10 :  16;   // ruled lines on the page
+      const TARGET = mobile ? 260 : 620;   // total points; graph density unchanged
       const NODES  = mobile ?  30 :  60;   // points promoted to graph nodes
       const LINKS  = mobile ?  20 :  48;   // edges drawn between them
-      const GAP    = 0.62;                 // row spacing on y
-      const COL    = 8.0;                  // width of one column of figures
+      const GAP    = 0.95;                 // row spacing on y
+      const STEP   = 0.62;                 // spacing between figures along x
+      const MINRUN = 5, MAXRUN = 12;       // figures per row
+      // Columns are flush right and ragged left, the way a column of figures is
+      // actually set. These are the right edges; runs extend leftward from them.
+      const DEBIT_R  = -1.4;
+      const CREDIT_R =  7.6;
+      const CREDIT_L = CREDIT_R - (MAXRUN - 1) * STEP;   // leftmost a credit point reaches
+      const BLOCK_L  = DEBIT_R  - (MAXRUN - 1) * STEP;
+      const BLOCK_W  = CREDIT_R - BLOCK_L;
+      // Nothing may land in the gutter between DEBIT_R and CREDIT_L.
 
       const dprCap = () => Math.min(window.devicePixelRatio, window.innerWidth < 760 ? 1.5 : 2);
       renderer.setPixelRatio(dprCap());
@@ -1573,23 +1587,15 @@
       const field = new THREE.Group();
       scene.add(field);
 
-      // --- Ledger layout. Two right-aligned runs per row, ragged lengths, so the
-      // rows read as figures of differing magnitude rather than a uniform grid.
+      // --- Ledger layout. Runs of 5 to 12 figures per column, every run ending on
+      // the column's right edge, so both columns are flush right and ragged left.
       const runs = [];
-      let total = 0;
       for (let r = 0; r < ROWS; r++) {
-        const pair = [5 + Math.floor(Math.random() * 10), 5 + Math.floor(Math.random() * 10)];
-        runs.push(pair);
-        total += pair[0] + pair[1];
+        runs.push([
+          MINRUN + Math.floor(Math.random() * (MAXRUN - MINRUN + 1)),
+          MINRUN + Math.floor(Math.random() * (MAXRUN - MINRUN + 1))
+        ]);
       }
-      while (total !== TARGET) {           // land exactly on budget, stay ragged
-        const r = Math.floor(Math.random() * ROWS), c = Math.random() < 0.5 ? 0 : 1;
-        if (total < TARGET) { runs[r][c]++; total++; }
-        else if (runs[r][c] > 5) { runs[r][c]--; total--; }
-      }
-      let longest = 0;
-      runs.forEach(p => { longest = Math.max(longest, p[0], p[1]); });
-      const STEP = COL / Math.max(1, longest - 1);
 
       const N      = TARGET;
       const ledger = new Float32Array(N * 3);
@@ -1597,26 +1603,36 @@
       const delay  = new Float32Array(N);
       const seed   = new Float32Array(N);
       const role   = new Float32Array(N);
+      const paper  = new Float32Array(N);   // 1 = printed on the page, 0 = graph only
       const halfH  = (ROWS - 1) * GAP / 2;
-      // Sit the ledger above centre by a fraction of its own height, so its rule
-      // lands in the gap between the headline and the hero-foot divider rather
-      // than crossing the lede copy. Scales with the block, so mobile agrees.
-      const LIFT   = halfH * 0.55;
+      const BLOCK_H = halfH * 2;
 
       let i = 0;
-      for (let r = 0; r < ROWS; r++) {
-        const y    = halfH + LIFT - r * GAP;           // row 0 is the top row
+      for (let r = 0; r < ROWS && i < N; r++) {
+        const y    = halfH - r * GAP;                  // row 0 is the top row
         const rowT = ROWS > 1 ? r / (ROWS - 1) : 0;    // top rows come apart first
         for (let c = 0; c < 2; c++) {
-          const rightEdge = c === 0 ? -1 : 9;          // debit block | gutter | credit block
-          for (let k = 0; k < runs[r][c]; k++, i++) {
-            ledger[i * 3]     = rightEdge - k * STEP;  // right-aligned, like figures
+          const edge = c === 0 ? DEBIT_R : CREDIT_R;
+          for (let k = 0; k < runs[r][c] && i < N; k++, i++) {
+            ledger[i * 3]     = edge - k * STEP;       // flush right, ragged left
             ledger[i * 3 + 1] = y;
             ledger[i * 3 + 2] = (Math.random() - 0.5) * 0.24;
             delay[i] = rowT * 0.7 + Math.random() * 0.3;
             seed[i]  = Math.random();
+            paper[i] = 1;
           }
         }
+      }
+      // 16 ruled rows cannot hold 620 points without runs far longer than a
+      // figure. The surplus exists only in the graph: invisible on the page,
+      // faded in as it disperses, so the uMorph 1.0 density is unchanged.
+      for (; i < N; i++) {
+        ledger[i * 3]     = BLOCK_L + Math.random() * BLOCK_W;
+        ledger[i * 3 + 1] = (Math.random() - 0.5) * BLOCK_H;
+        ledger[i * 3 + 2] = (Math.random() - 0.5) * 0.24;
+        delay[i] = Math.random();
+        seed[i]  = Math.random();
+        paper[i] = 0;
       }
       for (let j = 0; j < N; j++) {                    // loose sphere, biased right
         const u  = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2;
@@ -1639,6 +1655,7 @@
       geo.setAttribute('aDelay',   new THREE.BufferAttribute(delay, 1));
       geo.setAttribute('aSeed',    new THREE.BufferAttribute(seed, 1));
       geo.setAttribute('aRole',    new THREE.BufferAttribute(role, 1));
+      geo.setAttribute('aPaper',   new THREE.BufferAttribute(paper, 1));
 
       // --- Edges. Pair each node with a near neighbour in graph space so the result
       // reads as a graph rather than a ball of chords. Endpoints copy their source
@@ -1693,7 +1710,11 @@
         uInk:        { value: new THREE.Color(0, 0, 0) },
         uAccent:     { value: new THREE.Color(0, 0, 0) },
         uNear:       { value: 12.0 },
-        uFar:        { value: 44.0 }
+        uFar:        { value: 44.0 },
+        // The page is authored at unit scale and then placed; the graph is not
+        // touched by either, so the uMorph 1.0 state is independent of layout.
+        uLedgerScale:  { value: 0.5 },
+        uLedgerOffset: { value: new THREE.Vector3(0, 0, 0) }
       };
 
       // The morph, written once and shared verbatim by both vertex shaders.
@@ -1704,14 +1725,19 @@
         attribute float aSeed;
         uniform   float uMorph;
         uniform   float uTime;
+        uniform   float uLedgerScale;
+        uniform   vec3  uLedgerOffset;
         float easedT() {
           float t = clamp((uMorph - aDelay * 0.35) / 0.65, 0.0, 1.0);
           return t * t * (3.0 - 2.0 * t);
         }
         vec3 morphed(float t) {
-          vec3 p = mix(aLedger, aGraph, t);
-          p.x += sin(uTime * 0.30 + aSeed * 6.283) * 0.06 * (1.0 - t);
-          p.y += cos(uTime * 0.24 + aSeed * 4.712) * 0.05 * (1.0 - t);
+          vec3 page = aLedger * uLedgerScale + uLedgerOffset;
+          vec3 p = mix(page, aGraph, t);
+          // The page breathes in proportion to its own size, so shrinking it does
+          // not turn the drift into a wobble that blurs the column alignment.
+          p.x += sin(uTime * 0.30 + aSeed * 6.283) * 0.06 * uLedgerScale * (1.0 - t);
+          p.y += cos(uTime * 0.24 + aSeed * 4.712) * 0.05 * uLedgerScale * (1.0 - t);
           p += vec3(sin(uTime * 0.35 + aSeed * 6.283),
                     cos(uTime * 0.27 + aSeed * 4.712),
                     sin(uTime * 0.21 + aSeed * 3.141)) * 0.30 * t;
@@ -1726,20 +1752,24 @@
         blending: THREE.NormalBlending,   // additive blows out to white on paper
         vertexShader: MORPH + `
           attribute float aRole;
+          attribute float aPaper;
           uniform float uSize;
           uniform float uPixelRatio;
           varying float vDepth;
           varying float vRole;
           varying float vT;
+          varying float vPaper;
           void main() {
             float t = easedT();
             vec4 mv = modelViewMatrix * vec4(morphed(t), 1.0);
             vDepth = -mv.z;
             vRole  = aRole;
             vT     = t;
+            vPaper = aPaper;
             gl_PointSize = uSize * uPixelRatio
                          * (1.0 + vRole * 0.45)
-                         * (62.0 / max(0.001, -mv.z));
+                         * (62.0 / max(0.001, -mv.z))
+                         * mix(1.25, 1.0, t);   // crisper at rest than dispersed
             gl_Position = projectionMatrix * mv;
           }
         `,
@@ -1752,6 +1782,7 @@
           varying float vDepth;
           varying float vRole;
           varying float vT;
+          varying float vPaper;
           void main(){
             vec2 c = gl_PointCoord - 0.5;
             float d = length(c);
@@ -1759,8 +1790,12 @@
             float mask = smoothstep(0.5, 0.14, d);
             float core = smoothstep(0.30, 0.0, d);
             float fog  = 1.0 - clamp((vDepth - uNear) / (uFar - uNear), 0.0, 1.0);
-            vec3 col = mix(uInk, uAccent, vRole * (0.25 + 0.55 * vT));
+            // A ledger is written in one colour. Nodes warm toward the accent only
+            // as the graph forms; at uMorph 1.0 this reaches 0.80, as before.
+            vec3 col = mix(uInk, uAccent, vRole * 0.80 * vT);
             float a = (mask * 0.32 + core * 0.52) * mix(0.09, 0.85, fog);
+            a *= mix(1.55, 1.0, vT);                              // present at rest
+            a *= mix(vPaper, 1.0, smoothstep(0.1, 0.7, vT));      // surplus is graph-only
             gl_FragColor = vec4(col, a);
           }
         `
@@ -1806,16 +1841,82 @@
       // --- The rule. One accent line under the last row: the total rule an
       // accountant draws under a balanced ledger. It is the only literal accounting
       // artifact in the scene and the first thing visible on load.
-      const ruleY   = -halfH + LIFT - GAP * 0.85;
+      // It rules the credit column only, ending exactly on that column's right
+      // edge, which is what makes the flush-right alignment legible.
+      const ruleY   = -halfH - GAP * 0.55;
       const ruleGeo = new THREE.BufferGeometry();
       ruleGeo.setAttribute('position', new THREE.BufferAttribute(
-        new Float32Array([-9.2, ruleY, 0, 9.2, ruleY, 0]), 3));
+        new Float32Array([CREDIT_L, ruleY, 0, CREDIT_R, ruleY, 0]), 3));
       const ruleMat = new THREE.LineBasicMaterial({
-        transparent: true, opacity: 0.55, depthWrite: false
+        transparent: true, opacity: 0.7, depthWrite: false
       });
       const rule = new THREE.Line(ruleGeo, ruleMat);
       rule.frustumCulled = false;
       field.add(rule);
+
+      // --- Placement. The page is fitted into the clear band in the hero's upper
+      // right: below the nav, above the headline's cap height, right of where the
+      // status row ends. Derived from the live DOM boxes rather than tuned per
+      // breakpoint, so the no-overlap guarantee holds at every width, not just the
+      // ones that got tested. Recomputed on resize.
+      const FOVY = 55 * Math.PI / 180;
+      let maskRestX = 58, maskRestY = 50;
+
+      function placeLedger() {
+        const c = container.getBoundingClientRect();
+        if (c.height < 2 || c.width < 2) return;
+        const k = c.height / (2 * Math.tan(FOVY / 2) * 26);   // css px per world unit
+
+        const nav      = document.querySelector('.topbar');
+        const headline = document.querySelector('h1.headline');
+        const inner    = document.querySelector('.hero-inner');
+        const status   = document.querySelector('.status-row');
+        const spans    = document.querySelectorAll('.status-row > span');
+        let statusRight = c.left;
+        spans.forEach(s => {
+          statusRight = Math.max(statusRight, s.getBoundingClientRect().right);
+        });
+
+        // Align to the text column, not the wrapper's padding edge.
+        const ib = inner ? inner.getBoundingClientRect() : c;
+        const ics = inner ? getComputedStyle(inner) : null;
+        const contentR = ib.right - (ics ? parseFloat(ics.paddingRight) || 0 : 0);
+        const contentL = ib.left + (ics ? parseFloat(ics.paddingLeft) || 0 : 0);
+
+        const PAD    = 12;
+        const navB   = Math.max(nav ? nav.getBoundingClientRect().bottom : c.top, c.top);
+        const headT  = headline ? headline.getBoundingClientRect().top : c.bottom;
+        const statT  = status ? status.getBoundingClientRect().top : headT;
+
+        const band = (top, bottom, left, right) => {
+          const w = right - left, h = bottom - top;
+          if (w < 40 || h < 40) return null;
+          return { top, bottom, left, right,
+                   scale: Math.min(w / (BLOCK_W * k), h / (BLOCK_H * k)) };
+        };
+        // Preferred: right of the status row, the full drop from nav to headline.
+        // Fallback for narrow viewports, where the status row wraps and leaves no
+        // room beside it: the strip above the status row, still right-aligned.
+        const best = [
+          band(navB + PAD, headT - PAD, statusRight + PAD, contentR),
+          band(navB + PAD, statT - PAD, contentL, contentR)
+        ].filter(Boolean).sort((a, b) => b.scale - a.scale)[0];
+        if (!best) return;
+
+        const scale = Math.min(0.55, best.scale);   // never larger than intended
+        // Pin the credit column's right edge to the text column, centre in the band.
+        const offX = (best.right - c.left - c.width / 2) / k - CREDIT_R * scale;
+        const offY = (c.height / 2 - ((best.top + best.bottom) / 2 - c.top)) / k;
+        uniforms.uLedgerScale.value = scale;
+        uniforms.uLedgerOffset.value.set(offX, offY, 0);
+        rule.scale.setScalar(scale);
+        rule.position.set(offX, offY, 0);
+
+        // Where the mask should sit while the page is at rest.
+        const cx = (BLOCK_L + CREDIT_R) / 2 * scale + offX;
+        maskRestX = ((c.width / 2 + cx * k) / c.width) * 100;
+        maskRestY = ((c.height / 2 - offY * k) / c.height) * 100;
+      }
 
       // Colours come from the live CSS tokens, never from hardcoded hex, so the
       // scene follows the Theme and Accent controls.
@@ -1831,6 +1932,7 @@
       const par   = { x: 0, y: 0, tx: 0, ty: 0 };
       let raf = 0, running = false, onScreen = false;
       let morph = 0, camZ = 26, tilt = 0;
+      let maskX = -999, maskY = -999;   // force the first write
 
       function frame() {
         raf = requestAnimationFrame(frame);
@@ -1844,8 +1946,20 @@
         morph += (target - morph) * 0.06;         // damped, not 1:1 with the wheel
         uniforms.uMorph.value = morph;
 
-        ruleMat.opacity = 0.55 * Math.max(0, 1 - morph / 0.3);
+        ruleMat.opacity = 0.7 * Math.max(0, 1 - morph / 0.3);
         rule.visible = ruleMat.opacity > 0.002;
+
+        // The mask sits over the page at rest and slides back to the graph's own
+        // centre as it disperses, so the uMorph 1.0 framing is exactly as before.
+        // Quantised, so a settled scene stops touching CSS entirely.
+        const e  = Math.min(1, morph / 0.6);
+        const mx = maskRestX + (58 - maskRestX) * e * e * (3 - 2 * e);
+        const my = maskRestY + (50 - maskRestY) * e * e * (3 - 2 * e);
+        if (Math.abs(mx - maskX) > 0.35 || Math.abs(my - maskY) > 0.35) {
+          maskX = mx; maskY = my;
+          container.style.setProperty('--mask-x', mx.toFixed(1) + '%');
+          container.style.setProperty('--mask-y', my.toFixed(1) + '%');
+        }
 
         camZ += ((26 - 6 * morph) - camZ) * 0.06;
         camera.position.z = camZ;
@@ -1878,6 +1992,7 @@
         uniforms.uPixelRatio.value = renderer.getPixelRatio();
         camera.aspect = w / h;
         camera.updateProjectionMatrix();
+        placeLedger();   // the clear band moves with the layout
       }
       resize();
 
