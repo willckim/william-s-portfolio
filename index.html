@@ -5,9 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>William Kim · Staff Accountant / AI Engineer</title>
 <meta name="description" content="William Kim. Finance, engineering, and AI. Staff Accountant at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
+<link rel="canonical" href="https://www.williamckim.com/" />
+<meta name="theme-color" content="#f5f1ea" />
+
+<!-- Favicon: inline SVG data URI, so no extra file and no extra request. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f5f1ea'/%3E%3Cpath d='M6 9l5 15 5-10 5 10 5-15' fill='none' stroke='%23b6451a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+
+<!-- Sharing -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="William Kim · Staff Accountant / AI Engineer" />
+<meta property="og:description" content="Finance, engineering, and AI. Staff Accountant at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
+<meta property="og:url" content="https://www.williamckim.com/" />
+<meta property="og:site_name" content="William Kim" />
+<!-- summary, not summary_large_image, because there is no share image yet.
+     When /og.png exists at 1200x630, switch the card type below and add:
+       <meta property="og:image" content="https://www.williamckim.com/og.png" />
+       <meta property="og:image:width" content="1200" />
+       <meta property="og:image:height" content="630" />
+       <meta property="og:image:alt" content="William Kim · Finance x Engineering x AI" /> -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="William Kim · Staff Accountant / AI Engineer" />
+<meta name="twitter:description" content="Finance, engineering, and AI. Staff Accountant at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
+
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "William Kim",
+  "url": "https://www.williamckim.com/",
+  "jobTitle": "Staff Accountant",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Ortho Molecular Products"
+  },
+  "alumniOf": {
+    "@type": "CollegeOrUniversity",
+    "name": "University of Pittsburgh"
+  },
+  "hasCredential": {
+    "@type": "EducationalOccupationalCredential",
+    "credentialCategory": "degree",
+    "name": "B.S. Computer Science",
+    "dateCreated": "2024"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Barrington",
+    "addressRegion": "IL",
+    "addressCountry": "US"
+  },
+  "sameAs": [
+    "https://github.com/willckim",
+    "https://www.linkedin.com/in/william-c-kim/"
+  ]
+}
+</script>
 <style>
   /* ---------- TOKENS ---------- */
   :root {
@@ -665,6 +721,32 @@
                 translate .7s var(--ease);
   }
 
+  /* ---------- ACCESSIBILITY ---------- */
+  /* Nothing here strips a default outline; it replaces them with a ring that is
+     visible against paper and ink alike. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  /* .sw.active already carries an ink outline, so name it explicitly or the
+     active swatch would show no focus ring at all. */
+  .tweaks .sw:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .skip-link {
+    position: absolute; left: 12px; top: -64px; z-index: 200;
+    background: var(--ink); color: var(--bg);
+    padding: 11px 18px; border-radius: 999px;
+    font: 500 13px/1 var(--sans);
+    transition: top .18s ease;
+  }
+  .skip-link:focus { top: 12px; }
+  /* #main is a programmatic focus target, not a control, so it takes no ring.
+     :focus-visible above still covers every real interactive element. */
+  #main:focus { outline: none; }
+
   /* utility */
   .sr-only {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
@@ -673,6 +755,10 @@
 </style>
 </head>
 <body data-theme="light" data-accent="rust">
+
+  <!-- Targets the main landmark, which carries tabindex=-1 so focus actually
+       lands there rather than only scrolling. -->
+  <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- ---------- TOPBAR ---------- -->
   <header class="topbar">
@@ -689,6 +775,8 @@
       </nav>
     </div>
   </header>
+
+  <main id="main" tabindex="-1">
 
   <!-- ---------- HERO ---------- -->
   <section id="top" class="hero" data-screen-label="01 Hero">
@@ -763,7 +851,7 @@
               <span class="pill good">✓ Multi-AI fallback</span>
               <span class="pill good">✓ Vision scanning</span>
             </div>
-            <div class="idx-detail">
+            <div class="idx-detail" id="idx-detail-01">
               <div>
                 <div class="idx-body">
                   <div>
@@ -796,7 +884,7 @@
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
             </a>
           </div>
-          <button class="idx-expand-btn" aria-label="Expand">
+          <button class="idx-expand-btn" type="button" aria-label="Expand case notes" aria-expanded="false" aria-controls="idx-detail-01">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </button>
         </article>
@@ -814,7 +902,7 @@
               <span class="pill good">✓ Self-healing selectors</span>
               <span class="pill good">✓ Human-in-the-loop</span>
             </div>
-            <div class="idx-detail">
+            <div class="idx-detail" id="idx-detail-02">
               <div>
                 <div class="idx-body">
                   <div>
@@ -846,7 +934,7 @@
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
             </a>
           </div>
-          <button class="idx-expand-btn" aria-label="Expand">
+          <button class="idx-expand-btn" type="button" aria-label="Expand case notes" aria-expanded="false" aria-controls="idx-detail-02">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </button>
         </article>
@@ -864,7 +952,7 @@
               <span class="pill good">✓ 4 specialized agents</span>
               <span class="pill good">✓ Vanguard compliant</span>
             </div>
-            <div class="idx-detail">
+            <div class="idx-detail" id="idx-detail-03">
               <div>
                 <div class="idx-body">
                   <div>
@@ -896,7 +984,7 @@
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
             </a>
           </div>
-          <button class="idx-expand-btn" aria-label="Expand">
+          <button class="idx-expand-btn" type="button" aria-label="Expand case notes" aria-expanded="false" aria-controls="idx-detail-03">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </button>
         </article>
@@ -914,7 +1002,7 @@
               <span class="pill good">✓ 200K+ race results</span>
               <span class="pill good">✓ Wearable integration</span>
             </div>
-            <div class="idx-detail">
+            <div class="idx-detail" id="idx-detail-04">
               <div>
                 <div class="idx-body">
                   <div>
@@ -947,7 +1035,7 @@
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
             </a>
           </div>
-          <button class="idx-expand-btn" aria-label="Expand">
+          <button class="idx-expand-btn" type="button" aria-label="Expand case notes" aria-expanded="false" aria-controls="idx-detail-04">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           </button>
         </article>
@@ -1201,11 +1289,16 @@
     </div>
   </section>
 
+  </main>
+
   <!-- ---------- FOOTER ---------- -->
   <footer class="foot">
     <div class="wrap" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; width: 100%;">
       <div class="copy">© 2026 William Kim · <em>Built from scratch in HTML, CSS &amp; WebGL.</em></div>
-      <div>Last update · May 2026</div>
+      <!-- Hardcoded on purpose: this is a static file with no build step, so
+           there is nothing to inject a git commit date at. Bump it by hand when
+           you ship. A stale date reads worse than no date. -->
+      <div>Last update · July 2026</div>
     </div>
   </footer>
 
@@ -1247,20 +1340,23 @@
     </div>
   </aside>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"
-          integrity="sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ=="
-          crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <!-- Three.js is loaded lazily at the bottom of this file. It is decoration, so
+       first paint must never wait on 600KB of library. -->
 <script>
-  // Expandable project rows — animate max-height to scrollHeight
+  // Expandable project rows — animate max-height to scrollHeight.
+  // The row stays clickable for pointer users; the expand button is the real
+  // control, so keyboard users get here by tabbing to it and it carries the
+  // aria-expanded state.
   document.querySelectorAll('[data-row]').forEach(row => {
     const detail = row.querySelector('.idx-detail');
+    const btn = row.querySelector('.idx-expand-btn');
     row.addEventListener('click', (e) => {
       if (e.target.closest('a')) return;
       const isOpen = row.classList.toggle('open');
-      if (isOpen) {
-        detail.style.maxHeight = detail.scrollHeight + 'px';
-      } else {
-        detail.style.maxHeight = '0px';
+      detail.style.maxHeight = isOpen ? detail.scrollHeight + 'px' : '0px';
+      if (btn) {
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        btn.setAttribute('aria-label', (isOpen ? 'Collapse' : 'Expand') + ' case notes');
       }
     });
   });
@@ -1286,13 +1382,27 @@
       heroField.refresh();
     });
   });
+  // Swatches are divs, so they need the role, the tab stop and the keys that a
+  // button would have given them for free.
   document.querySelectorAll('#accentSwatches .sw').forEach(s => {
-    s.addEventListener('click', () => {
-      document.querySelectorAll('#accentSwatches .sw').forEach(x => x.classList.remove('active'));
+    s.setAttribute('role', 'button');
+    s.setAttribute('tabindex', '0');
+    s.setAttribute('aria-label', s.dataset.accent + ' accent');
+    const pick = () => {
+      document.querySelectorAll('#accentSwatches .sw').forEach(x => {
+        x.classList.remove('active');
+        x.setAttribute('aria-pressed', 'false');
+      });
       s.classList.add('active');
+      s.setAttribute('aria-pressed', 'true');
       document.body.dataset.accent = s.dataset.accent;
       heroField.refresh();
+    };
+    s.addEventListener('click', pick);
+    s.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); }
     });
+    s.setAttribute('aria-pressed', s.classList.contains('active') ? 'true' : 'false');
   });
   // Off tears the scene all the way down (buffers, programs, context), not just
   // hides the canvas. On rebuilds it from scratch.
@@ -1319,7 +1429,8 @@
   }
 
   // ---- Contact crystal — smaller sibling, same shader language.
-  (function initContact() {
+  // Called by the loader below once Three has arrived, not at parse time.
+  function initContact() {
     if (typeof THREE === 'undefined') return;
     const canvas = document.getElementById('contact-canvas');
     const wrap = canvas && canvas.parentElement;
@@ -1416,7 +1527,7 @@
       paint(clock.getElapsedTime());
       requestAnimationFrame(loop);
     })();
-  })();
+  }
 
   // ---- Hero field — a double-entry ledger that dissolves into an orchestration
   // graph as you scroll, and settles back if you scroll up. Every point carries two
@@ -1813,7 +1924,45 @@
     };
   })();
 
-  heroField.mount();
+  // ---- Three.js loader. Injected only after window load, only if the hero is
+  // actually on screen, and never under reduced motion. Both WebGL scenes are
+  // decoration: if this never runs, or the CDN is down, the page is unchanged
+  // apart from the canvases being absent.
+  (function loadThree() {
+    if (reduceMotion) return;
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    let injected = false;
+
+    function inject() {
+      if (injected) return;
+      injected = true;
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      s.integrity = 'sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ==';
+      s.crossOrigin = 'anonymous';
+      s.referrerPolicy = 'no-referrer';
+      s.async = true;
+      s.onload = function () {
+        // Respect the Tweaks toggle if it was switched off before this landed.
+        const on = document.querySelector('#heroSeg button[data-hero="on"]');
+        if (!on || on.classList.contains('active')) heroField.mount();
+        initContact();
+      };
+      document.head.appendChild(s);
+    }
+
+    function whenHeroVisible() {
+      if (!('IntersectionObserver' in window)) { inject(); return; }
+      const io = new IntersectionObserver(entries => {
+        if (entries.some(e => e.isIntersecting)) { io.disconnect(); inject(); }
+      });
+      io.observe(hero);
+    }
+
+    if (document.readyState === 'complete') whenHeroVisible();
+    else window.addEventListener('load', whenHeroVisible);
+  })();
 
   // ---- Card tilt. One shared rAF for every card, started on enter and stopped
   // when nothing is hovered. pointermove only records a target; the transform is
