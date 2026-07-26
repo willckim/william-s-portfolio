@@ -1561,21 +1561,19 @@
       } catch (e) { return null; }
 
       const mobile = window.innerWidth < 760;
-      const ROWS   = mobile ?  10 :  16;   // ruled lines on the page
+      const narrow = window.innerWidth < 1200;
+      const ROWS   = narrow ?  10 :  16;   // ruled lines on the page
       const TARGET = mobile ? 260 : 620;   // total points; graph density unchanged
       const NODES  = mobile ?  30 :  60;   // points promoted to graph nodes
       const LINKS  = mobile ?  20 :  48;   // edges drawn between them
       const GAP    = 0.95;                 // row spacing on y
-      const STEP   = 0.62;                 // spacing between figures along x
-      const MINRUN = 5, MAXRUN = 12;       // figures per row
-      // Columns are flush right and ragged left, the way a column of figures is
-      // actually set. These are the right edges; runs extend leftward from them.
-      const DEBIT_R  = -1.4;
-      const CREDIT_R =  7.6;
-      const CREDIT_L = CREDIT_R - (MAXRUN - 1) * STEP;   // leftmost a credit point reaches
-      const BLOCK_L  = DEBIT_R  - (MAXRUN - 1) * STEP;
-      const BLOCK_W  = CREDIT_R - BLOCK_L;
-      // Nothing may land in the gutter between DEBIT_R and CREDIT_L.
+      const STEP   = 0.62;                 // p: spacing between digits in a group
+      const MAXRUN = 12;                   // digits per figure, capped
+      const CLUSTER_GAP = 1.7;             // gap between groups, in units of p
+      const GUTTER_P    = 3.2;             // column gutter, in units of p
+      const TOTAL_LIFT  = 1.4 * STEP;      // extra air above the total row
+      const RULE_DROP   = GAP * 0.55;
+      const CREDIT_R    = 7.6;             // credit column right edge, flush
 
       const dprCap = () => Math.min(window.devicePixelRatio, window.innerWidth < 760 ? 1.5 : 2);
       renderer.setPixelRatio(dprCap());
@@ -1587,14 +1585,57 @@
       const field = new THREE.Group();
       scene.add(field);
 
-      // --- Ledger layout. Runs of 5 to 12 figures per column, every run ending on
-      // the column's right edge, so both columns are flush right and ragged left.
-      const runs = [];
+      // --- Ledger layout. A figure is groups of digits, never an even run: two
+      // for the cents, then one to three groups of three, then an optional
+      // leading group. Uniform pitch is exactly what made a row read as a bar.
+      function figureGroups(isTotal) {
+        if (isTotal) return [3 + Math.floor(Math.random() * 2)];   // one short figure
+        const g = [2];                                             // cents
+        const thousands = 1 + Math.floor(Math.random() * 3);
+        for (let n = 0; n < thousands; n++) g.push(3);
+        let count = 2 + thousands * 3;
+        if (Math.random() < 0.6 && count < MAXRUN) {                // leading group
+          const lead = 1 + Math.floor(Math.random() * Math.min(3, MAXRUN - count));
+          g.push(lead);
+          count += lead;
+        }
+        return g;
+      }
+      // Leftward reach of a figure, measured from its flush right edge.
+      function groupSpan(g) {
+        let span = 0, placed = 0;
+        for (let gi = 0; gi < g.length; gi++) {
+          for (let m = 0; m < g[gi]; m++, placed++) {
+            if (placed > 0) span += (m === 0 ? CLUSTER_GAP : 1) * STEP;
+          }
+        }
+        return span;
+      }
+
+      const rows = [];
+      let maxSpan = 0;
       for (let r = 0; r < ROWS; r++) {
-        runs.push([
-          MINRUN + Math.floor(Math.random() * (MAXRUN - MINRUN + 1)),
-          MINRUN + Math.floor(Math.random() * (MAXRUN - MINRUN + 1))
-        ]);
+        const isTotal = r === ROWS - 1;
+        const pair = [figureGroups(isTotal), figureGroups(isTotal)];
+        rows.push(pair);
+        maxSpan = Math.max(maxSpan, groupSpan(pair[0]), groupSpan(pair[1]));
+      }
+      // The gutter has to beat the inter-group gap decisively or the two columns
+      // read as one wide figure. Derived from the widest figure actually built.
+      const DEBIT_R  = CREDIT_R - maxSpan - GUTTER_P * STEP;
+      const CREDIT_L = CREDIT_R - maxSpan;
+      const BLOCK_L  = DEBIT_R  - maxSpan;
+      const BLOCK_W  = CREDIT_R - BLOCK_L;
+
+      // The total row sits alone above the rule, with extra air over it.
+      const SPAN_H = (ROWS - 1) * GAP + TOTAL_LIFT + RULE_DROP;
+      const TOP_Y  = SPAN_H / 2;
+      const BLOCK_H = SPAN_H;
+      const rowYs = [];
+      for (let r = 0; r < ROWS; r++) {
+        rowYs.push(r < ROWS - 1
+          ? TOP_Y - r * GAP
+          : TOP_Y - ((ROWS - 1) * GAP + TOTAL_LIFT));
       }
 
       const N      = TARGET;
@@ -1604,22 +1645,25 @@
       const seed   = new Float32Array(N);
       const role   = new Float32Array(N);
       const paper  = new Float32Array(N);   // 1 = printed on the page, 0 = graph only
-      const halfH  = (ROWS - 1) * GAP / 2;
-      const BLOCK_H = halfH * 2;
 
       let i = 0;
       for (let r = 0; r < ROWS && i < N; r++) {
-        const y    = halfH - r * GAP;                  // row 0 is the top row
+        const y    = rowYs[r];                         // row 0 is the top row
         const rowT = ROWS > 1 ? r / (ROWS - 1) : 0;    // top rows come apart first
         for (let c = 0; c < 2; c++) {
-          const edge = c === 0 ? DEBIT_R : CREDIT_R;
-          for (let k = 0; k < runs[r][c] && i < N; k++, i++) {
-            ledger[i * 3]     = edge - k * STEP;       // flush right, ragged left
-            ledger[i * 3 + 1] = y;
-            ledger[i * 3 + 2] = (Math.random() - 0.5) * 0.24;
-            delay[i] = rowT * 0.7 + Math.random() * 0.3;
-            seed[i]  = Math.random();
-            paper[i] = 1;
+          const edge = c === 0 ? DEBIT_R : CREDIT_R;   // flush right, ragged left
+          const groups = rows[r][c];
+          let x = edge, placed = 0;
+          for (let gi = 0; gi < groups.length && i < N; gi++) {
+            for (let m = 0; m < groups[gi] && i < N; m++, i++, placed++) {
+              if (placed > 0) x -= (m === 0 ? CLUSTER_GAP : 1) * STEP;
+              ledger[i * 3]     = x;
+              ledger[i * 3 + 1] = y;
+              ledger[i * 3 + 2] = (Math.random() - 0.5) * 0.24;
+              delay[i] = rowT * 0.7 + Math.random() * 0.3;
+              seed[i]  = Math.random();
+              paper[i] = 1;
+            }
           }
         }
       }
@@ -1628,7 +1672,7 @@
       // faded in as it disperses, so the uMorph 1.0 density is unchanged.
       for (; i < N; i++) {
         ledger[i * 3]     = BLOCK_L + Math.random() * BLOCK_W;
-        ledger[i * 3 + 1] = (Math.random() - 0.5) * BLOCK_H;
+        ledger[i * 3 + 1] = (Math.random() - 0.5) * SPAN_H;
         ledger[i * 3 + 2] = (Math.random() - 0.5) * 0.24;
         delay[i] = Math.random();
         seed[i]  = Math.random();
@@ -1766,8 +1810,10 @@
             vRole  = aRole;
             vT     = t;
             vPaper = aPaper;
+            // The node size bump is scaled by t: a page of figures is written in
+            // one weight, and nodes only emerge as the graph forms.
             gl_PointSize = uSize * uPixelRatio
-                         * (1.0 + vRole * 0.45)
+                         * (1.0 + vRole * 0.45 * t)
                          * (62.0 / max(0.001, -mv.z))
                          * mix(1.25, 1.0, t);   // crisper at rest than dispersed
             gl_Position = projectionMatrix * mv;
@@ -1843,7 +1889,7 @@
       // artifact in the scene and the first thing visible on load.
       // It rules the credit column only, ending exactly on that column's right
       // edge, which is what makes the flush-right alignment legible.
-      const ruleY   = -halfH - GAP * 0.55;
+      const ruleY   = TOP_Y - SPAN_H;
       const ruleGeo = new THREE.BufferGeometry();
       ruleGeo.setAttribute('position', new THREE.BufferAttribute(
         new Float32Array([CREDIT_L, ruleY, 0, CREDIT_R, ruleY, 0]), 3));
@@ -1860,7 +1906,9 @@
       // breakpoint, so the no-overlap guarantee holds at every width, not just the
       // ones that got tested. Recomputed on resize.
       const FOVY = 55 * Math.PI / 180;
+      const MIN_ROW_PITCH = 8;          // px between rows below which they merge
       let maskRestX = 58, maskRestY = 50;
+      let restFloor = 0;                // uMorph held here at rest, 0 = full ledger
 
       function placeLedger() {
         const c = container.getBoundingClientRect();
@@ -1883,7 +1931,9 @@
         const contentR = ib.right - (ics ? parseFloat(ics.paddingRight) || 0 : 0);
         const contentL = ib.left + (ics ? parseFloat(ics.paddingLeft) || 0 : 0);
 
-        const PAD    = 12;
+        // The narrow branch is fighting for every pixel of band, so it runs at the
+        // minimum clearance rather than the comfortable one.
+        const PAD    = narrow ? 8 : 12;
         const navB   = Math.max(nav ? nav.getBoundingClientRect().bottom : c.top, c.top);
         const headT  = headline ? headline.getBoundingClientRect().top : c.bottom;
         const statT  = status ? status.getBoundingClientRect().top : headT;
@@ -1904,6 +1954,11 @@
         if (!best) return;
 
         const scale = Math.min(0.55, best.scale);   // never larger than intended
+
+        // If the band cannot give the rows enough pitch to resolve, do not
+        // compress further. Open the field partway instead, so it never claims to
+        // be a ledger it has no room to render.
+        restFloor = (GAP * scale * k) < MIN_ROW_PITCH ? 0.35 : 0;
         // Pin the credit column's right edge to the text column, centre in the band.
         const offX = (best.right - c.left - c.width / 2) / k - CREDIT_R * scale;
         const offY = (c.height / 2 - ((best.top + best.bottom) / 2 - c.top)) / k;
@@ -1942,7 +1997,8 @@
         // Desktop reads scroll across the hero. Mobile ignores it and breathes.
         const target = mobile
           ? 0.55 + Math.sin(t * 0.22) * 0.08
-          : Math.min(Math.max(window.scrollY / Math.max(hero.offsetHeight, 1), 0), 1);
+          : Math.max(restFloor,
+              Math.min(Math.max(window.scrollY / Math.max(hero.offsetHeight, 1), 0), 1));
         morph += (target - morph) * 0.06;         // damped, not 1:1 with the wheel
         uniforms.uMorph.value = morph;
 
