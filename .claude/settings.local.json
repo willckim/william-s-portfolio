@@ -2,7 +2,26 @@
   "permissions": {
     "allow": [
       "Bash(gh repo view:*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "mcp__plugin_vercel_vercel__list_teams",
+      "mcp__plugin_vercel_vercel__list_projects",
+      "Read(//c/Users/willi/**)",
+      "Read(//c/Users/willi/notes/**)",
+      "Bash(py -c \"import sys; print\\(sys.version\\)\")",
+      "Bash(py -c \"import pypdf; print\\('pypdf ok'\\)\")",
+      "Bash(py -c \"import pptx; print\\('python-pptx ok'\\)\")",
+      "Bash(py -c ' *)",
+      "Bash(node verify-copilot.js)",
+      "Bash(node contrast-copilot.js)",
+      "Bash(node measure-lines.js)",
+      "Bash(node fallback-copy.js)",
+      "Bash(node print-card.js)",
+      "Bash(py -X utf8 -c ' *)",
+      "Bash(node test-flex-print.js)",
+      "Bash(node verify-links.js)",
+      "Bash(node shot-counters.js)",
+      "Bash(node measure-contact.js)",
+      "Bash(py -X utf8)"
     ]
   }
 }
