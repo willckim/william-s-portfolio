@@ -98,14 +98,30 @@
   [data-accent="cobalt"]  { --accent: #2b4ed1; }
   [data-accent="ink"]     { --accent: #19170f; }
   [data-theme="dark"][data-accent="ink"] { --accent: #f4efe4; --accent-ink: #0f0e0c; }
-  /* Rust on the dark paper is only 3.54:1, so on this theme it is lifted in
-     linear light by 1.55. That scales all three channels by the same factor,
-     which holds the hue and saturation exactly and moves luminance alone:
-     4.99:1 on --bg and 4.76:1 on --bg-elev. --accent-ink follows the ink
-     accent's precedent above and becomes the page black, which makes text on
-     an accent fill the same contrast pair in reverse, so one number covers
-     both directions. Scoped to dark + rust; the paper theme is untouched. */
-  [data-theme="dark"][data-accent="rust"] { --accent: #dd5622; --accent-ink: #0f0e0c; }
+  /* On the dark paper the three coloured accents land at 3.54, 2.98 and 2.86
+     to one, so each is lifted here until it clears 4.5 against both dark
+     surfaces. Rust and forest are scaled in linear light, which multiplies all
+     three channels by one factor and so moves luminance while leaving the
+     channel ratios alone. Cobalt cannot be done that way: its blue is already
+     at 0.638 in linear light, so it clips at a factor of 1.568 and stalls at
+     3.97:1. It is raised in HSL lightness instead, which holds its hue and
+     saturation just as exactly. Hue moves by at most 0.28 degrees across all
+     three, saturation by at most 0.017.
+
+     --accent-ink follows the ink accent's precedent above and becomes the page
+     black. It has to: lightening an accent drops white-on-accent to about
+     3.9:1, and this way text on an accent fill is the same contrast pair in
+     reverse, so a single number covers both directions.
+
+                    light      dark       on --bg   on --bg-elev
+       rust         #b6451a    #dd5622    4.99:1    4.76:1
+       forest       #2f6a3a    #428f50    4.85:1    4.62:1
+       cobalt       #2b4ed1    #5e79de    4.84:1    4.62:1
+
+     Scoped to the dark theme only; every light theme value is untouched. */
+  [data-theme="dark"][data-accent="rust"]   { --accent: #dd5622; --accent-ink: #0f0e0c; }
+  [data-theme="dark"][data-accent="forest"] { --accent: #428f50; --accent-ink: #0f0e0c; }
+  [data-theme="dark"][data-accent="cobalt"] { --accent: #5e79de; --accent-ink: #0f0e0c; }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
