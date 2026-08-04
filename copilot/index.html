@@ -313,8 +313,11 @@
   @media (max-width: 720px) { .mistakes { grid-template-columns: 1fr; } }
 
   .nonneg { margin-top: clamp(36px, 5vw, 60px); }
-  .nonneg-list { list-style: none; border-top: 1px solid var(--line); margin-top: 18px; }
+  /* Explicit counter, not counter(list-item): these rows are display:grid, which
+     is not display:list-item, so the implicit counter never increments. */
+  .nonneg-list { list-style: none; counter-reset: nn; border-top: 1px solid var(--line); margin-top: 18px; }
   .nonneg-list li {
+    counter-increment: nn;
     /* The text is an anonymous grid item, so the measure has to be capped by the
        track itself rather than by a max-width on a child that does not exist. */
     display: grid; grid-template-columns: 44px minmax(0, 62ch);
@@ -324,7 +327,7 @@
     color: var(--ink-2); font-size: 15px; line-height: 1.6;
   }
   .nonneg-list li::before {
-    content: counter(list-item, decimal-leading-zero);
+    content: counter(nn, decimal-leading-zero);
     font-family: var(--mono); font-size: 12px; color: var(--muted);
     padding-top: 3px;
   }
@@ -365,6 +368,20 @@
     flex-shrink: 0;
   }
   .dl-row.pending .dl-name { color: var(--muted); }
+  /* Live rows get the same treatment the résumé link gets on the main site:
+     the whole row is the target, the mono meta carries type and size. */
+  a.dl-row { transition: padding .3s var(--ease); position: relative; }
+  a.dl-row::before {
+    content: "";
+    position: absolute; left: 0; top: 0; height: 100%; width: 0;
+    background: var(--accent);
+    transition: width .3s var(--ease);
+  }
+  a.dl-row:hover { padding-left: 12px; }
+  a.dl-row:hover::before { width: 3px; }
+  a.dl-row:hover .dl-name { color: var(--accent); }
+  a.dl-row:hover .dl-meta { color: var(--ink-2); }
+  a.dl-row .dl-name { transition: color .2s ease; }
 
   /* ---------- FOOTER ---------- */
   footer.foot {
@@ -700,13 +717,13 @@
           </div>
           <div class="dl-meta">Coming soon</div>
         </div>
-        <div class="dl-row pending">
+        <a class="dl-row" href="/copilot-guardrail-card.html">
           <div class="dl-name">
             One page guardrail card
-            <span class="dl-sub">The split, the non-negotiables, the data rule, and the template. Printable.</span>
+            <span class="dl-sub">The split, the non-negotiables, the data rule, and the template. Prints to one Letter page.</span>
           </div>
-          <div class="dl-meta">Coming soon</div>
-        </div>
+          <div class="dl-meta">HTML · 12 KB · Open ↗</div>
+        </a>
       </div>
     </div>
   </section>
