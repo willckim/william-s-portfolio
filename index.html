@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>William Kim · Staff Accountant / AI Engineer</title>
-<meta name="description" content="William Kim. Finance, engineering, and AI. Staff Accountant at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
+<title>William Kim · Staff Accountant · Automation Lead / AI Engineer</title>
+<meta name="description" content="William Kim. Finance, engineering, and AI. Staff Accountant · Automation Lead at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
 <link rel="canonical" href="https://www.williamckim.com/" />
 <meta name="theme-color" content="#f5f1ea" />
 
@@ -13,8 +13,8 @@
 
 <!-- Sharing -->
 <meta property="og:type" content="website" />
-<meta property="og:title" content="William Kim · Staff Accountant / AI Engineer" />
-<meta property="og:description" content="Finance, engineering, and AI. Staff Accountant at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
+<meta property="og:title" content="William Kim · Staff Accountant · Automation Lead / AI Engineer" />
+<meta property="og:description" content="Finance, engineering, and AI. Staff Accountant · Automation Lead at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
 <meta property="og:url" content="https://www.williamckim.com/" />
 <meta property="og:site_name" content="William Kim" />
 <!-- summary, not summary_large_image, because there is no share image yet.
@@ -24,8 +24,8 @@
        <meta property="og:image:height" content="630" />
        <meta property="og:image:alt" content="William Kim · Finance x Engineering x AI" /> -->
 <meta name="twitter:card" content="summary" />
-<meta name="twitter:title" content="William Kim · Staff Accountant / AI Engineer" />
-<meta name="twitter:description" content="Finance, engineering, and AI. Staff Accountant at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
+<meta name="twitter:title" content="William Kim · Staff Accountant · Automation Lead / AI Engineer" />
+<meta name="twitter:description" content="Finance, engineering, and AI. Staff Accountant · Automation Lead at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -37,7 +37,7 @@
   "@type": "Person",
   "name": "William Kim",
   "url": "https://www.williamckim.com/",
-  "jobTitle": "Staff Accountant",
+  "jobTitle": "Staff Accountant · Automation Lead",
   "worksFor": {
     "@type": "Organization",
     "name": "Ortho Molecular Products"
@@ -205,6 +205,43 @@
     50%      { box-shadow: 0 0 0 6px color-mix(in oklab, var(--good) 0%, transparent); }
   }
   .status-row .sep { opacity: .4; }
+  /* The hero field fits itself into the clear band right of where this row ends,
+     so the row's length is what decides whether the ledger has room to resolve
+     its rows. Adding "Automation Lead" pushed that edge far enough right to
+     collapse the band and force the field into its dispersed fallback. Capping
+     the measure lets the row wrap instead, which costs one line and keeps the
+     ledger. Below 900px the row already wraps on its own. */
+  @media (min-width: 900px) {
+    .status-row { max-width: 78%; }
+  }
+
+  /* ===== TEMPORARY · workshop pointer =================================
+     Sits hard under the status row instead of floating in the middle of
+     the gap that row reserves before the headline: the negative top margin
+     collapses against that gap, and the bottom margin puts it back. Delete
+     this whole rule with the matching markup block in the hero. */
+  .hero-workshop {
+    /* inline-block, not inline-flex: as a flex container the arrow becomes its
+       own item and strands itself on the first line when the label wraps. */
+    display: inline-block;
+    margin-top: calc(14px - clamp(40px, 6vw, 72px));
+    margin-bottom: clamp(40px, 6vw, 72px);
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    border-bottom: 1px solid color-mix(in oklab, var(--accent) 30%, transparent);
+    padding-bottom: 4px;
+    transition: border-color .2s ease;
+  }
+  .hero-workshop:hover { border-bottom-color: var(--accent); }
+  .hero-workshop .arr { display: inline-block; margin-left: 5px; transition: transform .25s ease; }
+  .hero-workshop:hover .arr { transform: translateX(3px); }
+  /* Holds the line to one line on a phone, where 11px plus tracking is about
+     10px too wide for the viewport. */
+  @media (max-width: 430px) {
+    .hero-workshop { font-size: 10px; letter-spacing: 0.02em; }
+  }
+  /* ===== END TEMPORARY ============================================== */
 
   h1.headline {
     font-family: var(--sans);
@@ -547,6 +584,24 @@
   }
   .tool-list { color: var(--ink-2); font-size: 14px; line-height: 1.7; }
 
+  /* ---------- ABOUT · work impact ---------- */
+  /* The figures carry the weight here, so they are set at pull-quote size in
+     the accent and the sentence underneath stays at body size. */
+  .at-work { margin-top: clamp(32px, 4vw, 52px); }
+  .impact { margin-top: 16px; border-top: 1px solid var(--line); }
+  .impact-row { padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .impact-fig {
+    font-family: var(--sans); font-weight: 500;
+    font-size: clamp(20px, 2.1vw, 27px);
+    line-height: 1.08; letter-spacing: -0.025em;
+    color: var(--accent);
+  }
+  .impact-txt {
+    margin-top: 8px;
+    color: var(--ink-2); font-size: 15px; line-height: 1.55;
+    max-width: 48ch;
+  }
+
   /* ---------- CERTS ---------- */
   .certs {
     display: grid; grid-template-columns: repeat(3, 1fr);
@@ -790,10 +845,21 @@
       <div class="status-row">
         <span><span class="dot"></span>Currently shipping &nbsp;·&nbsp; Barrington, IL</span>
         <span class="sep">/</span>
-        <span>Staff Accountant @ Ortho Molecular Products</span>
+        <span>Staff Accountant · Automation Lead @ Ortho Molecular Products</span>
         <span class="sep">/</span>
         <span>B.S. Computer Science, Pitt '24</span>
       </div>
+
+      <!-- ===== TEMPORARY · workshop pointer ==============================
+           The training deck sends attendees to williamckim.com rather than
+           to /copilot, so they land here first and need one visible way
+           across. Remove after the session has aged out: delete this block
+           and the .hero-workshop rule in <style>. Nothing else refers to
+           either one. -->
+      <a class="hero-workshop" href="/copilot">
+        Workshop attendees · Copilot prompting materials <span class="arr">→</span>
+      </a>
+      <!-- ===== END TEMPORARY ============================================= -->
 
       <h1 class="headline">
         Finance <span class="x">×</span> <em>Engineering</em> <span class="x">×</span> AI.
@@ -1063,6 +1129,20 @@
 
       <div class="grid">
         <div class="card">
+          <div class="card-tag"><span class="dot">●</span> WORKSHOP · Enablement</div>
+          <div class="card-title">Prompting Copilot for Accounting Work</div>
+          <div class="card-desc">
+            Sixty minute training for our accounting team on applying Copilot to reconciliation workflows,
+            mapping which steps belong to deterministic tools and which belong to AI assisted exception
+            handling. Slides, prompt library, and guardrail card published.
+          </div>
+          <div class="card-stack"><span>Microsoft 365 Copilot</span><span>Excel</span><span>Power Query</span><span>Enablement</span></div>
+          <div class="card-links">
+            <a href="/copilot">Materials ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
           <div class="card-tag"><span class="dot">●</span> LIVE · Orchestration</div>
           <div class="card-title">LLM Orchestration Engine · multi-model routing</div>
           <div class="card-desc">
@@ -1175,15 +1255,36 @@
       </div>
 
       <div class="about-grid">
-        <p class="about-lede">
-          Staff Accountant at <em>Ortho Molecular Products</em> in Barrington, supporting the Fast Close,
-          reconciliations, internal audits, fixed assets, sales tax remittals and corporate tax filings.
-          Off the clock I ship production AI: <em>LLM orchestration</em>, multi-agent systems, mobile apps,
-          and browser automation. Numbers <em>and</em> neural nets. Currently studying
-          <em>quantum computing</em> in Qiskit: working circuits for core algorithms (superposition,
-          entanglement, teleportation, Grover's) and a classical vs quantum forecaster. <em>IBM Quantum</em>
-          hardware next.
-        </p>
+        <div>
+          <p class="about-lede">
+            Staff Accountant at <em>Ortho Molecular Products</em> in Barrington, supporting the Fast Close,
+            reconciliations, internal audits, fixed assets, sales tax remittals and corporate tax filings.
+            <em>CPA candidate</em>, sitting for the exams in October 2026.
+            Off the clock I ship production AI: <em>LLM orchestration</em>, multi-agent systems, mobile apps,
+            and browser automation. Numbers <em>and</em> neural nets. Currently studying
+            <em>quantum computing</em> in Qiskit: working circuits for core algorithms (superposition,
+            entanglement, teleportation, Grover's) and a classical vs quantum forecaster. <em>IBM Quantum</em>
+            hardware next.
+          </p>
+
+          <div class="at-work">
+            <div class="eyebrow">At work</div>
+            <div class="impact">
+              <div class="impact-row">
+                <div class="impact-fig">36 hours → under 10 minutes</div>
+                <div class="impact-txt">A transaction classification engine replaced a manual monthly review.</div>
+              </div>
+              <div class="impact-row">
+                <div class="impact-fig">Excel → Python</div>
+                <div class="impact-txt">A pipeline replaced a manual reporting workflow.</div>
+              </div>
+              <div class="impact-row">
+                <div class="impact-fig">Power Platform</div>
+                <div class="impact-txt">Internal tools.</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div class="toolbox">
           <div class="tool-row">
