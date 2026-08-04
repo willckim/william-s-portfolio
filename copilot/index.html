@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Prompting Copilot for Accounting Work · William Kim</title>
+<meta name="description" content="Workshop resource: a prompt library, the R-STAR-QC framework, and guardrails for applying Microsoft 365 Copilot to reconciliation and exception-handling work." />
+<link rel="canonical" href="https://www.williamckim.com/copilot" />
+<meta name="theme-color" content="#f5f1ea" />
+
+<!-- Same inline SVG favicon as the main site, so no extra file and no extra request. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f5f1ea'/%3E%3Cpath d='M6 9l5 15 5-10 5 10 5-15' fill='none' stroke='%23b6451a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+
+<!-- Sharing -->
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Prompting Copilot for Accounting Work · William Kim" />
+<meta property="og:description" content="Workshop resource: a prompt library, the R-STAR-QC framework, and guardrails for applying Microsoft 365 Copilot to reconciliation and exception-handling work." />
+<meta property="og:url" content="https://www.williamckim.com/copilot" />
+<meta property="og:site_name" content="William Kim" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Prompting Copilot for Accounting Work · William Kim" />
+<meta name="twitter:description" content="Workshop resource: a prompt library, the R-STAR-QC framework, and guardrails for applying Microsoft 365 Copilot to reconciliation and exception-handling work." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<style>
+  /* ---------- TOKENS (mirrors the main site) ---------- */
+  :root {
+    --bg: #f5f1ea;
+    --bg-elev: #efeae0;
+    --ink: #19170f;
+    --ink-2: #2b2820;
+    --muted: #6a6557;
+    --line: #19170f1a;
+    --line-2: #19170f0d;
+    --accent: #b6451a;       /* rust */
+    --accent-ink: #ffffff;
+    --good: #2f6f4f;
+    --maxw: 1280px;
+    --gutter: clamp(20px, 4vw, 56px);
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- LAYOUT ---------- */
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+
+  /* ---------- TOPBAR ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in oklab, var(--bg) 86%, transparent);
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+    max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter);
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+  }
+  .brand-mark {
+    width: 22px; height: 22px; border-radius: 4px;
+    background: var(--ink); color: var(--bg);
+    display: grid; place-items: center; font-weight: 700;
+    font-family: var(--sans); font-size: 12px;
+  }
+  .brand-name { font-weight: 500; }
+  .brand-name em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--muted); }
+  .backlink {
+    font-family: var(--mono); font-size: 12px; color: var(--ink-2);
+    transition: color .2s ease;
+  }
+  .backlink:hover { color: var(--accent); }
+  @media (max-width: 480px) { .brand-name { display: none; } }
+
+  /* ---------- TITLE BLOCK ---------- */
+  .page-head {
+    padding: clamp(48px, 7vw, 108px) 0 clamp(36px, 5vw, 64px);
+    border-bottom: 1px solid var(--line);
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h1.title {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: clamp(38px, 5.6vw, 78px);
+    line-height: 1.0;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    max-width: 17ch;
+    margin-top: 18px;
+  }
+  h1.title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--accent); letter-spacing: -0.01em; }
+  .standfirst {
+    margin-top: clamp(24px, 3vw, 36px);
+    font-size: clamp(17px, 1.5vw, 21px);
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 56ch;
+  }
+  .byline {
+    margin-top: 22px;
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section.block {
+    padding: clamp(56px, 8vw, 104px) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .sec-head { margin-bottom: clamp(28px, 4vw, 48px); }
+  h2.sec-title {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: clamp(28px, 3.6vw, 46px);
+    line-height: 1.05;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    margin-top: 12px;
+    max-width: 20ch;
+  }
+  h2.sec-title em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--accent); }
+  .sec-note {
+    margin-top: 14px;
+    color: var(--ink-2); font-size: 15px; line-height: 1.6; max-width: 62ch;
+  }
+
+  /* ---------- § 01 THE ONE IDEA (the thesis, set larger) ---------- */
+  .split {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .split > div { background: var(--bg); padding: clamp(22px, 3vw, 36px); }
+  .col-label {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+  }
+  .col-label b { color: var(--accent); font-weight: 500; }
+  .col-head {
+    font-family: var(--sans); font-weight: 500;
+    font-size: clamp(22px, 2.4vw, 30px);
+    line-height: 1.15; letter-spacing: -0.02em;
+    color: var(--ink); margin: 12px 0 20px;
+  }
+  ul.plain { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  ul.plain li {
+    position: relative; padding-left: 20px;
+    color: var(--ink-2);
+    font-size: clamp(16px, 1.35vw, 19px);
+    line-height: 1.5;
+  }
+  ul.plain li::before { content: "›"; position: absolute; left: 0; color: var(--accent); }
+  .thesis-close {
+    margin-top: clamp(28px, 3.5vw, 44px);
+    padding-top: clamp(20px, 2.5vw, 28px);
+    border-top: 1px solid var(--line);
+    font-family: var(--serif);
+    font-size: clamp(21px, 2.4vw, 31px);
+    line-height: 1.3;
+    color: var(--ink);
+    max-width: 42ch;
+  }
+  .thesis-close b { font-family: var(--sans); font-weight: 500; color: var(--accent); font-size: 0.86em; }
+  @media (max-width: 800px) { .split { grid-template-columns: 1fr; } }
+
+  /* ---------- § 02 FRAMEWORK ---------- */
+  .rstar { border-top: 1px solid var(--line); }
+  .rstar-row {
+    display: grid; grid-template-columns: 56px 120px 1fr;
+    gap: 8px clamp(16px, 2.5vw, 32px);
+    align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .rstar-key {
+    font-family: var(--serif); font-style: italic;
+    font-size: 30px; line-height: 1; color: var(--accent);
+  }
+  .rstar-term {
+    font-family: var(--sans); font-weight: 500; font-size: 16px;
+    letter-spacing: -0.01em; color: var(--ink);
+  }
+  .rstar-def { color: var(--ink-2); font-size: 15px; line-height: 1.6; max-width: 72ch; }
+  .rstar-def span { color: var(--muted); }
+  @media (max-width: 640px) {
+    .rstar-row { grid-template-columns: 40px 1fr; }
+    .rstar-key { font-size: 24px; }
+    .rstar-def { grid-column: 2; }
+  }
+  .twenty {
+    margin-top: clamp(28px, 3.5vw, 40px);
+    padding: clamp(20px, 2.6vw, 30px);
+    background: var(--bg-elev);
+    border-left: 3px solid var(--accent);
+  }
+  .twenty .lbl {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .twenty p {
+    font-family: var(--mono); font-size: clamp(13px, 1.15vw, 15px);
+    line-height: 1.7; color: var(--ink);
+    overflow-wrap: anywhere;
+  }
+  .twenty p b { color: var(--accent); font-weight: 500; }
+  .cite {
+    margin-top: 20px;
+    font-size: 13px; line-height: 1.6; color: var(--muted);
+  }
+  .cite em { font-family: var(--serif); font-style: italic; }
+
+  /* ---------- § 03 PROMPT LIBRARY ---------- */
+  .prompt {
+    background: var(--bg-elev);
+    border: 1px solid var(--line);
+    padding: clamp(18px, 2.4vw, 26px);
+    margin-bottom: 14px;
+  }
+  .prompt-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+  .prompt-name {
+    display: flex; align-items: baseline; gap: 12px;
+    font-family: var(--sans); font-weight: 500; font-size: 17px;
+    letter-spacing: -0.01em; color: var(--ink);
+  }
+  .prompt-num { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+  .copy-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 7px 14px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--ink-2);
+    font: 500 12px/1 var(--mono);
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: border-color .2s ease, color .2s ease, background-color .2s ease;
+  }
+  .copy-btn:hover { border-color: var(--ink); color: var(--ink); }
+  .copy-btn.done { border-color: var(--good); color: var(--good); }
+  .copy-btn.failed { border-color: var(--accent); color: var(--accent); }
+  .prompt-text {
+    font-family: var(--mono);
+    font-size: clamp(12.5px, 1.05vw, 13.5px);
+    line-height: 1.75;
+    color: var(--ink-2);
+    /* Prose, not code: it must wrap on a phone rather than scroll sideways, and
+       it must not run to 130 characters on a wide desktop. */
+    max-width: 96ch;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+
+  /* ---------- § 04 GUARDRAILS ---------- */
+  .mistakes {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1px; background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .mistake { background: var(--bg); padding: clamp(18px, 2.2vw, 24px); }
+  .mistake h3 {
+    font-family: var(--sans); font-weight: 500; font-size: 16px;
+    letter-spacing: -0.01em; color: var(--ink);
+    display: flex; gap: 10px; align-items: baseline;
+  }
+  .mistake h3 span { color: var(--accent); font-family: var(--mono); font-size: 12px; }
+  .mistake p { margin-top: 8px; color: var(--muted); font-size: 14px; line-height: 1.55; }
+  .mistake .fix {
+    margin-top: 12px; padding-top: 12px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-2); font-size: 14px; line-height: 1.55;
+  }
+  .mistake .fix b {
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent);
+    display: block; margin-bottom: 5px;
+  }
+  @media (max-width: 720px) { .mistakes { grid-template-columns: 1fr; } }
+
+  .nonneg { margin-top: clamp(36px, 5vw, 60px); }
+  .nonneg-list { list-style: none; border-top: 1px solid var(--line); margin-top: 18px; }
+  .nonneg-list li {
+    /* The text is an anonymous grid item, so the measure has to be capped by the
+       track itself rather than by a max-width on a child that does not exist. */
+    display: grid; grid-template-columns: 44px minmax(0, 62ch);
+    gap: clamp(12px, 2vw, 24px);
+    padding: 16px 0;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink-2); font-size: 15px; line-height: 1.6;
+  }
+  .nonneg-list li::before {
+    content: counter(list-item, decimal-leading-zero);
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
+    padding-top: 3px;
+  }
+
+  .datarule {
+    margin-top: clamp(36px, 5vw, 60px);
+    padding: clamp(28px, 4vw, 52px);
+    background: var(--ink);
+    color: var(--bg);
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .datarule .lbl {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: color-mix(in oklab, var(--bg) 62%, transparent);
+  }
+  .datarule p {
+    font-family: var(--sans); font-weight: 500;
+    font-size: clamp(26px, 4vw, 52px);
+    line-height: 1.05; letter-spacing: -0.03em;
+    max-width: 18ch;
+  }
+  .datarule .sub { font-family: var(--serif); font-style: italic; font-size: clamp(17px, 1.6vw, 22px); color: color-mix(in oklab, var(--bg) 76%, transparent); }
+
+  /* ---------- § 05 DOWNLOADS ---------- */
+  .dl-list { border-top: 1px solid var(--line); }
+  .dl-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+    padding: 18px 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .dl-name { font-size: 16px; color: var(--ink); font-weight: 500; letter-spacing: -0.01em; }
+  .dl-sub { display: block; margin-top: 5px; font-size: 14px; color: var(--muted); font-weight: 400; letter-spacing: 0; }
+  .dl-meta {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+    flex-shrink: 0;
+  }
+  .dl-row.pending .dl-name { color: var(--muted); }
+
+  /* ---------- FOOTER ---------- */
+  footer.foot {
+    padding: 36px 0 28px;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  footer.foot .inner {
+    display: flex; flex-wrap: wrap; gap: 14px;
+    justify-content: space-between; align-items: center;
+  }
+  footer.foot em { font-family: var(--serif); font-style: italic; font-size: 13px; }
+
+  /* ---------- ACCESSIBILITY ---------- */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .skip-link {
+    position: absolute; left: 12px; top: -64px; z-index: 200;
+    background: var(--ink); color: var(--bg);
+    padding: 11px 18px; border-radius: 999px;
+    font: 500 13px/1 var(--sans);
+    transition: top .18s ease;
+  }
+  .skip-link:focus { top: 12px; }
+  #main:focus { outline: none; }
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+</style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="topbar">
+    <div class="inner">
+      <a href="/" class="brand">
+        <span class="brand-mark">W</span>
+        <span class="brand-name">William Kim <em>/ portfolio</em></span>
+      </a>
+      <a class="backlink" href="/">← Back to portfolio</a>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+  <!-- ---------- TITLE BLOCK ---------- -->
+  <div class="page-head">
+    <div class="wrap">
+      <div class="eyebrow">Workshop · Accounting team training</div>
+      <h1 class="title">Prompting Copilot for <em>Accounting Work</em></h1>
+      <p class="standfirst">
+        Reconciliations, exception handling, and making sense of large data.
+        Sixty minutes, two live demos.
+      </p>
+      <div class="byline">William Kim · Staff Accountant, Automation Lead</div>
+    </div>
+  </div>
+
+  <!-- ---------- § 01 THE ONE IDEA ---------- -->
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">§ 01 · The one idea</div>
+        <h2 class="sec-title">Copilot is not the <em>reconciliation engine</em>.</h2>
+        <p class="sec-note">
+          The tools that find differences and the tool that explains them are not the same tool.
+          Everything else on this page follows from that split.
+        </p>
+      </div>
+
+      <div class="split">
+        <div>
+          <div class="col-label">01 · Deterministic tools <b>FIND</b></div>
+          <div class="col-head">Same input, same answer, provable totals.</div>
+          <ul class="plain">
+            <li>Power Query merges</li>
+            <li>INDEX/MATCH</li>
+            <li>SUMIFS</li>
+            <li>Pivot tables</li>
+            <li>Conditional formatting</li>
+          </ul>
+        </div>
+        <div>
+          <div class="col-label">02 · Copilot <b>EXPLAINS</b></div>
+          <div class="col-head">Judgment, context, and language.</div>
+          <ul class="plain">
+            <li>Classifying an exception list: timing, coding, accrual, credit</li>
+            <li>Searching email and Teams for why an item is open</li>
+            <li>Writing the matching logic you then run yourself</li>
+            <li>Drafting the narrative and the follow-up to the item owner</li>
+            <li>Reviewing a finished rec for what is unexplained or unsupported</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="thesis-close">
+        Never ask Copilot to be the matching engine. <b>"It found 12 unmatched items when there
+        were 15"</b> is an audit finding, not a productivity win.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---------- § 02 THE FRAMEWORK ---------- -->
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">§ 02 · The framework</div>
+        <h2 class="sec-title">Structure beats <em>cleverness</em>: R-STAR-QC</h2>
+        <p class="sec-note">
+          You will not use all seven every time. Role, Task, Result, and Constraints carry most
+          of the weight.
+        </p>
+      </div>
+
+      <dl class="rstar">
+        <div class="rstar-row">
+          <dt class="rstar-key">R</dt>
+          <dd class="rstar-term">Role</dd>
+          <dd class="rstar-def">Who should it act as? <span>A staff accountant reviewing a sales tax rec.</span></dd>
+        </div>
+        <div class="rstar-row">
+          <dt class="rstar-key">S</dt>
+          <dd class="rstar-term">Situation</dd>
+          <dd class="rstar-def">What is the context? <span>Month-end close, period ending 7/31, two extracts.</span></dd>
+        </div>
+        <div class="rstar-row">
+          <dt class="rstar-key">T</dt>
+          <dd class="rstar-term">Task</dd>
+          <dd class="rstar-def">What is the single deliverable? <span>Categorize these 6 variances.</span></dd>
+        </div>
+        <div class="rstar-row">
+          <dt class="rstar-key">A</dt>
+          <dd class="rstar-term">Action</dd>
+          <dd class="rstar-def">What steps, in what order? <span>Group by state, then by root cause.</span></dd>
+        </div>
+        <div class="rstar-row">
+          <dt class="rstar-key">R</dt>
+          <dd class="rstar-term">Result</dd>
+          <dd class="rstar-def">What format? <span>A table with columns State, Amount, Category, Next step.</span></dd>
+        </div>
+        <div class="rstar-row">
+          <dt class="rstar-key">Q</dt>
+          <dd class="rstar-term">Question</dd>
+          <dd class="rstar-def">What should it ask you? <span>List anything you need from me to be certain.</span></dd>
+        </div>
+        <div class="rstar-row">
+          <dt class="rstar-key">C</dt>
+          <dd class="rstar-term">Constraints</dd>
+          <dd class="rstar-def">What are the rules? <span>Do not estimate. Flag anything you cannot source.</span></dd>
+        </div>
+      </dl>
+
+      <div class="twenty">
+        <div class="lbl">The 20 second version</div>
+        <p>
+          Act as <b>[role]</b>. Here is <b>[context]</b>. Do <b>[one task]</b>.
+          Return <b>[exact format]</b>. Do not <b>[the thing that would ruin it]</b>.
+        </p>
+      </div>
+
+      <p class="cite">
+        Source: Adebayo, Akpan &amp; Dell, <em>"Prompt Engineering for Accountants: Automating
+        Financial Tasks with AI,"</em> CPA Practice Advisor, September 2025.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---------- § 03 PROMPT LIBRARY ---------- -->
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">§ 03 · Prompt library</div>
+        <h2 class="sec-title">The five prompts from the <em>live demos</em>.</h2>
+        <p class="sec-note">
+          Every prompt ends with a boundary, and that sentence is the accuracy control,
+          not politeness. Copy them, then change the period, the account, and the categories
+          to match your own work.
+        </p>
+      </div>
+
+      <div class="prompt">
+        <div class="prompt-head">
+          <div class="prompt-name"><span class="prompt-num">01</span> Classify a variance list</div>
+          <button class="copy-btn" type="button" data-copy>Copy</button>
+        </div>
+        <p class="prompt-text">You are a staff accountant reviewing a sales tax reconciliation for the period ending 7/31/2026. Below are the state-level variances I calculated in Excel from two extracts: the GL sales tax payable detail and the tax engine export. For each variance, assign one root-cause category from this list: timing, coding error, missing accrual, unrecorded credit, rate error, jurisdiction mapping. Return a table with columns: State, Variance, Most likely category, Second possibility, What I should pull to confirm. Do not calculate or invent amounts. Use only the variances I pasted. If a variance could fit more than one category, say so explicitly.</p>
+      </div>
+
+      <div class="prompt">
+        <div class="prompt-head">
+          <div class="prompt-name"><span class="prompt-num">02</span> Investigate an aged item with Work IQ</div>
+          <button class="copy-btn" type="button" data-copy>Copy</button>
+        </div>
+        <p class="prompt-text">Search my email, Teams messages, and files from the last 90 days for anything about Minnesota sales tax, marketplace facilitator rules, or the Kestrel Nutrition account. Summarize what you find in three bullets, name who said it and when, and link each source. If you find nothing relevant, say so rather than guessing.</p>
+      </div>
+
+      <div class="prompt">
+        <div class="prompt-head">
+          <div class="prompt-name"><span class="prompt-num">03</span> Identify trends from a pivot</div>
+          <button class="copy-btn" type="button" data-copy>Copy</button>
+        </div>
+        <p class="prompt-text">Below is corporate card spend by category by month for May, June, and July 2026. Identify the three categories with the largest change and state the direction and dollar amount of each. Then tell me which changes look like normal seasonality versus something worth asking about, and explain your reasoning. Use only the figures I pasted.</p>
+      </div>
+
+      <div class="prompt">
+        <div class="prompt-head">
+          <div class="prompt-name"><span class="prompt-num">04</span> Flag outliers with a stated definition</div>
+          <button class="copy-btn" type="button" data-copy>Copy</button>
+        </div>
+        <p class="prompt-text">Here is spend by cardholder by month. Flag any cardholder whose monthly spend in any month is more than double their own average for the other two months. Also flag any category that appears for only one cardholder. For each flag, give the cardholder, the month, the amount, and one sentence on what I should check. Do not flag anything that does not meet those two definitions.</p>
+      </div>
+
+      <div class="prompt">
+        <div class="prompt-head">
+          <div class="prompt-name"><span class="prompt-num">05</span> Draft the summary email</div>
+          <button class="copy-btn" type="button" data-copy>Copy</button>
+        </div>
+        <p class="prompt-text">Draft an email to the Controller summarizing the four verified findings below. Under 200 words. Professional and factual, not alarmed. Lead with the total dollar impact, then the findings as a short list, then one clear ask. Do not add findings that are not in my list.</p>
+      </div>
+
+      <p class="sr-only" id="copyStatus" role="status" aria-live="polite"></p>
+    </div>
+  </section>
+
+  <!-- ---------- § 04 GUARDRAILS ---------- -->
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">§ 04 · Guardrails</div>
+        <h2 class="sec-title">Eight ways people get <em>burned</em>.</h2>
+        <p class="sec-note">
+          None of these are exotic. Every one of them shows up in the first week of using
+          the tool on real work.
+        </p>
+      </div>
+
+      <div class="mistakes">
+        <div class="mistake">
+          <h3><span>01</span> Asking it to do the math</h3>
+          <p>Treating Copilot like a calculator over a large range.</p>
+          <div class="fix"><b>Fix</b>Compute in Excel. Hand Copilot the result to interpret.</div>
+        </div>
+        <div class="mistake">
+          <h3><span>02</span> Leaving the format open</h3>
+          <p>"Summarize this" returns whatever shape it feels like.</p>
+          <div class="fix"><b>Fix</b>Name the columns, the length, and the audience.</div>
+        </div>
+        <div class="mistake">
+          <h3><span>03</span> Accepting the first answer</h3>
+          <p>The first draft is a starting point, not a deliverable.</p>
+          <div class="fix"><b>Fix</b>Push back once: "What did you assume? What is weakest here?"</div>
+        </div>
+        <div class="mistake">
+          <h3><span>04</span> Dumping in a whole workbook</h3>
+          <p>Context gets truncated and it quietly drops rows.</p>
+          <div class="fix"><b>Fix</b>Send the summary tab or the exception list, not all 4,000 rows.</div>
+        </div>
+        <div class="mistake">
+          <h3><span>05</span> Asking a leading question</h3>
+          <p>"Confirm this variance is timing" gets you agreement, not analysis.</p>
+          <div class="fix"><b>Fix</b>Ask neutrally: "What are the possible causes, ranked by likelihood?"</div>
+        </div>
+        <div class="mistake">
+          <h3><span>06</span> Starting a new chat every time</h3>
+          <p>You re-explain context and lose the thread's accumulated setup.</p>
+          <div class="fix"><b>Fix</b>Keep one chat per rec. Add turns instead of restarting.</div>
+        </div>
+        <div class="mistake">
+          <h3><span>07</span> Trusting a cited source blindly</h3>
+          <p>It can attach a real-looking citation to a claim the source never made.</p>
+          <div class="fix"><b>Fix</b>Open the link. Every time you plan to rely on it.</div>
+        </div>
+        <div class="mistake">
+          <h3><span>08</span> Pasting confidential data outside Copilot</h3>
+          <p>Your organization's data protection agreement covers Microsoft 365 Copilot. It does not cover a personal ChatGPT account.</p>
+          <div class="fix"><b>Fix</b>Company financial data stays in M365 Copilot. No exceptions.</div>
+        </div>
+      </div>
+
+      <div class="nonneg">
+        <div class="eyebrow">The four non-negotiables</div>
+        <ol class="nonneg-list">
+          <li>Every number that reaches a workpaper ties back to a control total before anyone signs it. Copilot drafts. The accountant ties out and signs.</li>
+          <li>Every categorized exception needs a source document, not just a plausible story.</li>
+          <li>If Copilot names a dollar amount you did not give it, that is a red flag, not a finding.</li>
+          <li>Note in the workpaper where AI assisted. Reviewers should know what to scrutinize.</li>
+        </ol>
+      </div>
+
+      <div class="datarule">
+        <div class="lbl">The data rule</div>
+        <p>Company financial data stays in M365 Copilot.</p>
+        <div class="sub">No exceptions, and no personal accounts.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- § 05 DOWNLOADS ---------- -->
+  <section class="block">
+    <div class="wrap">
+      <div class="sec-head">
+        <div class="eyebrow">§ 05 · Downloads</div>
+        <h2 class="sec-title">Everything from the <em>session</em>.</h2>
+        <p class="sec-note">
+          The prompt library above is the whole of it in text form. These are the files.
+        </p>
+      </div>
+
+      <div class="dl-list">
+        <div class="dl-row pending">
+          <div class="dl-name">
+            The slides
+            <span class="dl-sub">All 19, including the demo debrief and what the tool misses.</span>
+          </div>
+          <div class="dl-meta">Coming soon</div>
+        </div>
+        <div class="dl-row pending">
+          <div class="dl-name">
+            Demo 1 · Sales tax reconciliation
+            <span class="dl-sub">100 rows across two systems, no shared key. Fictional data.</span>
+          </div>
+          <div class="dl-meta">Coming soon</div>
+        </div>
+        <div class="dl-row pending">
+          <div class="dl-name">
+            Demo 2 · Corporate card spend
+            <span class="dl-sub">258 transactions across three months. Fictional data.</span>
+          </div>
+          <div class="dl-meta">Coming soon</div>
+        </div>
+        <div class="dl-row pending">
+          <div class="dl-name">
+            One page guardrail card
+            <span class="dl-sub">The split, the non-negotiables, the data rule, and the template. Printable.</span>
+          </div>
+          <div class="dl-meta">Coming soon</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <footer class="foot">
+    <div class="wrap inner">
+      <div>© 2026 William Kim · <em>Workshop materials, free to reuse.</em></div>
+      <div>All demo data is fictional.</div>
+    </div>
+  </footer>
+
+<script>
+  // ---- Copy buttons. No library: the Clipboard API where it is available and
+  // permitted, a hidden textarea everywhere else. The prompt lives in the DOM as
+  // ordinary wrapping prose, so whitespace is normalized on the way out.
+  (function initCopy() {
+    const status = document.getElementById('copyStatus');
+
+    function legacyCopy(text) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:0;left:-9999px;opacity:0;';
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, text.length);
+      let ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      return ok;
+    }
+
+    function flash(btn, ok) {
+      btn.classList.remove('done', 'failed');
+      btn.classList.add(ok ? 'done' : 'failed');
+      btn.textContent = ok ? 'Copied' : 'Press Ctrl+C';
+      if (status) status.textContent = ok ? 'Prompt copied to clipboard.' : 'Copy failed. Select the prompt and press Ctrl+C.';
+      clearTimeout(btn._t);
+      btn._t = setTimeout(() => {
+        btn.classList.remove('done', 'failed');
+        btn.textContent = 'Copy';
+      }, 1800);
+    }
+
+    document.querySelectorAll('[data-copy]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const panel = btn.closest('.prompt');
+        const node  = panel && panel.querySelector('.prompt-text');
+        if (!node) return;
+        const text = node.textContent.replace(/\s+/g, ' ').trim();
+
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text)
+            .then(() => flash(btn, true))
+            .catch(() => flash(btn, legacyCopy(text)));
+        } else {
+          flash(btn, legacyCopy(text));
+        }
+      });
+    });
+  })();
+</script>
+</body>
+</html>
