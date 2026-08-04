@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>William Kim · Staff Accountant · Automation Lead / AI Engineer</title>
+<title>William Kim · Staff Accountant / AI Engineer</title>
 <meta name="description" content="William Kim. Finance, engineering, and AI. Staff Accountant · Automation Lead at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
 <link rel="canonical" href="https://www.williamckim.com/" />
 <meta name="theme-color" content="#f5f1ea" />
@@ -98,6 +98,14 @@
   [data-accent="cobalt"]  { --accent: #2b4ed1; }
   [data-accent="ink"]     { --accent: #19170f; }
   [data-theme="dark"][data-accent="ink"] { --accent: #f4efe4; --accent-ink: #0f0e0c; }
+  /* Rust on the dark paper is only 3.54:1, so on this theme it is lifted in
+     linear light by 1.55. That scales all three channels by the same factor,
+     which holds the hue and saturation exactly and moves luminance alone:
+     4.99:1 on --bg and 4.76:1 on --bg-elev. --accent-ink follows the ink
+     accent's precedent above and becomes the page black, which makes text on
+     an accent fill the same contrast pair in reverse, so one number covers
+     both directions. Scoped to dark + rust; the paper theme is untouched. */
+  [data-theme="dark"][data-accent="rust"] { --accent: #dd5622; --accent-ink: #0f0e0c; }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { scroll-behavior: smooth; }
@@ -638,7 +646,13 @@
     display: block;
     font-family: var(--sans);
     font-weight: 400;
-    font-size: clamp(36px, 6vw, 96px);
+    /* The address renders about 10em wide, so under roughly 410px the 36px
+       floor pushed it past the gutter and out of the viewport. min() trims
+       only as much as the viewport demands and leaves every width from 414px
+       up at exactly the size it had. break-word is the backstop if the
+       address ever gets longer; it does not affect intrinsic sizing. */
+    font-size: min(clamp(36px, 6vw, 96px), calc(10vw - 4px));
+    overflow-wrap: break-word;
     line-height: 1.02;
     letter-spacing: -0.03em;
     color: var(--ink);
@@ -828,8 +842,11 @@
         <span class="brand-name">William Kim <em>/ portfolio</em></span>
       </a>
       <nav class="topnav">
-        <a href="#work">Work <span class="count">04</span></a>
-        <a href="#more">More <span class="count">05</span></a>
+        <!-- The numbers below are counted from the DOM on load (see initNavCounts).
+             The literals are the no-JS fallback, so keep them in step when you add
+             a featured row or a card. -->
+        <a href="#work">Work <span class="count" data-count-of="#work .index-row">04</span></a>
+        <a href="#more">More <span class="count" data-count-of="#more .card">08</span></a>
         <a href="#about">About</a>
         <a href="#contact">Contact</a>
       </nav>
@@ -2331,6 +2348,14 @@
     // Hide only once the observer is wired, so a thrown error above can never
     // leave the page blank.
     document.documentElement.classList.add('reveal');
+  })();
+
+  // ---- Nav counts, read off the DOM so the header cannot drift out of step
+  // with the sections it is counting.
+  (function initNavCounts() {
+    document.querySelectorAll('[data-count-of]').forEach(el => {
+      el.textContent = String(document.querySelectorAll(el.dataset.countOf).length).padStart(2, '0');
+    });
   })();
 </script>
 </body>
