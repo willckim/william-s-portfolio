@@ -44,20 +44,20 @@
 
       <!-- ===================== AT ORTHO ===================== -->
       <section class="panel" id="ortho" role="tabpanel" data-accent="ledger">
-        <p class="small" style="margin:14px 0 0">Ortho Molecular Products, Barrington, IL. Staff Accountant working across technical solutions and financial systems, March 2026 to present. Every system below keeps accountant review and posting authority, writes audit logs, and ships with written procedures.</p>
+        <p class="small" style="margin:14px 0 0">Ortho Molecular Products, Barrington, IL. Staff Accountant working across technical solutions and financial systems, March 2026 to present. Every system below keeps accountant review and posting authority, writes audit logs, and ships with written procedures. The automations run as Azure Functions written in C#/.NET.</p>
         <table class="book">
           <thead><tr><th>System</th><th>What it does</th><th>Stack</th><th>Outcome</th></tr></thead>
           <tbody>
             <tr>
               <td class="name">Concur Automation<span class="kind">Production · LLM system</span></td>
-              <td>Classifies corporate card transactions, about 1,900 per cycle, using an OpenAI API call wrapped in deterministic rule guardrails. Benchmarked against the human reviewers before it went live. Humans still post.</td>
-              <td class="stack">Python · OpenAI API · SAP Concur · rule engine</td>
+              <td>Classifies corporate card transactions, about 1,900 per cycle, built in C#/.NET on Azure Functions, calling the OpenAI API inside deterministic rule guardrails. Benchmarked against the human reviewers before it went live. Humans still post.</td>
+              <td class="stack">C#/.NET · Azure Functions · OpenAI API · SAP Concur · rule engine</td>
               <td class="outcome"><span class="num">36 h → under 10 min</span> per month. 95 to 97% exact match to reviewer, zero misclassifications.</td>
             </tr>
             <tr>
               <td class="name">Royalty Calculation Pipeline<span class="kind">Production</span></td>
-              <td>Rule-based pipeline that applies per-family rate logic to monthly activity data with automated validation checks, replacing a manual Excel and pivot-table workflow for a critical month-end report.</td>
-              <td class="stack">Python · Excel · validation checks</td>
+              <td>Rule-based C#/.NET pipeline running as an Azure Function that applies per-family rate logic to monthly activity data with automated validation checks, replacing a manual Excel and pivot-table workflow for a critical month-end report.</td>
+              <td class="stack">C#/.NET · Azure Functions · validation checks</td>
               <td class="outcome">Monthly royalty check cut from about <span class="num">30 to 10 min</span>.</td>
             </tr>
             <tr>
@@ -68,8 +68,8 @@
             </tr>
             <tr>
               <td class="name">Accounting Time Tracker<span class="kind">Production</span></td>
-              <td>Timekeeping tool for the accounting building: hours captured across roles and activities, approval workflow, full audit trail. Piloted with the department, rebuilt to incorporate IT review, now in production.</td>
-              <td class="stack">Power Platform · Dataverse · approval workflow</td>
+              <td>Timekeeping tool for the accounting building, built as an Azure Function: hours captured across roles and activities, approval workflow, full audit trail. Piloted with the department, rebuilt to incorporate IT review, now in production.</td>
+              <td class="stack">Azure Functions · C#/.NET · approval workflow</td>
               <td class="outcome">The department can finally see where close hours go, which is what decides what gets automated next.</td>
             </tr>
             <tr>
