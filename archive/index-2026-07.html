@@ -1,0 +1,2378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>William Kim · Staff Accountant / AI Engineer</title>
+<meta name="description" content="William Kim. Finance, engineering, and AI. Staff Accountant · Automation Lead at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
+<link rel="canonical" href="https://www.williamckim.com/" />
+<meta name="theme-color" content="#f5f1ea" />
+
+<!-- Favicon: inline SVG data URI, so no extra file and no extra request. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f5f1ea'/%3E%3Cpath d='M6 9l5 15 5-10 5 10 5-15' fill='none' stroke='%23b6451a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+
+<!-- Sharing -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="William Kim · Staff Accountant · Automation Lead / AI Engineer" />
+<meta property="og:description" content="Finance, engineering, and AI. Staff Accountant · Automation Lead at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
+<meta property="og:url" content="https://www.williamckim.com/" />
+<meta property="og:site_name" content="William Kim" />
+<!-- summary, not summary_large_image, because there is no share image yet.
+     When /og.png exists at 1200x630, switch the card type below and add:
+       <meta property="og:image" content="https://www.williamckim.com/og.png" />
+       <meta property="og:image:width" content="1200" />
+       <meta property="og:image:height" content="630" />
+       <meta property="og:image:alt" content="William Kim · Finance x Engineering x AI" /> -->
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="William Kim · Staff Accountant · Automation Lead / AI Engineer" />
+<meta name="twitter:description" content="Finance, engineering, and AI. Staff Accountant · Automation Lead at Ortho Molecular Products. B.S. Computer Science, University of Pittsburgh." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "William Kim",
+  "url": "https://www.williamckim.com/",
+  "jobTitle": "Staff Accountant · Automation Lead",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Ortho Molecular Products"
+  },
+  "alumniOf": {
+    "@type": "CollegeOrUniversity",
+    "name": "University of Pittsburgh"
+  },
+  "hasCredential": {
+    "@type": "EducationalOccupationalCredential",
+    "credentialCategory": "degree",
+    "name": "B.S. Computer Science",
+    "dateCreated": "2024"
+  },
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Barrington",
+    "addressRegion": "IL",
+    "addressCountry": "US"
+  },
+  "sameAs": [
+    "https://github.com/willckim",
+    "https://www.linkedin.com/in/william-c-kim/"
+  ]
+}
+</script>
+<style>
+  /* ---------- TOKENS ---------- */
+  :root {
+    --bg: #f5f1ea;
+    --bg-elev: #efeae0;
+    --ink: #19170f;
+    --ink-2: #2b2820;
+    --muted: #6a6557;
+    --line: #19170f1a;
+    --line-2: #19170f0d;
+    --accent: #b6451a;       /* rust */
+    --accent-ink: #ffffff;
+    --good: #2f6f4f;
+    --maxw: 1280px;
+    --gutter: clamp(20px, 4vw, 56px);
+    --ease: cubic-bezier(.16, 1, .3, 1);
+    --sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --serif: "Instrument Serif", "Times New Roman", serif;
+    --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  [data-theme="dark"] {
+    --bg: #0f0e0c;
+    --bg-elev: #16140f;
+    --ink: #f4efe4;
+    --ink-2: #d9d3c5;
+    --muted: #8a8474;
+    --line: #f4efe41a;
+    --line-2: #f4efe40d;
+  }
+  [data-accent="rust"]    { --accent: #b6451a; }
+  [data-accent="forest"]  { --accent: #2f6a3a; }
+  [data-accent="cobalt"]  { --accent: #2b4ed1; }
+  [data-accent="ink"]     { --accent: #19170f; }
+  [data-theme="dark"][data-accent="ink"] { --accent: #f4efe4; --accent-ink: #0f0e0c; }
+  /* On the dark paper the three coloured accents land at 3.54, 2.98 and 2.86
+     to one, so each is lifted here until it clears 4.5 against both dark
+     surfaces. Rust and forest are scaled in linear light, which multiplies all
+     three channels by one factor and so moves luminance while leaving the
+     channel ratios alone. Cobalt cannot be done that way: its blue is already
+     at 0.638 in linear light, so it clips at a factor of 1.568 and stalls at
+     3.97:1. It is raised in HSL lightness instead, which holds its hue and
+     saturation just as exactly. Hue moves by at most 0.28 degrees across all
+     three, saturation by at most 0.017.
+
+     --accent-ink follows the ink accent's precedent above and becomes the page
+     black. It has to: lightening an accent drops white-on-accent to about
+     3.9:1, and this way text on an accent fill is the same contrast pair in
+     reverse, so a single number covers both directions.
+
+                    light      dark       on --bg   on --bg-elev
+       rust         #b6451a    #dd5622    4.99:1    4.76:1
+       forest       #2f6a3a    #428f50    4.85:1    4.62:1
+       cobalt       #2b4ed1    #5e79de    4.84:1    4.62:1
+
+     Scoped to the dark theme only; every light theme value is untouched. */
+  [data-theme="dark"][data-accent="rust"]   { --accent: #dd5622; --accent-ink: #0f0e0c; }
+  [data-theme="dark"][data-accent="forest"] { --accent: #428f50; --accent-ink: #0f0e0c; }
+  [data-theme="dark"][data-accent="cobalt"] { --accent: #5e79de; --accent-ink: #0f0e0c; }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+    transition: background-color .4s ease, color .4s ease;
+  }
+  ::selection { background: var(--accent); color: var(--accent-ink); }
+  a { color: inherit; text-decoration: none; }
+  img { display: block; max-width: 100%; }
+
+  /* ---------- LAYOUT ---------- */
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+  .row { display: flex; align-items: center; }
+  .col { display: flex; flex-direction: column; }
+
+  /* ---------- TOPBAR ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in oklab, var(--bg) 86%, transparent);
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .inner {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+    max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter);
+  }
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em;
+  }
+  .brand-mark {
+    width: 22px; height: 22px; border-radius: 4px;
+    background: var(--ink); color: var(--bg);
+    display: grid; place-items: center; font-weight: 700;
+    font-family: var(--sans); font-size: 12px;
+  }
+  .brand-name { font-weight: 500; }
+  .brand-name em { font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--muted); }
+  .topnav { display: flex; gap: 28px; font-size: 13px; }
+  .topnav a {
+    color: var(--ink-2);
+    position: relative; padding: 4px 0;
+    transition: color .2s ease;
+  }
+  .topnav a:hover { color: var(--accent); }
+  .topnav .count { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-left: 4px; }
+
+  @media (max-width: 720px) {
+    .topnav { display: none; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: clamp(56px, 9vw, 140px) 0 clamp(40px, 6vw, 80px);
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    overflow: hidden;
+  }
+  /* ---------- HERO field — ledger to graph (WebGL) ---------- */
+  /* The radial mask dissolves the field into the paper instead of clipping it
+     at a hard canvas edge. That soft boundary is most of the atmosphere. */
+  /* The centre follows the ledger while it is at rest and returns to these
+     defaults as the graph forms. The defaults are the graph's own framing, so if
+     the script never updates them the dispersed state is unaffected. */
+  #quantum-scene {
+    position: absolute; inset: 0;
+    z-index: 0; pointer-events: none;
+    opacity: 0; transition: opacity 1.4s ease;
+    --mask-x: 58%;
+    --mask-y: 50%;
+    -webkit-mask-image: radial-gradient(ellipse 82% 74% at var(--mask-x) var(--mask-y),
+      #000 34%, transparent 84%);
+            mask-image: radial-gradient(ellipse 82% 74% at var(--mask-x) var(--mask-y),
+      #000 34%, transparent 84%);
+  }
+  #quantum-scene.ready { opacity: 1; }
+  #quantum-scene canvas { width: 100%; height: 100%; display: block; }
+  .hero-inner { position: relative; z-index: 1; }
+  .status-row {
+    display: flex; flex-wrap: wrap; gap: 14px 28px; align-items: center;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: clamp(40px, 6vw, 72px);
+  }
+  .status-row .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--good);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--good) 60%, transparent);
+    animation: pulse 2.4s ease-in-out infinite;
+    display: inline-block; margin-right: 8px; vertical-align: middle;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--good) 60%, transparent); }
+    50%      { box-shadow: 0 0 0 6px color-mix(in oklab, var(--good) 0%, transparent); }
+  }
+  .status-row .sep { opacity: .4; }
+  /* The hero field fits itself into the clear band right of where this row ends,
+     so the row's length is what decides whether the ledger has room to resolve
+     its rows. Adding "Automation Lead" pushed that edge far enough right to
+     collapse the band and force the field into its dispersed fallback. Capping
+     the measure lets the row wrap instead, which costs one line and keeps the
+     ledger. Below 900px the row already wraps on its own. */
+  @media (min-width: 900px) {
+    .status-row { max-width: 78%; }
+  }
+
+  /* ===== TEMPORARY · workshop pointer =================================
+     Sits hard under the status row instead of floating in the middle of
+     the gap that row reserves before the headline: the negative top margin
+     collapses against that gap, and the bottom margin puts it back. Delete
+     this whole rule with the matching markup block in the hero. */
+  .hero-workshop {
+    /* inline-block, not inline-flex: as a flex container the arrow becomes its
+       own item and strands itself on the first line when the label wraps. */
+    display: inline-block;
+    margin-top: calc(14px - clamp(40px, 6vw, 72px));
+    margin-bottom: clamp(40px, 6vw, 72px);
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--accent);
+    border-bottom: 1px solid color-mix(in oklab, var(--accent) 30%, transparent);
+    padding-bottom: 4px;
+    transition: border-color .2s ease;
+  }
+  .hero-workshop:hover { border-bottom-color: var(--accent); }
+  .hero-workshop .arr { display: inline-block; margin-left: 5px; transition: transform .25s ease; }
+  .hero-workshop:hover .arr { transform: translateX(3px); }
+  /* Holds the line to one line on a phone, where 11px plus tracking is about
+     10px too wide for the viewport. */
+  @media (max-width: 430px) {
+    .hero-workshop { font-size: 10px; letter-spacing: 0.02em; }
+  }
+  /* ===== END TEMPORARY ============================================== */
+
+  h1.headline {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: clamp(48px, 8.4vw, 132px);
+    line-height: 0.92;
+    letter-spacing: -0.035em;
+    color: var(--ink);
+    max-width: 16ch;
+  }
+  h1.headline em {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+  h1.headline .x {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 400;
+    color: var(--muted);
+    padding: 0 0.08em;
+  }
+  .hero-foot {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 4vw, 64px);
+    align-items: end;
+    margin-top: clamp(40px, 6vw, 80px);
+    padding-top: clamp(24px, 3vw, 36px);
+    border-top: 1px solid var(--line);
+  }
+  .hero-foot .lede {
+    font-size: clamp(16px, 1.4vw, 19px);
+    line-height: 1.55;
+    color: var(--ink-2);
+    max-width: 52ch;
+  }
+  .hero-foot .lede em { font-family: var(--serif); font-style: italic; color: var(--accent); }
+  .hero-actions {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    justify-content: flex-end;
+  }
+  @media (max-width: 760px) {
+    .hero-foot { grid-template-columns: 1fr; }
+    .hero-actions { justify-content: flex-start; }
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 12px 18px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink);
+    font: 500 13px/1 var(--sans);
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    transition: border-color .2s ease, background-color .2s ease, color .2s ease, transform .2s ease;
+  }
+  .btn:hover { border-color: var(--ink); transform: translateY(-1px); }
+  .btn .arrow { transition: transform .25s ease; }
+  .btn:hover .arrow { transform: translate(2px, -2px); }
+  .btn.primary {
+    background: var(--ink); color: var(--bg); border-color: var(--ink);
+  }
+  .btn.primary:hover { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
+  /* ---------- TICKER ---------- */
+  .ticker {
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    padding: 18px 0;
+    background: var(--bg-elev);
+  }
+  .ticker-track {
+    display: flex; gap: 56px; width: max-content;
+    animation: slide 60s linear infinite;
+    will-change: transform;
+  }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+  .ticker-item {
+    font-family: var(--mono); font-size: 13px; letter-spacing: 0.02em;
+    color: var(--ink-2);
+    display: inline-flex; align-items: center; gap: 56px;
+    white-space: nowrap;
+  }
+  .ticker-item::after {
+    content: "✦";
+    color: var(--accent);
+    margin-left: 56px;
+    font-family: var(--serif);
+  }
+  @keyframes slide {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+
+  /* ---------- SECTIONS ---------- */
+  section.block {
+    padding: clamp(72px, 10vw, 140px) 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .section-head {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: clamp(24px, 4vw, 64px);
+    align-items: end;
+    margin-bottom: clamp(40px, 6vw, 72px);
+  }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  h2.section-title {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: clamp(32px, 4.6vw, 64px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--ink);
+    max-width: 18ch;
+  }
+  h2.section-title em {
+    font-family: var(--serif); font-style: italic; font-weight: 400; color: var(--accent);
+  }
+  .section-head .right {
+    color: var(--ink-2);
+    font-size: 15px; line-height: 1.6;
+    max-width: 48ch;
+    justify-self: end;
+  }
+  @media (max-width: 760px) {
+    .section-head { grid-template-columns: 1fr; align-items: start; }
+    .section-head .right { justify-self: start; }
+  }
+
+  /* ---------- FEATURED — Editorial Index ---------- */
+  .index { border-top: 1px solid var(--line); }
+  .index-row {
+    display: grid;
+    grid-template-columns: 60px 1fr auto;
+    gap: clamp(20px, 4vw, 56px);
+    align-items: start;
+    padding: clamp(24px, 3vw, 36px) 0;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    position: relative;
+    transition: padding .35s ease;
+  }
+  .index-row::before {
+    content: "";
+    position: absolute; left: 0; top: 0; height: 100%; width: 0;
+    background: var(--accent);
+    transition: width .35s ease;
+  }
+  .index-row:hover { padding-left: 12px; }
+  .index-row:hover::before { width: 3px; }
+  .idx-num {
+    font-family: var(--mono); font-size: 12px; color: var(--muted);
+    padding-top: 6px;
+  }
+  .idx-main { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .idx-title-line {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 14px 24px;
+  }
+  .idx-title {
+    font-family: var(--sans);
+    font-weight: 500;
+    font-size: clamp(22px, 2.6vw, 34px);
+    line-height: 1.12;
+    letter-spacing: -0.018em;
+    color: var(--ink);
+    transition: color .25s ease;
+  }
+  .idx-row .idx-title:hover, .index-row:hover .idx-title { color: var(--accent); }
+  .idx-kicker {
+    font-family: var(--serif); font-style: italic;
+    font-size: clamp(16px, 1.5vw, 22px);
+    color: var(--muted);
+    font-weight: 400;
+  }
+  .idx-meta {
+    display: flex; flex-wrap: wrap; gap: 8px 18px;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .idx-meta .pill {
+    border: 1px solid var(--line);
+    padding: 4px 10px;
+    border-radius: 999px;
+    color: var(--ink-2);
+  }
+  .idx-meta .pill.good { color: var(--good); border-color: color-mix(in oklab, var(--good) 30%, var(--line)); }
+  .idx-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .5s ease;
+  }
+  .idx-body {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: clamp(20px, 3vw, 48px);
+    padding: 18px 0 8px;
+  }
+  @media (max-width: 760px) { .idx-body { grid-template-columns: 1fr; } }
+  .idx-desc { color: var(--ink-2); font-size: 15px; line-height: 1.65; max-width: 56ch; }
+  .idx-desc + .idx-desc { margin-top: 12px; color: var(--muted); font-size: 14px; }
+  .idx-bullets {
+    margin-top: 14px;
+    display: flex; flex-direction: column; gap: 8px;
+    color: var(--ink-2); font-size: 14px;
+  }
+  .idx-bullets div { padding-left: 18px; position: relative; }
+  .idx-bullets div::before {
+    content: "›"; position: absolute; left: 0; color: var(--accent);
+  }
+  .idx-stack {
+    display: flex; flex-wrap: wrap; gap: 6px 8px;
+    font-family: var(--mono); font-size: 11px;
+  }
+  .idx-stack span {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 5px 8px;
+    color: var(--ink-2);
+    background: color-mix(in oklab, var(--bg-elev) 60%, transparent);
+  }
+  .idx-actions { display: flex; gap: 8px; flex-shrink: 0; padding-top: 6px; }
+  .idx-icon {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    display: grid; place-items: center;
+    color: var(--ink-2);
+    transition: border-color .2s ease, background-color .2s ease, color .2s ease;
+  }
+  .idx-icon:hover { border-color: var(--ink); color: var(--ink); }
+  .idx-icon svg { width: 14px; height: 14px; }
+  .idx-expand-btn {
+    align-self: start;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--ink-2);
+    display: grid; place-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform .35s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .index-row.open .idx-expand-btn {
+    transform: rotate(45deg);
+    background: var(--ink);
+    color: var(--bg);
+    border-color: var(--ink);
+  }
+  .idx-expand-btn svg { width: 14px; height: 14px; }
+
+  /* ---------- ADDITIONAL PROJECTS GRID ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+  }
+  .card {
+    background: var(--bg);
+    padding: clamp(20px, 2.5vw, 32px);
+    grid-column: span 4;
+    display: flex; flex-direction: column; gap: 14px;
+    transition: background-color .25s ease;
+    min-height: 280px;
+  }
+  .card:hover { background: var(--bg-elev); }
+  @media (max-width: 1000px) { .card { grid-column: span 6; } }
+  @media (max-width: 640px)  { .card { grid-column: span 12; } }
+
+  .card-tag {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  .card-tag span.dot { color: var(--accent); }
+  .card-title {
+    font-family: var(--sans); font-weight: 500;
+    font-size: 20px; line-height: 1.2;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .card-desc { color: var(--muted); font-size: 14px; line-height: 1.55; }
+  .card-stack {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    font-family: var(--mono); font-size: 10px; color: var(--ink-2);
+    margin-top: auto;
+  }
+  .card-stack span { border: 1px solid var(--line); padding: 3px 7px; border-radius: 3px; }
+  .card-links { display: flex; gap: 14px; font-family: var(--mono); font-size: 11px; }
+  .card-links a {
+    color: var(--ink-2);
+    display: inline-flex; align-items: center; gap: 6px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+  }
+  .card-links a:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ---------- ABOUT split ---------- */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: clamp(24px, 5vw, 96px);
+  }
+  @media (max-width: 800px) { .about-grid { grid-template-columns: 1fr; } }
+  .about-lede {
+    font-family: var(--sans);
+    font-weight: 400;
+    font-size: clamp(22px, 2.4vw, 32px);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--ink);
+  }
+  .about-lede em { font-family: var(--serif); font-style: italic; color: var(--accent); }
+  .toolbox {
+    display: flex; flex-direction: column; gap: 22px;
+  }
+  .tool-row {
+    display: grid; grid-template-columns: 130px 1fr;
+    gap: 16px; align-items: baseline;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .tool-row:last-child { border-bottom: none; }
+  .tool-label {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.1em;
+  }
+  .tool-list { color: var(--ink-2); font-size: 14px; line-height: 1.7; }
+
+  /* ---------- ABOUT · work impact ---------- */
+  /* The figures carry the weight here, so they are set at pull-quote size in
+     the accent and the sentence underneath stays at body size. */
+  .at-work { margin-top: clamp(32px, 4vw, 52px); }
+  .impact { margin-top: 16px; border-top: 1px solid var(--line); }
+  .impact-row { padding: 16px 0; border-bottom: 1px solid var(--line); }
+  .impact-fig {
+    font-family: var(--sans); font-weight: 500;
+    font-size: clamp(20px, 2.1vw, 27px);
+    line-height: 1.08; letter-spacing: -0.025em;
+    color: var(--accent);
+  }
+  .impact-txt {
+    margin-top: 8px;
+    color: var(--ink-2); font-size: 15px; line-height: 1.55;
+    max-width: 48ch;
+  }
+
+  /* ---------- CERTS ---------- */
+  .certs {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 24px;
+  }
+  @media (max-width: 760px) { .certs { grid-template-columns: 1fr; } }
+  .cert {
+    padding: 18px;
+    border: 1px solid var(--line);
+    display: flex; flex-direction: column; gap: 6px;
+    transition: border-color .2s ease, transform .2s ease;
+  }
+  .cert:hover { border-color: var(--ink); transform: translateY(-2px); }
+  .cert .issuer {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .cert .cname {
+    font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.3;
+  }
+  .cert .when { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* ---------- CONTACT ---------- */
+  .contact-stage {
+    display: grid; grid-template-columns: 1fr auto;
+    gap: clamp(24px, 4vw, 56px); align-items: center;
+  }
+  @media (max-width: 720px) { .contact-stage { grid-template-columns: 1fr; } }
+  .contact-3d { width: 180px; height: 180px; justify-self: end; pointer-events: none; }
+  @media (max-width: 720px) { .contact-3d { justify-self: start; width: 120px; height: 120px; } }
+  .contact-3d canvas { width: 100% !important; height: 100% !important; display: block; }
+  .contact-big {
+    display: block;
+    font-family: var(--sans);
+    font-weight: 400;
+    /* The address renders about 10em wide, so under roughly 410px the 36px
+       floor pushed it past the gutter and out of the viewport. min() trims
+       only as much as the viewport demands and leaves every width from 414px
+       up at exactly the size it had. break-word is the backstop if the
+       address ever gets longer; it does not affect intrinsic sizing. */
+    font-size: min(clamp(36px, 6vw, 96px), calc(10vw - 4px));
+    overflow-wrap: break-word;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    transition: color .25s ease;
+  }
+  .contact-big em { font-family: var(--serif); font-style: italic; color: var(--accent); }
+  .contact-big:hover { color: var(--accent); }
+  .contact-big .arr { display: inline-block; transform: translateY(-0.08em); transition: transform .3s ease; }
+  .contact-big:hover .arr { transform: translate(8px, -0.18em); }
+  .contact-list {
+    margin-top: clamp(40px, 6vw, 72px);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: var(--line);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 800px) { .contact-list { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 480px) { .contact-list { grid-template-columns: 1fr; } }
+  .contact-cell {
+    background: var(--bg);
+    padding: 20px;
+    display: flex; flex-direction: column; gap: 6px;
+    transition: background-color .25s ease;
+  }
+  .contact-cell:hover { background: var(--bg-elev); }
+  .contact-cell .label {
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 0.1em; text-transform: uppercase;
+  }
+  .contact-cell .value { font-size: 14px; color: var(--ink); }
+
+  /* ---------- FOOTER ---------- */
+  footer.foot {
+    padding: 40px 0 28px;
+    display: flex; flex-wrap: wrap; gap: 14px;
+    justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 11px; color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+  footer.foot .copy em { font-family: var(--serif); font-style: italic; font-size: 13px; }
+
+  /* ---------- TWEAKS PANEL ---------- */
+  .tweaks {
+    position: fixed; right: 16px; bottom: 16px; z-index: 100;
+    width: 240px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.10);
+    display: none;
+    font-size: 12px;
+  }
+  .tweaks.open { display: block; }
+  .tweaks h4 {
+    font-family: var(--mono); font-size: 10px; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--muted); margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .tweaks .close { cursor: pointer; color: var(--muted); }
+  .tweaks .close:hover { color: var(--ink); }
+  .tweaks .group { margin-bottom: 14px; }
+  .tweaks .group:last-child { margin-bottom: 0; }
+  .tweaks .gl {
+    font-family: var(--mono); font-size: 10px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;
+  }
+  .tweaks .swatches { display: flex; gap: 8px; }
+  .tweaks .sw {
+    width: 26px; height: 26px; border-radius: 50%;
+    border: 1px solid var(--line); cursor: pointer;
+    transition: transform .15s ease;
+  }
+  .tweaks .sw:hover { transform: scale(1.08); }
+  .tweaks .sw.active { outline: 2px solid var(--ink); outline-offset: 2px; }
+  .tweaks .seg {
+    display: flex; border: 1px solid var(--line); border-radius: 999px;
+    padding: 3px; gap: 3px;
+  }
+  .tweaks .seg button {
+    flex: 1; padding: 6px 10px; border: none; background: transparent;
+    color: var(--ink-2); font-family: var(--sans); font-size: 12px;
+    border-radius: 999px; cursor: pointer;
+  }
+  .tweaks .seg button.active { background: var(--ink); color: var(--bg); }
+
+  .tweaks-toggle {
+    position: fixed; right: 16px; bottom: 16px; z-index: 99;
+    width: 44px; height: 44px; border-radius: 50%;
+    background: var(--ink); color: var(--bg);
+    border: none; cursor: pointer;
+    display: grid; place-items: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+    transition: transform .2s ease, background-color .25s ease;
+  }
+  .tweaks-toggle:hover { transform: scale(1.06); background: var(--accent); }
+  .tweaks-toggle svg { width: 18px; height: 18px; }
+
+  /* ---------- MOTION: card tilt ---------- */
+  /* JS only writes the four custom properties; CSS owns the transform itself, so
+     the rest position stays a plain declarative transition. */
+  .tilt {
+    position: relative;
+    transform: perspective(900px)
+               rotateX(var(--rx, 0deg))
+               rotateY(var(--ry, 0deg))
+               translateZ(0);
+  }
+  .tilt::after {
+    content: "";
+    position: absolute; inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .3s ease;
+    background: radial-gradient(300px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in oklab, var(--accent) 6%, transparent), transparent 72%);
+    mix-blend-mode: multiply;   /* on paper this reads as a shadow, not a glow */
+  }
+  .tilt.lit::after { opacity: 1; }
+
+  /* ---------- MOTION: scroll reveals ---------- */
+  /* The hidden state hangs off html.reveal, which JS adds on boot. If JS never
+     runs, or motion is reduced, nothing is ever hidden. Uses the standalone
+     `translate` property so it composes with .tilt's transform instead of
+     fighting it. */
+  html.reveal .rv { opacity: 0; translate: 0 14px; }
+  html.reveal .rv.in {
+    opacity: 1; translate: 0 0;
+    transition: opacity .7s var(--ease) var(--d, 0ms),
+                translate .7s var(--ease) var(--d, 0ms);
+  }
+  /* A revealed card is permanently .rv.in, so its transition would otherwise
+     outweigh the tilt's and the card would snap back instead of easing. Both
+     selectors are listed: the first wins over .rv.in, the second covers the
+     case where reveals never ran. */
+  html.reveal .rv.in.resting,
+  .tilt.resting {
+    transition: transform .5s var(--ease),
+                opacity   .7s var(--ease),
+                translate .7s var(--ease);
+  }
+
+  /* ---------- ACCESSIBILITY ---------- */
+  /* Nothing here strips a default outline; it replaces them with a ring that is
+     visible against paper and ink alike. */
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  /* .sw.active already carries an ink outline, so name it explicitly or the
+     active swatch would show no focus ring at all. */
+  .tweaks .sw:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .skip-link {
+    position: absolute; left: 12px; top: -64px; z-index: 200;
+    background: var(--ink); color: var(--bg);
+    padding: 11px 18px; border-radius: 999px;
+    font: 500 13px/1 var(--sans);
+    transition: top .18s ease;
+  }
+  .skip-link:focus { top: 12px; }
+  /* #main is a programmatic focus target, not a control, so it takes no ring.
+     :focus-visible above still covers every real interactive element. */
+  #main:focus { outline: none; }
+
+  /* utility */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+</style>
+</head>
+<body data-theme="light" data-accent="rust">
+
+  <!-- Targets the main landmark, which carries tabindex=-1 so focus actually
+       lands there rather than only scrolling. -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ---------- TOPBAR ---------- -->
+  <header class="topbar">
+    <div class="inner">
+      <a href="#top" class="brand">
+        <span class="brand-mark">W</span>
+        <span class="brand-name">William Kim <em>/ portfolio</em></span>
+      </a>
+      <nav class="topnav">
+        <!-- The numbers below are counted from the DOM on load (see initNavCounts).
+             The literals are the no-JS fallback, so keep them in step when you add
+             a featured row or a card. -->
+        <a href="#work">Work <span class="count" data-count-of="#work .index-row">04</span></a>
+        <a href="#more">More <span class="count" data-count-of="#more .card">08</span></a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+
+  <!-- ---------- HERO ---------- -->
+  <section id="top" class="hero" data-screen-label="01 Hero">
+    <div id="quantum-scene" aria-hidden="true"></div>
+    <div class="hero-inner wrap">
+      <div class="status-row">
+        <span><span class="dot"></span>Currently shipping &nbsp;·&nbsp; Barrington, IL</span>
+        <span class="sep">/</span>
+        <span>Staff Accountant · Automation Lead @ Ortho Molecular Products</span>
+        <span class="sep">/</span>
+        <span>B.S. Computer Science, Pitt '24</span>
+      </div>
+
+      <!-- ===== TEMPORARY · workshop pointer ==============================
+           The training deck sends attendees to williamckim.com rather than
+           to /copilot, so they land here first and need one visible way
+           across. Remove after the session has aged out: delete this block
+           and the .hero-workshop rule in <style>. Nothing else refers to
+           either one. -->
+      <a class="hero-workshop" href="/copilot">
+        Workshop attendees · Copilot prompting materials <span class="arr">→</span>
+      </a>
+      <!-- ===== END TEMPORARY ============================================= -->
+
+      <h1 class="headline">
+        Finance <span class="x">×</span> <em>Engineering</em> <span class="x">×</span> AI.
+      </h1>
+
+      <div class="hero-foot">
+        <p class="lede">
+          I write <em>journal entries</em> by day and <em>orchestration engines</em> by craft. A hybrid who ships
+          LLM pipelines, multi-agent systems and production cloud apps with the same rigor I bring to a Fast Close.
+          Fluent in <em>GAAP</em> and <em>GPU</em>.
+        </p>
+        <div class="hero-actions">
+          <a href="/resume.pdf" class="btn primary" download>
+            Résumé <span class="arrow">↗</span>
+          </a>
+          <a href="https://www.linkedin.com/in/william-c-kim/" class="btn" target="_blank" rel="noopener">
+            LinkedIn <span class="arrow">↗</span>
+          </a>
+          <a href="https://github.com/willckim" class="btn" target="_blank" rel="noopener">
+            GitHub <span class="arrow">↗</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- TICKER ---------- -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span class="ticker-item">Python · TypeScript · FastAPI · React / Next.js · React Native · PostgreSQL · DuckDB · Redis · Docker · AWS · GCP · Azure · LLM Orchestration · RAG · Embeddings · ONNX · Power BI · Snowflake · SQL · DAX · ETL Pipelines · GAAP · FP&amp;A · Variance Analysis</span>
+      <span class="ticker-item">Python · TypeScript · FastAPI · React / Next.js · React Native · PostgreSQL · DuckDB · Redis · Docker · AWS · GCP · Azure · LLM Orchestration · RAG · Embeddings · ONNX · Power BI · Snowflake · SQL · DAX · ETL Pipelines · GAAP · FP&amp;A · Variance Analysis</span>
+    </div>
+  </div>
+
+  <!-- ---------- FEATURED — INDEX ---------- -->
+  <section id="work" class="block" data-screen-label="02 Featured">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">§ 01 · Selected work</div>
+          <h2 class="section-title">Featured <em>projects</em></h2>
+        </div>
+        <div class="right">
+          Production builds across AI orchestration, agentic automation, mobile, and finance ops.
+          Click any row to expand the case notes.
+        </div>
+      </div>
+
+      <div class="index">
+        <!-- 01 -->
+        <article class="index-row" data-row>
+          <div class="idx-num">01</div>
+          <div class="idx-main">
+            <div class="idx-title-line">
+              <h3 class="idx-title">Purelytics</h3>
+              <span class="idx-kicker">AI ingredient analyzer · React Native</span>
+            </div>
+            <div class="idx-meta">
+              <span class="pill">2025</span>
+              <span class="pill good">✓ Multi-AI fallback</span>
+              <span class="pill good">✓ Vision scanning</span>
+            </div>
+            <div class="idx-detail" id="idx-detail-01">
+              <div>
+                <div class="idx-body">
+                  <div>
+                    <p class="idx-desc">
+                      React Native mobile app that uses on-device vision to scan product ingredient labels and deliver
+                      health assessments with a color-coded 0–100 scoring system. Supports 12+ product categories with
+                      specialized supplement analysis including bioavailability and interaction warnings, and surfaces
+                      category-matched healthier alternatives with pricing data.
+                    </p>
+                    <p class="idx-desc">
+                      Multi-AI provider fallback hierarchy (Claude → Gemini → GPT-4o) ensures reliability with zero
+                      backend infrastructure. Built with Expo SDK 54, React Navigation, and on-device credential storage.
+                    </p>
+                    <div class="idx-bullets">
+                      <div>Vision-based scanning pipeline that photographs ingredient labels for instant evaluation</div>
+                      <div>Multi-AI provider fallback for high-availability analysis</div>
+                      <div>Family profiles with health-specific filtering and full scan archive</div>
+                    </div>
+                  </div>
+                  <div class="idx-stack">
+                    <span>React Native</span><span>Expo</span><span>Claude</span><span>GPT-4o</span>
+                    <span>Gemini</span><span>Vision AI</span><span>Brave Search API</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="idx-actions">
+            <a class="idx-icon" href="https://github.com/willckim/Purelytics" target="_blank" rel="noopener" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
+            </a>
+          </div>
+          <button class="idx-expand-btn" type="button" aria-label="Expand case notes" aria-expanded="false" aria-controls="idx-detail-01">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </article>
+
+        <!-- 02 -->
+        <article class="index-row" data-row>
+          <div class="idx-num">02</div>
+          <div class="idx-main">
+            <div class="idx-title-line">
+              <h3 class="idx-title">Odyx HQ</h3>
+              <span class="idx-kicker">Agentic browser automation · Claude-powered</span>
+            </div>
+            <div class="idx-meta">
+              <span class="pill">2025</span>
+              <span class="pill good">✓ Self-healing selectors</span>
+              <span class="pill good">✓ Human-in-the-loop</span>
+            </div>
+            <div class="idx-detail" id="idx-detail-02">
+              <div>
+                <div class="idx-body">
+                  <div>
+                    <p class="idx-desc">
+                      Universal agentic Chrome extension that navigates, fills forms, and executes payments on any
+                      website through a conversational side panel. An Action Tree pipes a pruned DOM (&lt; 4K tokens) to
+                      Claude for planning, with human-in-the-loop confirmation for sensitive operations.
+                    </p>
+                    <p class="idx-desc">
+                      Manifest V3 extension with React 19, Express / Prisma / PostgreSQL backend, Redis-backed JWT auth,
+                      Stripe shared payment tokens, and multi-stage Docker containerization for deployment.
+                    </p>
+                    <div class="idx-bullets">
+                      <div>Action Tree system that prunes the DOM into &lt; 4K tokens for efficient planning</div>
+                      <div>Self-healing selector strategy with Computer Use as fallback</div>
+                      <div>Tier-based RBAC (Free / Pro / Enterprise) with audit logging</div>
+                    </div>
+                  </div>
+                  <div class="idx-stack">
+                    <span>TypeScript</span><span>React 19</span><span>Claude API</span><span>Chrome Extension</span>
+                    <span>Prisma</span><span>PostgreSQL</span><span>Redis</span><span>Stripe</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="idx-actions">
+            <a class="idx-icon" href="https://github.com/willckim/Odyx-HQ" target="_blank" rel="noopener" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
+            </a>
+          </div>
+          <button class="idx-expand-btn" type="button" aria-label="Expand case notes" aria-expanded="false" aria-controls="idx-detail-02">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </article>
+
+        <!-- 03 -->
+        <article class="index-row" data-row>
+          <div class="idx-num">03</div>
+          <div class="idx-main">
+            <div class="idx-title-line">
+              <h3 class="idx-title">Rift Architect</h3>
+              <span class="idx-kicker">Multi-agent AI coach · Electron desktop</span>
+            </div>
+            <div class="idx-meta">
+              <span class="pill">2025</span>
+              <span class="pill good">✓ 4 specialized agents</span>
+              <span class="pill good">✓ Vanguard compliant</span>
+            </div>
+            <div class="idx-detail" id="idx-detail-03">
+              <div>
+                <div class="idx-body">
+                  <div>
+                    <p class="idx-desc">
+                      Multi-agent AI orchestrator for League of Legends that provides real-time coaching across
+                      champion select, in-game, and post-game phases. Four specialized Claude-powered agents handle
+                      drafting, macro strategy, enemy cooldown tracking with haste adjustments, and post-game wellness.
+                    </p>
+                    <p class="idx-desc">
+                      Electron desktop app with automated client detection via lockfile polling, a serial API queue
+                      with token-bucket rate limiting, and interactive draggable overlays with persistent positioning.
+                    </p>
+                    <div class="idx-bullets">
+                      <div>Drafting Oracle · Macro Strategist · Spell Tracker · Tilt Guard</div>
+                      <div>Serial API queue with 80% auto-pause to stay inside rate limits</div>
+                      <div>Screen-saver window level escalation for fullscreen visibility</div>
+                    </div>
+                  </div>
+                  <div class="idx-stack">
+                    <span>Electron</span><span>Node.js</span><span>Claude SDK</span><span>SQLite</span>
+                    <span>Riot API</span><span>Multi-Agent</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="idx-actions">
+            <a class="idx-icon" href="https://github.com/willckim/Rift-Architect" target="_blank" rel="noopener" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
+            </a>
+          </div>
+          <button class="idx-expand-btn" type="button" aria-label="Expand case notes" aria-expanded="false" aria-controls="idx-detail-03">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </article>
+
+        <!-- 04 -->
+        <article class="index-row" data-row>
+          <div class="idx-num">04</div>
+          <div class="idx-main">
+            <div class="idx-title-line">
+              <h3 class="idx-title">HYROX Pace</h3>
+              <span class="idx-kicker">Race prediction engine · FastAPI + React Native</span>
+            </div>
+            <div class="idx-meta">
+              <span class="pill">2025</span>
+              <span class="pill good">✓ 200K+ race results</span>
+              <span class="pill good">✓ Wearable integration</span>
+            </div>
+            <div class="idx-detail" id="idx-detail-04">
+              <div>
+                <div class="idx-body">
+                  <div>
+                    <p class="idx-desc">
+                      Race prediction, pacing, and live execution app for HYROX athletes. A 100% deterministic simulation
+                      engine built on 200,000+ race results, championship timing data, and physiological research.
+                      Delivers three-tier finish-time predictions (conservative, likely, aggressive) with
+                      segment-by-segment pacing and risk analysis.
+                    </p>
+                    <p class="idx-desc">
+                      FastAPI async backend with Pydantic v2 and SQLAlchemy. React Native / Expo frontend with Zustand.
+                      Apple Health and Google Fit integration with 30-second HR polling and redline alerts.
+                    </p>
+                    <div class="idx-bullets">
+                      <div>Deterministic engine with fatigue accumulation and compromised post-station running</div>
+                      <div>Live race tracking with wearable HR and visual redline alerts at 95%+ max HR</div>
+                      <div>Three-tier prediction system with segment pacing and contextual execution cues</div>
+                    </div>
+                  </div>
+                  <div class="idx-stack">
+                    <span>TypeScript</span><span>Python</span><span>FastAPI</span><span>React Native</span>
+                    <span>Expo</span><span>Zustand</span><span>SQLAlchemy</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="idx-actions">
+            <a class="idx-icon" href="https://github.com/willckim/HYROX-Pace" target="_blank" rel="noopener" aria-label="GitHub">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.5 5.74.5 12.02c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2.05c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.71.08-.71 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.69 1.26 3.35.96.1-.75.4-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.51-1.47.11-3.06 0 0 .97-.31 3.18 1.18a11.04 11.04 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.77.12 3.06.74.81 1.18 1.84 1.18 3.1 0 4.43-2.69 5.41-5.25 5.69.41.36.77 1.06.77 2.14v3.17c0 .31.21.67.8.56C20.22 21.4 23.5 17.1 23.5 12.02 23.5 5.74 18.27.5 12 .5z"/></svg>
+            </a>
+          </div>
+          <button class="idx-expand-btn" type="button" aria-label="Expand case notes" aria-expanded="false" aria-controls="idx-detail-04">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- MORE ---------- -->
+  <section id="more" class="block" data-screen-label="03 More">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">§ 02 · Index</div>
+          <h2 class="section-title">More <em>builds</em></h2>
+        </div>
+        <div class="right">
+          A working set across orchestration, data ops, FP&amp;A, analytics, and claims. Mostly shipped, some live demos.
+        </div>
+      </div>
+
+      <div class="grid">
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> WORKSHOP · Enablement</div>
+          <div class="card-title">Prompting Copilot for Accounting Work</div>
+          <div class="card-desc">
+            Sixty minute training for our accounting team on applying Copilot to reconciliation workflows,
+            mapping which steps belong to deterministic tools and which belong to AI assisted exception
+            handling. Slides, prompt library, and guardrail card published.
+          </div>
+          <div class="card-stack"><span>Microsoft 365 Copilot</span><span>Excel</span><span>Power Query</span><span>Enablement</span></div>
+          <div class="card-links">
+            <a href="/copilot">Materials ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> LIVE · Orchestration</div>
+          <div class="card-title">LLM Orchestration Engine · multi-model routing</div>
+          <div class="card-desc">
+            Provider-agnostic backend that routes requests across OpenAI, Azure, ONNX, and AWS Bedrock by task,
+            cost and latency. Real-time p50/p95 dashboard.
+          </div>
+          <div class="card-stack"><span>Python</span><span>FastAPI</span><span>Docker</span><span>OpenAI</span><span>AWS</span></div>
+          <div class="card-links">
+            <a href="https://www.llmorchestrationengine.com/" target="_blank" rel="noopener">Demo ↗</a>
+            <a href="https://github.com/willckim/LLM-Orchestration-Engine" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> LIVE · Data Ops</div>
+          <div class="card-title">DataOps Copilot · AI profiling &amp; quality</div>
+          <div class="card-desc">
+            Ingests CSV / Excel / JSON and runs schema inference, anomaly detection and data-quality profiling
+            at scale through multi-provider LLM routing.
+          </div>
+          <div class="card-stack"><span>FastAPI</span><span>DuckDB</span><span>PostgreSQL</span><span>Cloud Run</span><span>React</span></div>
+          <div class="card-links">
+            <a href="https://www.dataopscopilot.com/" target="_blank" rel="noopener">Demo ↗</a>
+            <a href="https://github.com/willckim/DataOps-Copilot" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> FP&amp;A</div>
+          <div class="card-title">FP&amp;A AI Dashboard</div>
+          <div class="card-desc">
+            Automated variance analysis, rolling 3–6 month forecasts and AI-generated executive briefs. Cuts
+            manual reporting time by ~80%.
+          </div>
+          <div class="card-stack"><span>Python</span><span>Pandas</span><span>Power BI</span><span>Forecasting</span></div>
+          <div class="card-links">
+            <a href="https://github.com/willckim/fpna-ai-dashboard" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> LIVE · Analytics</div>
+          <div class="card-title">Snowflake + Power BI Sales Analytics</div>
+          <div class="card-desc">
+            End-to-end pipeline: ETL into a star-schema warehouse and interactive dashboards with KPI drilldowns.
+          </div>
+          <div class="card-stack"><span>Snowflake</span><span>SQL</span><span>ETL</span><span>Power BI</span><span>DAX</span></div>
+          <div class="card-links">
+            <a href="https://app.snowflake.com/zmydbpf/fq34862/w3u0HWZNPryg/query" target="_blank" rel="noopener">Demo ↗</a>
+            <a href="https://github.com/willckim/snowflake-powerbi-sales-dashboard" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> LIVE · Claims AI</div>
+          <div class="card-title">ClaimsInvestigator AI</div>
+          <div class="card-desc">
+            Processes first-notice-of-loss narratives and policy data to generate structured investigation plans
+            with prioritized actions and coverage-issue flags.
+          </div>
+          <div class="card-stack"><span>Python</span><span>FastAPI</span><span>LLM Reasoning</span><span>REST</span></div>
+          <div class="card-links">
+            <a href="https://www.claiminvestigator-ai.com/" target="_blank" rel="noopener">Demo ↗</a>
+            <a href="https://github.com/willckim/ClaimInvestigator-AI" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-tag"><span class="dot">●</span> SANDBOX · Quantum</div>
+          <div class="card-title">Quantum Finance Sandbox</div>
+          <div class="card-desc">
+            Qiskit programs covering core quantum algorithms (superposition, entanglement, teleportation,
+            Bernstein-Vazirani, Grover's search) plus a classical vs quantum revenue forecaster using
+            variational quantum regression. Organized into basics, algorithms, and finance modules.
+          </div>
+          <div class="card-stack"><span>Python</span><span>Qiskit</span><span>Qiskit Aer</span><span>Qiskit ML</span><span>scikit-learn</span></div>
+          <div class="card-links">
+            <a href="https://github.com/willckim/quantum-finance" target="_blank" rel="noopener">GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="card" style="background: var(--bg-elev);">
+          <div class="card-tag" style="color: var(--accent);">→ Index continues</div>
+          <div class="card-title" style="font-family: var(--serif); font-style: italic; font-weight: 400;">
+            A few more on GitHub.
+          </div>
+          <div class="card-desc">
+            Smaller utilities, experiments, and finance automations live in the repo list. Feel free to poke around.
+          </div>
+          <div class="card-stack" style="margin-top: auto;"><span>+ more</span></div>
+          <div class="card-links">
+            <a href="https://github.com/willckim" target="_blank" rel="noopener">All repos ↗</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- ABOUT ---------- -->
+  <section id="about" class="block" data-screen-label="04 About">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">§ 03 · Profile</div>
+          <h2 class="section-title">A rare <em>hybrid</em>.</h2>
+        </div>
+        <div class="right">
+          The person who automates the spreadsheet, then builds the AI that replaces the automation.
+        </div>
+      </div>
+
+      <div class="about-grid">
+        <div>
+          <p class="about-lede">
+            Staff Accountant at <em>Ortho Molecular Products</em> in Barrington, supporting the Fast Close,
+            reconciliations, internal audits, fixed assets, sales tax remittals and corporate tax filings.
+            <em>CPA candidate</em>, sitting for the exams in October 2026.
+            Off the clock I ship production AI: <em>LLM orchestration</em>, multi-agent systems, mobile apps,
+            and browser automation. Numbers <em>and</em> neural nets. Currently studying
+            <em>quantum computing</em> in Qiskit: working circuits for core algorithms (superposition,
+            entanglement, teleportation, Grover's) and a classical vs quantum forecaster. <em>IBM Quantum</em>
+            hardware next.
+          </p>
+
+          <div class="at-work">
+            <div class="eyebrow">At work</div>
+            <div class="impact">
+              <div class="impact-row">
+                <div class="impact-fig">36 hours → under 10 minutes</div>
+                <div class="impact-txt">A transaction classification engine replaced a manual monthly review.</div>
+              </div>
+              <div class="impact-row">
+                <div class="impact-fig">Excel → Python</div>
+                <div class="impact-txt">A pipeline replaced a manual reporting workflow.</div>
+              </div>
+              <div class="impact-row">
+                <div class="impact-fig">Power Platform</div>
+                <div class="impact-txt">Internal tools.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="toolbox">
+          <div class="tool-row">
+            <div class="tool-label">Finance</div>
+            <div class="tool-list">GAAP · Financial Reporting · Variance Analysis · Forecasting · FP&amp;A · GL Reconciliation</div>
+          </div>
+          <div class="tool-row">
+            <div class="tool-label">AI / ML</div>
+            <div class="tool-list">PyTorch · HuggingFace · LoRA / PEFT · RAG · Embeddings · ONNX · OCR · Prompt Engineering</div>
+          </div>
+          <div class="tool-row">
+            <div class="tool-label">Backend</div>
+            <div class="tool-list">Python · FastAPI · Node.js · PostgreSQL · DuckDB · Redis · Docker · REST</div>
+          </div>
+          <div class="tool-row">
+            <div class="tool-label">Frontend</div>
+            <div class="tool-list">React · Next.js · Expo / React Native · TypeScript · Tailwind</div>
+          </div>
+          <div class="tool-row">
+            <div class="tool-label">Cloud</div>
+            <div class="tool-list">AWS · GCP · Azure · Vercel · Cloud Run · GitHub Actions</div>
+          </div>
+          <div class="tool-row">
+            <div class="tool-label">Data</div>
+            <div class="tool-list">SQL · Pandas · Snowflake · Power BI · Tableau · DAX · ETL</div>
+          </div>
+          <div class="tool-row">
+            <div class="tool-label">Exploring</div>
+            <div class="tool-list">CUDA-Q · IBM Quantum Hardware · Shor's Algorithm · VQE</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="eyebrow" style="margin-top: clamp(56px, 8vw, 96px); margin-bottom: 12px;">§ 04 · Certifications</div>
+      <div class="certs">
+        <a class="cert" href="https://credentials.edx.org/credentials/7fb7942917134311a35206438331fce2/" target="_blank" rel="noopener">
+          <div class="issuer">AWS</div>
+          <div class="cname">Cloud Solutions Architecture</div>
+          <div class="when">Issued Jan 2026</div>
+        </a>
+        <a class="cert" href="https://credentials.edx.org/credentials/e2bf6e539d774ac4ae66bf7dc2ecea53/" target="_blank" rel="noopener">
+          <div class="issuer">IBM</div>
+          <div class="cname">Applied AI Developer</div>
+          <div class="when">Issued Oct 2025</div>
+        </a>
+        <a class="cert" href="https://credentials.edx.org/credentials/85fd690fac8449de8ffaf150708d37af/" target="_blank" rel="noopener">
+          <div class="issuer">Specialization</div>
+          <div class="cname">Generative AI for Cybersecurity</div>
+          <div class="when">Issued Jan 2026</div>
+        </a>
+        <a class="cert" href="https://verify.skilljar.com/c/cus2g97io6fh" target="_blank" rel="noopener">
+          <div class="issuer">Anthropic</div>
+          <div class="cname">Claude Code in Action</div>
+          <div class="when">Issued Mar 2026</div>
+        </a>
+        <a class="cert" href="https://verify.skilljar.com/c/y79xafcst46t" target="_blank" rel="noopener">
+          <div class="issuer">Anthropic</div>
+          <div class="cname">Model Context Protocol: Advanced Topics</div>
+          <div class="when">Issued Mar 2026</div>
+        </a>
+        <a class="cert" href="https://verify.skilljar.com/c/ogvqgwvmtukd" target="_blank" rel="noopener">
+          <div class="issuer">Anthropic</div>
+          <div class="cname">Building with the Claude API</div>
+          <div class="when">Issued Mar 2026</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- CONTACT ---------- -->
+  <section id="contact" class="block" data-screen-label="05 Contact" style="border-bottom: none;">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">§ 05 · Get in touch</div>
+          <h2 class="section-title">Let's <em>build</em> something.</h2>
+        </div>
+        <div class="right">
+          Open to hybrid finance × engineering roles, AI consulting, and contract builds.
+        </div>
+      </div>
+
+      <div class="contact-stage">
+        <a href="mailto:williamcjk11@gmail.com" class="contact-big">
+          williamcjk11<em>@</em>gmail.com <span class="arr">↗</span>
+        </a>
+        <div class="contact-3d"><canvas id="contact-canvas"></canvas></div>
+      </div>
+
+      <div class="contact-list">
+        <a class="contact-cell" href="tel:+17734154606">
+          <div class="label">Phone</div>
+          <div class="value">(773) 415-4606</div>
+        </a>
+        <a class="contact-cell" href="https://www.linkedin.com/in/william-c-kim/" target="_blank" rel="noopener">
+          <div class="label">LinkedIn</div>
+          <div class="value">william-c-kim</div>
+        </a>
+        <a class="contact-cell" href="https://github.com/willckim" target="_blank" rel="noopener">
+          <div class="label">GitHub</div>
+          <div class="value">willckim</div>
+        </a>
+        <a class="contact-cell" href="/resume.pdf" download>
+          <div class="label">Résumé</div>
+          <div class="value">Download PDF ↓</div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <!-- ---------- FOOTER ---------- -->
+  <footer class="foot">
+    <div class="wrap" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 14px; width: 100%;">
+      <div class="copy">© 2026 William Kim · <em>Built from scratch in HTML, CSS &amp; WebGL.</em></div>
+      <!-- Hardcoded on purpose: this is a static file with no build step, so
+           there is nothing to inject a git commit date at. Bump it by hand when
+           you ship. A stale date reads worse than no date. -->
+      <div>Last update · July 2026</div>
+    </div>
+  </footer>
+
+  <!-- ---------- TWEAKS ---------- -->
+  <button class="tweaks-toggle" id="tweaksToggle" aria-label="Tweaks">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  </button>
+
+  <aside class="tweaks" id="tweaksPanel">
+    <h4>
+      <span>Tweaks</span>
+      <span class="close" id="tweaksClose">close</span>
+    </h4>
+    <div class="group">
+      <div class="gl">Theme</div>
+      <div class="seg" id="themeSeg">
+        <button data-theme="light" class="active">Paper</button>
+        <button data-theme="dark">Ink</button>
+      </div>
+    </div>
+    <div class="group">
+      <div class="gl">Accent</div>
+      <div class="swatches" id="accentSwatches">
+        <div class="sw active" data-accent="rust"   style="background:#b6451a"></div>
+        <div class="sw"        data-accent="forest" style="background:#2f6a3a"></div>
+        <div class="sw"        data-accent="cobalt" style="background:#2b4ed1"></div>
+        <div class="sw"        data-accent="ink"    style="background:#19170f"></div>
+      </div>
+    </div>
+    <div class="group">
+      <div class="gl">Hero 3D</div>
+      <div class="seg" id="heroSeg">
+        <button data-hero="on" class="active">On</button>
+        <button data-hero="off">Off</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Three.js is loaded lazily at the bottom of this file. It is decoration, so
+       first paint must never wait on 600KB of library. -->
+<script>
+  // Expandable project rows — animate max-height to scrollHeight.
+  // The row stays clickable for pointer users; the expand button is the real
+  // control, so keyboard users get here by tabbing to it and it carries the
+  // aria-expanded state.
+  document.querySelectorAll('[data-row]').forEach(row => {
+    const detail = row.querySelector('.idx-detail');
+    const btn = row.querySelector('.idx-expand-btn');
+    row.addEventListener('click', (e) => {
+      if (e.target.closest('a')) return;
+      const isOpen = row.classList.toggle('open');
+      detail.style.maxHeight = isOpen ? detail.scrollHeight + 'px' : '0px';
+      if (btn) {
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        btn.setAttribute('aria-label', (isOpen ? 'Collapse' : 'Expand') + ' case notes');
+      }
+    });
+  });
+  // Recompute open rows on resize
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.index-row.open .idx-detail').forEach(d => {
+      d.style.maxHeight = d.scrollHeight + 'px';
+    });
+  });
+
+  // Tweaks
+  const toggleBtn = document.getElementById('tweaksToggle');
+  const panel = document.getElementById('tweaksPanel');
+  const closeBtn = document.getElementById('tweaksClose');
+  toggleBtn.addEventListener('click', () => panel.classList.toggle('open'));
+  closeBtn.addEventListener('click', () => panel.classList.remove('open'));
+
+  document.querySelectorAll('#themeSeg button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#themeSeg button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      document.body.dataset.theme = b.dataset.theme;
+      heroField.refresh();
+    });
+  });
+  // Swatches are divs, so they need the role, the tab stop and the keys that a
+  // button would have given them for free.
+  document.querySelectorAll('#accentSwatches .sw').forEach(s => {
+    s.setAttribute('role', 'button');
+    s.setAttribute('tabindex', '0');
+    s.setAttribute('aria-label', s.dataset.accent + ' accent');
+    const pick = () => {
+      document.querySelectorAll('#accentSwatches .sw').forEach(x => {
+        x.classList.remove('active');
+        x.setAttribute('aria-pressed', 'false');
+      });
+      s.classList.add('active');
+      s.setAttribute('aria-pressed', 'true');
+      document.body.dataset.accent = s.dataset.accent;
+      heroField.refresh();
+    };
+    s.addEventListener('click', pick);
+    s.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); }
+    });
+    s.setAttribute('aria-pressed', s.classList.contains('active') ? 'true' : 'false');
+  });
+  // Off tears the scene all the way down (buffers, programs, context), not just
+  // hides the canvas. On rebuilds it from scratch.
+  document.querySelectorAll('#heroSeg button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('#heroSeg button').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      if (b.dataset.hero === 'on') heroField.mount(); else heroField.unmount();
+    });
+  });
+
+  // ---- Shared helper: read a CSS custom-property hex and build a THREE.Color.
+  // Parses the existing --accent / --ink tokens directly (matches the design's
+  // numeric 0-1 path, so the accent reads the same and recolors live with theme).
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function cssColor(varName, fallback) {
+    let hex = (getComputedStyle(document.body).getPropertyValue(varName).trim() || fallback).replace('#', '');
+    if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+    return new THREE.Color(
+      parseInt(hex.slice(0, 2), 16) / 255,
+      parseInt(hex.slice(2, 4), 16) / 255,
+      parseInt(hex.slice(4, 6), 16) / 255
+    );
+  }
+
+  // ---- Contact crystal — smaller sibling, same shader language.
+  // Called by the loader below once Three has arrived, not at parse time.
+  function initContact() {
+    if (typeof THREE === 'undefined') return;
+    const canvas = document.getElementById('contact-canvas');
+    const wrap = canvas && canvas.parentElement;
+    if (!canvas || !wrap) return;
+
+    let renderer;
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    } catch (e) { return; }
+    // r128 predates automatic colour management; this reproduces the encoding the
+    // crystal was authored against so it renders exactly as before.
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 100);
+    camera.position.set(0, 0, 3.6);
+
+    const mat = new THREE.ShaderMaterial({
+      uniforms: { uTime: { value: 0 }, uAccent: { value: cssColor('--accent', '#b6451a') } },
+      vertexShader: `
+        varying vec3 vNormal; varying vec3 vPos;
+        void main() {
+          vNormal = normalize(normalMatrix * normal);
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          vPos = mv.xyz;
+          gl_Position = projectionMatrix * mv;
+        }`,
+      fragmentShader: `
+        precision highp float;
+        varying vec3 vNormal; varying vec3 vPos;
+        uniform vec3 uAccent; uniform float uTime;
+        vec3 spectrum(float t) {
+          vec3 a = vec3(0.55, 0.42, 0.32);
+          vec3 b = vec3(0.45, 0.35, 0.30);
+          vec3 c = vec3(1.00, 1.00, 1.00);
+          vec3 d = vec3(0.00, 0.10, 0.20);
+          return a + b * cos(6.2831 * (c * t + d));
+        }
+        void main() {
+          vec3 viewDir = normalize(-vPos);
+          float fres = 1.0 - max(dot(vNormal, viewDir), 0.0);
+          float fresSharp = pow(fres, 2.2);
+          float t = fres * 0.8 + uTime * 0.04 + vNormal.y * 0.15;
+          vec3 irid = spectrum(t);
+          vec3 base = mix(vec3(0.10,0.09,0.07), vec3(0.96,0.92,0.84), vNormal.y * 0.5 + 0.5);
+          vec3 col = mix(base, irid, 0.40);
+          col = mix(col, uAccent, fresSharp * 0.75);
+          col += vec3(fresSharp * 0.20);
+          gl_FragColor = vec4(col, 0.92);
+        }`,
+      transparent: true,
+      depthWrite: false,
+    });
+    const core = new THREE.Mesh(new THREE.OctahedronGeometry(1.0, 0), mat);
+    scene.add(core);
+    const edges = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.OctahedronGeometry(1.005, 0)),
+      new THREE.LineBasicMaterial({ transparent: true, opacity: 0.30 })
+    );
+    scene.add(edges);
+    const ghost = new THREE.LineSegments(
+      new THREE.EdgesGeometry(new THREE.OctahedronGeometry(0.6, 0)),
+      new THREE.LineBasicMaterial({ transparent: true, opacity: 0.15 })
+    );
+    scene.add(ghost);
+
+    function resize() {
+      const r = wrap.getBoundingClientRect();
+      const w = Math.max(r.width, 1), h = Math.max(r.height, 1);
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    new ResizeObserver(resize).observe(wrap);
+
+    function paint(t) {
+      mat.uniforms.uTime.value = t;
+      mat.uniforms.uAccent.value = cssColor('--accent', '#b6451a');
+      const ink = cssColor('--ink', '#19170f');
+      edges.material.color.copy(ink);
+      ghost.material.color.copy(ink);
+      core.rotation.x = t * 0.16;
+      core.rotation.y = t * 0.22;
+      edges.rotation.copy(core.rotation);
+      ghost.rotation.x = -t * 0.18;
+      ghost.rotation.y = -t * 0.24;
+      renderer.render(scene, camera);
+    }
+
+    if (reduceMotion) { paint(2.2); return; }
+    const clock = new THREE.Clock();
+    (function loop() {
+      paint(clock.getElapsedTime());
+      requestAnimationFrame(loop);
+    })();
+  }
+
+  // ---- Hero field — a double-entry ledger that dissolves into an orchestration
+  // graph as you scroll, and settles back if you scroll up. Every point carries two
+  // positions and one blend uniform; that single trick is the whole scene. There is
+  // no second scene and nothing cross-fades.
+  const heroField = (function () {
+    const container = document.getElementById('quantum-scene');
+    const hero = document.querySelector('.hero');
+    let live = null;
+
+    // Probe first: THREE.WebGLRenderer logs its own console error before throwing,
+    // so asking here keeps the no-WebGL path genuinely silent.
+    function webglAvailable() {
+      try {
+        const probe = document.createElement('canvas');
+        return !!(window.WebGLRenderingContext &&
+          (probe.getContext('webgl') || probe.getContext('experimental-webgl')));
+      } catch (e) { return false; }
+    }
+
+    function build() {
+      if (!webglAvailable()) return null;   // hero simply has no canvas
+      let renderer;
+      try {
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      } catch (e) { return null; }
+
+      const mobile = window.innerWidth < 760;
+      const narrow = window.innerWidth < 1200;
+      const ROWS   = narrow ?  10 :  16;   // ruled lines on the page
+      const TARGET = mobile ? 260 : 620;   // total points; graph density unchanged
+      const NODES  = mobile ?  30 :  60;   // points promoted to graph nodes
+      const LINKS  = mobile ?  20 :  48;   // edges drawn between them
+      const GAP    = 0.95;                 // row spacing on y
+      const STEP   = 0.62;                 // p: spacing between digits in a group
+      const MAXRUN = 12;                   // digits per figure, capped
+      const CLUSTER_GAP = 1.7;             // gap between groups, in units of p
+      const GUTTER_P    = 3.2;             // column gutter, in units of p
+      const TOTAL_LIFT  = 1.4 * STEP;      // extra air above the total row
+      const RULE_DROP   = GAP * 0.55;
+      const CREDIT_R    = 7.6;             // credit column right edge, flush
+
+      const dprCap = () => Math.min(window.devicePixelRatio, window.innerWidth < 760 ? 1.5 : 2);
+      renderer.setPixelRatio(dprCap());
+      container.appendChild(renderer.domElement);
+
+      const scene  = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 100);
+      camera.position.z = 26;
+      const field = new THREE.Group();
+      scene.add(field);
+
+      // --- Ledger layout. A figure is groups of digits, never an even run: two
+      // for the cents, then one to three groups of three, then an optional
+      // leading group. Uniform pitch is exactly what made a row read as a bar.
+      function figureGroups(isTotal) {
+        if (isTotal) return [3 + Math.floor(Math.random() * 2)];   // one short figure
+        const g = [2];                                             // cents
+        const thousands = 1 + Math.floor(Math.random() * 3);
+        for (let n = 0; n < thousands; n++) g.push(3);
+        let count = 2 + thousands * 3;
+        if (Math.random() < 0.6 && count < MAXRUN) {                // leading group
+          const lead = 1 + Math.floor(Math.random() * Math.min(3, MAXRUN - count));
+          g.push(lead);
+          count += lead;
+        }
+        return g;
+      }
+      // Leftward reach of a figure, measured from its flush right edge.
+      function groupSpan(g) {
+        let span = 0, placed = 0;
+        for (let gi = 0; gi < g.length; gi++) {
+          for (let m = 0; m < g[gi]; m++, placed++) {
+            if (placed > 0) span += (m === 0 ? CLUSTER_GAP : 1) * STEP;
+          }
+        }
+        return span;
+      }
+
+      const rows = [];
+      let maxSpan = 0;
+      for (let r = 0; r < ROWS; r++) {
+        const isTotal = r === ROWS - 1;
+        const pair = [figureGroups(isTotal), figureGroups(isTotal)];
+        rows.push(pair);
+        maxSpan = Math.max(maxSpan, groupSpan(pair[0]), groupSpan(pair[1]));
+      }
+      // The gutter has to beat the inter-group gap decisively or the two columns
+      // read as one wide figure. Derived from the widest figure actually built.
+      const DEBIT_R  = CREDIT_R - maxSpan - GUTTER_P * STEP;
+      const CREDIT_L = CREDIT_R - maxSpan;
+      const BLOCK_L  = DEBIT_R  - maxSpan;
+      const BLOCK_W  = CREDIT_R - BLOCK_L;
+
+      // The total row sits alone above the rule, with extra air over it.
+      const SPAN_H = (ROWS - 1) * GAP + TOTAL_LIFT + RULE_DROP;
+      const TOP_Y  = SPAN_H / 2;
+      const BLOCK_H = SPAN_H;
+      const rowYs = [];
+      for (let r = 0; r < ROWS; r++) {
+        rowYs.push(r < ROWS - 1
+          ? TOP_Y - r * GAP
+          : TOP_Y - ((ROWS - 1) * GAP + TOTAL_LIFT));
+      }
+
+      const N      = TARGET;
+      const ledger = new Float32Array(N * 3);
+      const graph  = new Float32Array(N * 3);
+      const delay  = new Float32Array(N);
+      const seed   = new Float32Array(N);
+      const role   = new Float32Array(N);
+      const paper  = new Float32Array(N);   // 1 = printed on the page, 0 = graph only
+
+      let i = 0;
+      for (let r = 0; r < ROWS && i < N; r++) {
+        const y    = rowYs[r];                         // row 0 is the top row
+        const rowT = ROWS > 1 ? r / (ROWS - 1) : 0;    // top rows come apart first
+        for (let c = 0; c < 2; c++) {
+          const edge = c === 0 ? DEBIT_R : CREDIT_R;   // flush right, ragged left
+          const groups = rows[r][c];
+          let x = edge, placed = 0;
+          for (let gi = 0; gi < groups.length && i < N; gi++) {
+            for (let m = 0; m < groups[gi] && i < N; m++, i++, placed++) {
+              if (placed > 0) x -= (m === 0 ? CLUSTER_GAP : 1) * STEP;
+              ledger[i * 3]     = x;
+              ledger[i * 3 + 1] = y;
+              ledger[i * 3 + 2] = (Math.random() - 0.5) * 0.24;
+              delay[i] = rowT * 0.7 + Math.random() * 0.3;
+              seed[i]  = Math.random();
+              paper[i] = 1;
+            }
+          }
+        }
+      }
+      // 16 ruled rows cannot hold 620 points without runs far longer than a
+      // figure. The surplus exists only in the graph: invisible on the page,
+      // faded in as it disperses, so the uMorph 1.0 density is unchanged.
+      for (; i < N; i++) {
+        ledger[i * 3]     = BLOCK_L + Math.random() * BLOCK_W;
+        ledger[i * 3 + 1] = (Math.random() - 0.5) * SPAN_H;
+        ledger[i * 3 + 2] = (Math.random() - 0.5) * 0.24;
+        delay[i] = Math.random();
+        seed[i]  = Math.random();
+        paper[i] = 0;
+      }
+      for (let j = 0; j < N; j++) {                    // loose sphere, biased right
+        const u  = Math.random() * 2 - 1, a = Math.random() * Math.PI * 2;
+        const s  = Math.sqrt(1 - u * u), rr = 13 * Math.cbrt(Math.random());
+        graph[j * 3]     = 3 + rr * s * Math.cos(a);
+        graph[j * 3 + 1] = rr * s * Math.sin(a);
+        graph[j * 3 + 2] = rr * u;
+      }
+
+      const nodes = [], taken = {};
+      while (nodes.length < Math.min(NODES, N)) {
+        const j = Math.floor(Math.random() * N);
+        if (!taken[j]) { taken[j] = 1; nodes.push(j); role[j] = 1; }
+      }
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.BufferAttribute(ledger.slice(), 3));
+      geo.setAttribute('aLedger',  new THREE.BufferAttribute(ledger, 3));
+      geo.setAttribute('aGraph',   new THREE.BufferAttribute(graph, 3));
+      geo.setAttribute('aDelay',   new THREE.BufferAttribute(delay, 1));
+      geo.setAttribute('aSeed',    new THREE.BufferAttribute(seed, 1));
+      geo.setAttribute('aRole',    new THREE.BufferAttribute(role, 1));
+      geo.setAttribute('aPaper',   new THREE.BufferAttribute(paper, 1));
+
+      // --- Edges. Pair each node with a near neighbour in graph space so the result
+      // reads as a graph rather than a ball of chords. Endpoints copy their source
+      // particle's delay and seed, so an edge tracks its two points exactly.
+      const eLedger = new Float32Array(LINKS * 2 * 3);
+      const eGraph  = new Float32Array(LINKS * 2 * 3);
+      const eDelay  = new Float32Array(LINKS * 2);
+      const eSeed   = new Float32Array(LINKS * 2);
+      const eT      = new Float32Array(LINKS * 2);
+      for (let e = 0; e < LINKS; e++) {
+        const a = nodes[Math.floor(Math.random() * nodes.length)];
+        let b = -1, best = Infinity;
+        for (let s = 0; s < 6; s++) {
+          const cand = nodes[Math.floor(Math.random() * nodes.length)];
+          if (cand === a) continue;
+          const dx = graph[cand * 3]     - graph[a * 3];
+          const dy = graph[cand * 3 + 1] - graph[a * 3 + 1];
+          const dz = graph[cand * 3 + 2] - graph[a * 3 + 2];
+          const d2 = dx * dx + dy * dy + dz * dz;
+          if (d2 < best) { best = d2; b = cand; }
+        }
+        if (b < 0) b = nodes[0] === a ? nodes[1] : nodes[0];
+        const ends = [a, b];
+        for (let end = 0; end < 2; end++) {
+          const src = ends[end], v = e * 2 + end;
+          eLedger[v * 3] = ledger[src * 3];
+          eLedger[v * 3 + 1] = ledger[src * 3 + 1];
+          eLedger[v * 3 + 2] = ledger[src * 3 + 2];
+          eGraph[v * 3] = graph[src * 3];
+          eGraph[v * 3 + 1] = graph[src * 3 + 1];
+          eGraph[v * 3 + 2] = graph[src * 3 + 2];
+          eDelay[v] = delay[src];
+          eSeed[v]  = seed[src];
+          eT[v]     = end;
+        }
+      }
+      const lineGeo = new THREE.BufferGeometry();
+      lineGeo.setAttribute('position', new THREE.BufferAttribute(eLedger.slice(), 3));
+      lineGeo.setAttribute('aLedger',  new THREE.BufferAttribute(eLedger, 3));
+      lineGeo.setAttribute('aGraph',   new THREE.BufferAttribute(eGraph, 3));
+      lineGeo.setAttribute('aDelay',   new THREE.BufferAttribute(eDelay, 1));
+      lineGeo.setAttribute('aSeed',    new THREE.BufferAttribute(eSeed, 1));
+      lineGeo.setAttribute('aT',       new THREE.BufferAttribute(eT, 1));
+
+      // One uniform object shared by both materials, so points and edges can never
+      // drift out of sync by a frame.
+      const uniforms = {
+        uMorph:      { value: 0 },
+        uTime:       { value: 0 },
+        uSize:       { value: 1.25 },
+        uPixelRatio: { value: renderer.getPixelRatio() },
+        uInk:        { value: new THREE.Color(0, 0, 0) },
+        uAccent:     { value: new THREE.Color(0, 0, 0) },
+        uNear:       { value: 12.0 },
+        uFar:        { value: 44.0 },
+        // The page is authored at unit scale and then placed; the graph is not
+        // touched by either, so the uMorph 1.0 state is independent of layout.
+        uLedgerScale:  { value: 0.5 },
+        uLedgerOffset: { value: new THREE.Vector3(0, 0, 0) }
+      };
+
+      // The morph, written once and shared verbatim by both vertex shaders.
+      const MORPH = `
+        attribute vec3  aLedger;
+        attribute vec3  aGraph;
+        attribute float aDelay;
+        attribute float aSeed;
+        uniform   float uMorph;
+        uniform   float uTime;
+        uniform   float uLedgerScale;
+        uniform   vec3  uLedgerOffset;
+        float easedT() {
+          float t = clamp((uMorph - aDelay * 0.35) / 0.65, 0.0, 1.0);
+          return t * t * (3.0 - 2.0 * t);
+        }
+        vec3 morphed(float t) {
+          vec3 page = aLedger * uLedgerScale + uLedgerOffset;
+          vec3 p = mix(page, aGraph, t);
+          // The page breathes in proportion to its own size, so shrinking it does
+          // not turn the drift into a wobble that blurs the column alignment.
+          p.x += sin(uTime * 0.30 + aSeed * 6.283) * 0.06 * uLedgerScale * (1.0 - t);
+          p.y += cos(uTime * 0.24 + aSeed * 4.712) * 0.05 * uLedgerScale * (1.0 - t);
+          p += vec3(sin(uTime * 0.35 + aSeed * 6.283),
+                    cos(uTime * 0.27 + aSeed * 4.712),
+                    sin(uTime * 0.21 + aSeed * 3.141)) * 0.30 * t;
+          return p;
+        }
+      `;
+
+      const pointsMat = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.NormalBlending,   // additive blows out to white on paper
+        vertexShader: MORPH + `
+          attribute float aRole;
+          attribute float aPaper;
+          uniform float uSize;
+          uniform float uPixelRatio;
+          varying float vDepth;
+          varying float vRole;
+          varying float vT;
+          varying float vPaper;
+          void main() {
+            float t = easedT();
+            vec4 mv = modelViewMatrix * vec4(morphed(t), 1.0);
+            vDepth = -mv.z;
+            vRole  = aRole;
+            vT     = t;
+            vPaper = aPaper;
+            // The node size bump is scaled by t: a page of figures is written in
+            // one weight, and nodes only emerge as the graph forms.
+            gl_PointSize = uSize * uPixelRatio
+                         * (1.0 + vRole * 0.45 * t)
+                         * (62.0 / max(0.001, -mv.z))
+                         * mix(1.25, 1.0, t);   // crisper at rest than dispersed
+            gl_Position = projectionMatrix * mv;
+          }
+        `,
+        fragmentShader: `
+          precision mediump float;
+          uniform vec3  uInk;
+          uniform vec3  uAccent;
+          uniform float uNear;
+          uniform float uFar;
+          varying float vDepth;
+          varying float vRole;
+          varying float vT;
+          varying float vPaper;
+          void main(){
+            vec2 c = gl_PointCoord - 0.5;
+            float d = length(c);
+            if (d > 0.5) discard;
+            float mask = smoothstep(0.5, 0.14, d);
+            float core = smoothstep(0.30, 0.0, d);
+            float fog  = 1.0 - clamp((vDepth - uNear) / (uFar - uNear), 0.0, 1.0);
+            // A ledger is written in one colour. Nodes warm toward the accent only
+            // as the graph forms; at uMorph 1.0 this reaches 0.80, as before.
+            vec3 col = mix(uInk, uAccent, vRole * 0.80 * vT);
+            float a = (mask * 0.32 + core * 0.52) * mix(0.09, 0.85, fog);
+            a *= mix(1.55, 1.0, vT);                              // present at rest
+            a *= mix(vPaper, 1.0, smoothstep(0.1, 0.7, vT));      // surplus is graph-only
+            gl_FragColor = vec4(col, a);
+          }
+        `
+      });
+      const points = new THREE.Points(geo, pointsMat);
+      points.frustumCulled = false;       // bounds change every frame with the morph
+      field.add(points);
+
+      const lineMat = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.NormalBlending,
+        vertexShader: MORPH + `
+          attribute float aT;
+          varying float vT;
+          varying float vEdge;
+          void main() {
+            float t = easedT();
+            vT    = t;
+            vEdge = aT;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(morphed(t), 1.0);
+          }
+        `,
+        // Line width is 1px everywhere regardless of what you set, so alpha is the
+        // only control. Edges are absent in ledger form and arrive in the back half.
+        fragmentShader: `
+          precision mediump float;
+          uniform vec3 uAccent;
+          varying float vT;
+          varying float vEdge;
+          void main(){
+            float a = 0.14 * smoothstep(0.35, 0.85, vT);
+            a *= 1.0 - 0.25 * (1.0 - abs(vEdge - 0.5) * 2.0);
+            gl_FragColor = vec4(uAccent, a);
+          }
+        `
+      });
+      const links = new THREE.LineSegments(lineGeo, lineMat);
+      links.frustumCulled = false;
+      field.add(links);
+
+      // --- The rule. One accent line under the last row: the total rule an
+      // accountant draws under a balanced ledger. It is the only literal accounting
+      // artifact in the scene and the first thing visible on load.
+      // It rules the credit column only, ending exactly on that column's right
+      // edge, which is what makes the flush-right alignment legible.
+      const ruleY   = TOP_Y - SPAN_H;
+      const ruleGeo = new THREE.BufferGeometry();
+      ruleGeo.setAttribute('position', new THREE.BufferAttribute(
+        new Float32Array([CREDIT_L, ruleY, 0, CREDIT_R, ruleY, 0]), 3));
+      const ruleMat = new THREE.LineBasicMaterial({
+        transparent: true, opacity: 0.7, depthWrite: false
+      });
+      const rule = new THREE.Line(ruleGeo, ruleMat);
+      rule.frustumCulled = false;
+      field.add(rule);
+
+      // --- Placement. The page is fitted into the clear band in the hero's upper
+      // right: below the nav, above the headline's cap height, right of where the
+      // status row ends. Derived from the live DOM boxes rather than tuned per
+      // breakpoint, so the no-overlap guarantee holds at every width, not just the
+      // ones that got tested. Recomputed on resize.
+      const FOVY = 55 * Math.PI / 180;
+      const MIN_ROW_PITCH = 8;          // px between rows below which they merge
+      let maskRestX = 58, maskRestY = 50;
+      let restFloor = 0;                // uMorph held here at rest, 0 = full ledger
+
+      function placeLedger() {
+        const c = container.getBoundingClientRect();
+        if (c.height < 2 || c.width < 2) return;
+        const k = c.height / (2 * Math.tan(FOVY / 2) * 26);   // css px per world unit
+
+        const nav      = document.querySelector('.topbar');
+        const headline = document.querySelector('h1.headline');
+        const inner    = document.querySelector('.hero-inner');
+        const status   = document.querySelector('.status-row');
+        const spans    = document.querySelectorAll('.status-row > span');
+        let statusRight = c.left;
+        spans.forEach(s => {
+          statusRight = Math.max(statusRight, s.getBoundingClientRect().right);
+        });
+
+        // Align to the text column, not the wrapper's padding edge.
+        const ib = inner ? inner.getBoundingClientRect() : c;
+        const ics = inner ? getComputedStyle(inner) : null;
+        const contentR = ib.right - (ics ? parseFloat(ics.paddingRight) || 0 : 0);
+        const contentL = ib.left + (ics ? parseFloat(ics.paddingLeft) || 0 : 0);
+
+        // The narrow branch is fighting for every pixel of band, so it runs at the
+        // minimum clearance rather than the comfortable one.
+        const PAD    = narrow ? 8 : 12;
+        const navB   = Math.max(nav ? nav.getBoundingClientRect().bottom : c.top, c.top);
+        const headT  = headline ? headline.getBoundingClientRect().top : c.bottom;
+        const statT  = status ? status.getBoundingClientRect().top : headT;
+
+        const band = (top, bottom, left, right) => {
+          const w = right - left, h = bottom - top;
+          if (w < 40 || h < 40) return null;
+          return { top, bottom, left, right,
+                   scale: Math.min(w / (BLOCK_W * k), h / (BLOCK_H * k)) };
+        };
+        // Preferred: right of the status row, the full drop from nav to headline.
+        // Fallback for narrow viewports, where the status row wraps and leaves no
+        // room beside it: the strip above the status row, still right-aligned.
+        const best = [
+          band(navB + PAD, headT - PAD, statusRight + PAD, contentR),
+          band(navB + PAD, statT - PAD, contentL, contentR)
+        ].filter(Boolean).sort((a, b) => b.scale - a.scale)[0];
+        if (!best) return;
+
+        const scale = Math.min(0.55, best.scale);   // never larger than intended
+
+        // If the band cannot give the rows enough pitch to resolve, do not
+        // compress further. Open the field partway instead, so it never claims to
+        // be a ledger it has no room to render.
+        restFloor = (GAP * scale * k) < MIN_ROW_PITCH ? 0.35 : 0;
+        // Pin the credit column's right edge to the text column, centre in the band.
+        const offX = (best.right - c.left - c.width / 2) / k - CREDIT_R * scale;
+        const offY = (c.height / 2 - ((best.top + best.bottom) / 2 - c.top)) / k;
+        uniforms.uLedgerScale.value = scale;
+        uniforms.uLedgerOffset.value.set(offX, offY, 0);
+        rule.scale.setScalar(scale);
+        rule.position.set(offX, offY, 0);
+
+        // Where the mask should sit while the page is at rest.
+        const cx = (BLOCK_L + CREDIT_R) / 2 * scale + offX;
+        maskRestX = ((c.width / 2 + cx * k) / c.width) * 100;
+        maskRestY = ((c.height / 2 - offY * k) / c.height) * 100;
+      }
+
+      // Colours come from the live CSS tokens, never from hardcoded hex, so the
+      // scene follows the Theme and Accent controls.
+      function refreshColors() {
+        uniforms.uInk.value.copy(cssColor('--ink', '#19170f'));
+        uniforms.uAccent.value.copy(cssColor('--accent', '#b6451a'));
+        ruleMat.color.copy(uniforms.uAccent.value);
+      }
+      refreshColors();
+
+      const fine  = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const clock = new THREE.Clock();
+      const par   = { x: 0, y: 0, tx: 0, ty: 0 };
+      let raf = 0, running = false, onScreen = false;
+      let morph = 0, camZ = 26, tilt = 0;
+      let maskX = -999, maskY = -999;   // force the first write
+
+      function frame() {
+        raf = requestAnimationFrame(frame);
+        const t = clock.getElapsedTime();
+        uniforms.uTime.value = t;
+
+        // Desktop reads scroll across the hero. Mobile ignores it and breathes.
+        const target = mobile
+          ? 0.55 + Math.sin(t * 0.22) * 0.08
+          : Math.max(restFloor,
+              Math.min(Math.max(window.scrollY / Math.max(hero.offsetHeight, 1), 0), 1));
+        morph += (target - morph) * 0.06;         // damped, not 1:1 with the wheel
+        uniforms.uMorph.value = morph;
+
+        ruleMat.opacity = 0.7 * Math.max(0, 1 - morph / 0.3);
+        rule.visible = ruleMat.opacity > 0.002;
+
+        // The mask sits over the page at rest and slides back to the graph's own
+        // centre as it disperses, so the uMorph 1.0 framing is exactly as before.
+        // Quantised, so a settled scene stops touching CSS entirely.
+        const e  = Math.min(1, morph / 0.6);
+        const mx = maskRestX + (58 - maskRestX) * e * e * (3 - 2 * e);
+        const my = maskRestY + (50 - maskRestY) * e * e * (3 - 2 * e);
+        if (Math.abs(mx - maskX) > 0.35 || Math.abs(my - maskY) > 0.35) {
+          maskX = mx; maskY = my;
+          container.style.setProperty('--mask-x', mx.toFixed(1) + '%');
+          container.style.setProperty('--mask-y', my.toFixed(1) + '%');
+        }
+
+        camZ += ((26 - 6 * morph) - camZ) * 0.06;
+        camera.position.z = camZ;
+        tilt += ((-0.12 * morph) - tilt) * 0.06;
+
+        if (fine) {
+          par.x += (par.tx - par.x) * 0.045;
+          par.y += (par.ty - par.y) * 0.045;
+        }
+        field.rotation.x = tilt + par.y * 0.10;
+        field.rotation.y = par.x * 0.10;
+
+        renderer.render(scene, camera);
+        container.classList.add('ready');
+      }
+
+      function setRunning(on) {
+        if (on === running) return;
+        running = on;
+        if (on) { clock.getDelta(); raf = requestAnimationFrame(frame); }
+        else cancelAnimationFrame(raf);
+      }
+      function sync() { setRunning(onScreen && !document.hidden); }
+
+      function resize() {
+        const r = container.getBoundingClientRect();
+        const w = Math.max(r.width, 1), h = Math.max(r.height, 1);
+        renderer.setPixelRatio(dprCap());
+        renderer.setSize(w, h, false);
+        uniforms.uPixelRatio.value = renderer.getPixelRatio();
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        placeLedger();   // the clear band moves with the layout
+      }
+      resize();
+
+      let resizeTimer = 0;
+      function onResize() { clearTimeout(resizeTimer); resizeTimer = setTimeout(resize, 160); }
+      function onPointer(e) {
+        par.tx =  (e.clientX / window.innerWidth)  * 2 - 1;
+        par.ty = -((e.clientY / window.innerHeight) * 2 - 1);
+      }
+      window.addEventListener('resize', onResize);
+      document.addEventListener('visibilitychange', sync);
+      if (fine) window.addEventListener('pointermove', onPointer);
+
+      const io = new IntersectionObserver(([entry]) => { onScreen = entry.isIntersecting; sync(); });
+      io.observe(hero);
+
+      function destroy() {
+        setRunning(false);
+        io.disconnect();
+        clearTimeout(resizeTimer);
+        window.removeEventListener('resize', onResize);
+        document.removeEventListener('visibilitychange', sync);
+        if (fine) window.removeEventListener('pointermove', onPointer);
+        geo.dispose(); lineGeo.dispose(); ruleGeo.dispose();
+        pointsMat.dispose(); lineMat.dispose(); ruleMat.dispose();
+        renderer.dispose();
+        if (renderer.forceContextLoss) renderer.forceContextLoss();
+        const el = renderer.domElement;
+        if (el && el.parentNode) el.parentNode.removeChild(el);
+        container.classList.remove('ready');
+      }
+
+      return { destroy: destroy, refreshColors: refreshColors };
+    }
+
+    return {
+      mount: function () {
+        if (live || reduceMotion || !container || !hero) return;
+        if (typeof THREE === 'undefined') return;
+        live = build();
+      },
+      unmount: function () { if (live) { live.destroy(); live = null; } },
+      refresh: function () { if (live) live.refreshColors(); }
+    };
+  })();
+
+  // ---- Three.js loader. Injected only after window load, only if the hero is
+  // actually on screen, and never under reduced motion. Both WebGL scenes are
+  // decoration: if this never runs, or the CDN is down, the page is unchanged
+  // apart from the canvases being absent.
+  (function loadThree() {
+    if (reduceMotion) return;
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+    let injected = false;
+
+    function inject() {
+      if (injected) return;
+      injected = true;
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+      s.integrity = 'sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ==';
+      s.crossOrigin = 'anonymous';
+      s.referrerPolicy = 'no-referrer';
+      s.async = true;
+      s.onload = function () {
+        // Respect the Tweaks toggle if it was switched off before this landed.
+        const on = document.querySelector('#heroSeg button[data-hero="on"]');
+        if (!on || on.classList.contains('active')) heroField.mount();
+        initContact();
+      };
+      document.head.appendChild(s);
+    }
+
+    function whenHeroVisible() {
+      if (!('IntersectionObserver' in window)) { inject(); return; }
+      const io = new IntersectionObserver(entries => {
+        if (entries.some(e => e.isIntersecting)) { io.disconnect(); inject(); }
+      });
+      io.observe(hero);
+    }
+
+    if (document.readyState === 'complete') whenHeroVisible();
+    else window.addEventListener('load', whenHeroVisible);
+  })();
+
+  // ---- Card tilt. One shared rAF for every card, started on enter and stopped
+  // when nothing is hovered. pointermove only records a target; the transform is
+  // written in the loop. Return to rest is a CSS transition, not the loop.
+  (function initTilt() {
+    const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!fine || reduceMotion) return;
+
+    const MAX = 4.5, LERP = 0.12;
+    const cards = [];
+    let raf = 0;
+
+    function tick() {
+      let busy = false;
+      for (let i = 0; i < cards.length; i++) {
+        const s = cards[i];
+        if (!s.active) continue;
+        s.x += (s.tx - s.x) * LERP;
+        s.y += (s.ty - s.y) * LERP;
+        s.el.style.setProperty('--rx', s.x.toFixed(2) + 'deg');
+        s.el.style.setProperty('--ry', s.y.toFixed(2) + 'deg');
+        busy = true;
+      }
+      raf = busy ? requestAnimationFrame(tick) : 0;
+    }
+
+    document.querySelectorAll('.index-row, .card').forEach(el => {
+      el.classList.add('tilt');
+      const s = { el: el, tx: 0, ty: 0, x: 0, y: 0, active: false, r: null, timer: 0 };
+      cards.push(s);
+
+      el.addEventListener('pointerenter', () => {
+        clearTimeout(s.timer);
+        s.r = el.getBoundingClientRect();
+        s.active = true;
+        el.classList.remove('resting');
+        el.classList.add('lit');
+        el.style.willChange = 'transform';
+        if (!raf) raf = requestAnimationFrame(tick);
+      });
+
+      el.addEventListener('pointermove', e => {
+        if (!s.r) s.r = el.getBoundingClientRect();
+        const px = (e.clientX - s.r.left) / s.r.width;
+        const py = (e.clientY - s.r.top) / s.r.height;
+        s.ty = (px - 0.5) * 2 * MAX;    // rotateY follows cursor x
+        s.tx = (0.5 - py) * 2 * MAX;    // rotateX follows cursor y
+        el.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+        el.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+      });
+
+      el.addEventListener('pointerleave', () => {
+        s.active = false;
+        s.tx = s.ty = s.x = s.y = 0;
+        s.r = null;
+        el.classList.add('resting');
+        el.classList.remove('lit');
+        el.style.setProperty('--rx', '0deg');
+        el.style.setProperty('--ry', '0deg');
+        s.timer = setTimeout(() => {
+          el.style.willChange = '';
+          el.classList.remove('resting');
+        }, 500);
+      });
+    });
+
+    // Cached rects go stale if the page scrolls mid-hover.
+    window.addEventListener('scroll', () => {
+      for (let i = 0; i < cards.length; i++) if (cards[i].active) cards[i].r = null;
+    }, { passive: true });
+  })();
+
+  // ---- Scroll reveals. Fires once per element, staggered within its section.
+  (function initReveals() {
+    if (reduceMotion || !('IntersectionObserver' in window)) return;
+
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+
+    const SELECTOR = '.eyebrow, .section-title, .index-row, .card, .cert, .tool-row';
+    document.querySelectorAll('section.block').forEach(section => {
+      section.querySelectorAll(SELECTOR).forEach((el, i) => {
+        el.classList.add('rv');
+        el.style.setProperty('--d', Math.min(i, 5) * 55 + 'ms');
+        io.observe(el);
+      });
+    });
+
+    // Hide only once the observer is wired, so a thrown error above can never
+    // leave the page blank.
+    document.documentElement.classList.add('reveal');
+  })();
+
+  // ---- Nav counts, read off the DOM so the header cannot drift out of step
+  // with the sections it is counting.
+  (function initNavCounts() {
+    document.querySelectorAll('[data-count-of]').forEach(el => {
+      el.textContent = String(document.querySelectorAll(el.dataset.countOf).length).padStart(2, '0');
+    });
+  })();
+</script>
+</body>
+</html>
