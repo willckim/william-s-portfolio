@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Work · William Kim</title>
+  <meta name="description" content="Production systems at Ortho Molecular Products, shipped products, and experiments. Finance systems, automation, and applied AI.">
+  <link rel="canonical" href="https://www.williamckim.com/work.html">
+  <meta name="theme-color" content="#f2f3f0">
+  <!-- Favicon: inline SVG data URI, preserved from the previous site. -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f5f1ea'/%3E%3Cpath d='M6 9l5 15 5-10 5 10 5-15' fill='none' stroke='%23b6451a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html"><span class="mark">WK</span>William Kim<span class="sub">Finance × Engineering</span></a>
+      <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
+      <nav aria-label="Primary">
+        <ul class="tabs" id="nav">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="work.html" aria-current="page">Work</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="wrap">
+      <div class="page-head">
+        <h1>Work</h1>
+        <p>Kept like a ledger: what it is, what it does, what it runs on, and what changed because of it. Three books: production work at Ortho, products I have shipped on my own, and experiments.</p>
+      </div>
+
+      <div class="subtabs" role="tablist" aria-label="Work categories">
+        <button role="tab" data-panel="ortho" aria-selected="true">At Ortho</button>
+        <button role="tab" data-panel="products" aria-selected="false">Products</button>
+        <button role="tab" data-panel="experiments" aria-selected="false">Experiments</button>
+      </div>
+
+      <!-- ===================== AT ORTHO ===================== -->
+      <section class="panel" id="ortho" role="tabpanel">
+        <p class="small" style="margin:14px 0 0">Ortho Molecular Products, Barrington, IL. Staff Accountant working across technical solutions and financial systems, March 2026 to present. Every system below keeps accountant review and posting authority, writes audit logs, and ships with written procedures.</p>
+        <table class="book">
+          <thead><tr><th>System</th><th>What it does</th><th>Stack</th><th>Outcome</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="name">Concur Automation<span class="kind">Production · LLM system</span></td>
+              <td>Classifies corporate card transactions, about 1,900 per cycle, using an OpenAI API call wrapped in deterministic rule guardrails. Benchmarked against the human reviewers before it went live. Humans still post.</td>
+              <td class="stack">Python · OpenAI API · SAP Concur · rule engine</td>
+              <td class="outcome"><span class="num">36 h → under 10 min</span> per month. 95 to 97% exact match to reviewer, zero misclassifications.</td>
+            </tr>
+            <tr>
+              <td class="name">Royalty Calculation Pipeline<span class="kind">Production</span></td>
+              <td>Rule-based pipeline that applies per-family rate logic to monthly activity data with automated validation checks, replacing a manual Excel and pivot-table workflow for a critical month-end report.</td>
+              <td class="stack">Python · Excel · validation checks</td>
+              <td class="outcome">Monthly royalty check cut from about <span class="num">30 to 10 min</span>.</td>
+            </tr>
+            <tr>
+              <td class="name">Fast Close Report Fix<span class="kind">Financial systems</span></td>
+              <td>The SQL-based Fast Close report had produced wrong data for months. I wrote and ran the SQL myself to isolate the defect, found the exact code location, and handed the fix to the BI team, then followed through until it held.</td>
+              <td class="stack">T-SQL · BI partnership</td>
+              <td class="outcome">August close ran fully accurate, no discrepancies, after four months of follow-through.</td>
+            </tr>
+            <tr>
+              <td class="name">Accounting Time Tracker<span class="kind">Production</span></td>
+              <td>Timekeeping tool for the accounting building: hours captured across roles and activities, approval workflow, full audit trail. Piloted with the department, rebuilt to incorporate IT review, now in production.</td>
+              <td class="stack">Power Platform · Dataverse · approval workflow</td>
+              <td class="outcome">The department can finally see where close hours go, which is what decides what gets automated next.</td>
+            </tr>
+            <tr>
+              <td class="name">Practitioner Website Consolidation<span class="kind">Cross-functional · in progress, launch Dec 31, 2026</span></td>
+              <td>Selected from Accounting as the bridge between IT, Accounting, and Marketing for consolidating three practitioner platforms into one account and website. I author the specification layer: versioned workflows document, scope and decisions sheet, plain-language stakeholder version, and a clickable HTML prototype used to align the team.</td>
+              <td class="stack">Specification · HTML prototype · ERP field design</td>
+              <td class="outcome">Surfaced a tax compliance requirement no project document had (W-9/TIN and verified banking before proceeds accrue) and got it into the ERP design before build.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ===================== PRODUCTS ===================== -->
+      <section class="panel" id="products" role="tabpanel" hidden>
+        <p class="small" style="margin:14px 0 0">Built on my own time. Several are live; all are on GitHub.</p>
+        <table class="book">
+          <thead><tr><th>Product</th><th>What it does</th><th>Stack</th><th>Links</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="name">LLM Orchestration Engine<span class="kind">Live · orchestration</span></td>
+              <td>Provider-agnostic backend that routes requests across OpenAI, Azure, ONNX, and AWS Bedrock by task, cost, and latency, with a real-time p50/p95 dashboard.</td>
+              <td class="stack">Python · FastAPI · Docker · AWS</td>
+              <td class="link"><a href="https://www.llmorchestrationengine.com/">Demo</a> · <a href="https://github.com/willckim/LLM-Orchestration-Engine">GitHub</a></td>
+            </tr>
+            <tr>
+              <td class="name">DataOps Copilot<span class="kind">Live · data quality</span></td>
+              <td>Ingests CSV, Excel, and JSON, then runs schema inference, anomaly detection, and data-quality profiling through multi-provider LLM routing.</td>
+              <td class="stack">FastAPI · DuckDB · PostgreSQL · Cloud Run · React</td>
+              <td class="link"><a href="https://www.dataopscopilot.com/">Demo</a> · <a href="https://github.com/willckim/DataOps-Copilot">GitHub</a></td>
+            </tr>
+            <tr>
+              <td class="name">Odyx HQ<span class="kind">Agentic browser automation</span></td>
+              <td>Chrome extension that navigates, fills forms, and executes payments through a conversational side panel. An Action Tree prunes the DOM to under 4K tokens for planning, with human confirmation on sensitive steps and self-healing selectors.</td>
+              <td class="stack">TypeScript · React 19 · Claude API · Prisma · PostgreSQL · Redis · Stripe</td>
+              <td class="link"><a href="https://github.com/willckim/Odyx-HQ">GitHub</a></td>
+            </tr>
+            <tr>
+              <td class="name">Purelytics<span class="kind">Mobile · vision AI</span></td>
+              <td>React Native app that scans ingredient labels with on-device vision and scores products 0 to 100 across 12+ categories, with supplement-specific analysis and healthier alternatives. Multi-provider fallback (Claude, Gemini, GPT-4o), no backend.</td>
+              <td class="stack">React Native · Expo · Claude · Gemini · GPT-4o</td>
+              <td class="link"><a href="https://github.com/willckim/Purelytics">GitHub</a></td>
+            </tr>
+            <tr>
+              <td class="name">Rift Architect<span class="kind">Multi-agent desktop app</span></td>
+              <td>Four specialized Claude-powered agents coach a League of Legends player across draft, in-game, and post-game, inside an Electron overlay with a rate-limited serial API queue.</td>
+              <td class="stack">Electron · Node.js · Claude SDK · SQLite · Riot API</td>
+              <td class="link"><a href="https://github.com/willckim/Rift-Architect">GitHub</a></td>
+            </tr>
+            <tr>
+              <td class="name">HYROX Pace<span class="kind">Race prediction engine</span></td>
+              <td>Deterministic simulation built on 200,000+ race results that delivers three-tier finish predictions with segment pacing, plus live tracking with wearable heart-rate redline alerts.</td>
+              <td class="stack">Python · FastAPI · React Native · Expo · SQLAlchemy</td>
+              <td class="link"><a href="https://github.com/willckim/HYROX-Pace">GitHub</a></td>
+            </tr>
+            <tr>
+              <td class="name">ClaimsInvestigator AI<span class="kind">Live · claims</span></td>
+              <td>Turns first-notice-of-loss narratives and policy data into structured investigation plans with prioritized actions and coverage-issue flags.</td>
+              <td class="stack">Python · FastAPI · LLM reasoning</td>
+              <td class="link"><a href="https://www.claiminvestigator-ai.com/">Demo</a> · <a href="https://github.com/willckim/ClaimInvestigator-AI">GitHub</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <!-- ===================== EXPERIMENTS ===================== -->
+      <section class="panel" id="experiments" role="tabpanel" hidden>
+        <p class="small" style="margin:14px 0 0">Learning in public. Framed as exploration, not shipped work.</p>
+        <table class="book">
+          <thead><tr><th>Experiment</th><th>What it is</th><th>Stack</th><th>Links</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="name">Quantum Finance<span class="kind">Active learning</span></td>
+              <td>Eight working Qiskit programs: superposition, entanglement, teleportation, Bernstein-Vazirani, Grover's search, then QAOA portfolio optimization, quantum Monte Carlo risk estimation, and a variational quantum regressor, each benchmarked against a classical baseline. The honest finding so far: classical wins on simple trends; quantum earns its keep only when the combinations explode.</td>
+              <td class="stack">Python · Qiskit · Qiskit Aer · Qiskit ML</td>
+              <td class="link"><a href="https://github.com/willckim/quantum-finance">GitHub</a></td>
+            </tr>
+            <tr>
+              <td class="name">FP&amp;A AI Dashboard<span class="kind">Prototype</span></td>
+              <td>Automated variance analysis, rolling three to six month forecasts, and AI-drafted executive briefs on a sample dataset.</td>
+              <td class="stack">Python · Pandas · Power BI</td>
+              <td class="link"><a href="https://github.com/willckim/fpna-ai-dashboard">GitHub</a></td>
+            </tr>
+            <tr>
+              <td class="name">Snowflake + Power BI Sales Analytics<span class="kind">Live · analytics</span></td>
+              <td>End-to-end pipeline: ETL into a star-schema warehouse and interactive dashboards with KPI drilldowns.</td>
+              <td class="stack">Snowflake · SQL · ETL · Power BI · DAX</td>
+              <td class="link"><a href="https://app.snowflake.com/zmydbpf/fq34862/w3u0HWZNPryg/query">Demo</a> · <a href="https://github.com/willckim/snowflake-powerbi-sales-dashboard">GitHub</a></td>
+            </tr>
+            <tr>
+              <td class="name">Prompting Copilot for Accounting Work<span class="kind">Guide</span></td>
+              <td>A prompting guide for accounting teams: which reconciliation steps belong to deterministic tools (XLOOKUP, Power Query) and which to AI-assisted exception handling, with a prompt library and a one-page guardrail card.</td>
+              <td class="stack">Microsoft 365 Copilot · Excel · Power Query</td>
+              <td class="link"><a href="copilot">Read the guide</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© 2026 William Kim</span>
+      <span><a href="https://github.com/willckim">All repos on GitHub</a></span>
+    </div>
+  </footer>
+
+  <script src="assets/site.js"></script>
+</body>
+</html>
