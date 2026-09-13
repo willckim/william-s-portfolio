@@ -11,10 +11,25 @@
   --ink-2: #3c4045;
   --ink-3: #6b7076;
   --rule: #c9ccc6;
+
   --ledger: #1e6b47;
   --ledger-2: #d9e9df;
   --blueprint: #2a4a78;
   --blueprint-2: #dbe3ef;
+  /* amber and coral are darkened from the brief's #d98e04 and #d1495b so that
+     text on their own tints clears 4.5:1. Measured ratios in the commit body. */
+  --amber: #936003;
+  --amber-2: #fbeed0;
+  --coral: #bc3042;
+  --coral-2: #f9dfe3;
+  --violet: #5b4b8a;
+  --violet-2: #e6e1f2;
+
+  --grad-hero: linear-gradient(135deg, #f2f3f0 0%, #e2efe8 45%, #dbe3ef 100%);
+
+  --accent: var(--ledger);
+  --accent-2: var(--ledger-2);
+
   --max: 1120px;
   --gutter: clamp(20px, 4vw, 48px);
   --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -31,6 +46,8 @@ body {
   font-size: 17px;
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
+  /* The hero breaks out to 100vw; clip (not hidden) keeps the sticky header working. */
+  overflow-x: clip;
 }
 a { color: inherit; }
 a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
@@ -91,6 +108,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 /* ---------- Layout primitives ---------- */
 .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gutter); }
 main { padding: 48px 0 96px; }
+body.home main { padding-top: 0; }
 .page-head { padding: 24px 0 8px; }
 .page-head h1 { font-size: clamp(30px, 4.6vw, 52px); line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 12px; font-weight: 600; }
 .page-head p { max-width: 62ch; color: var(--ink-2); margin: 0; font-size: 18px; }
@@ -115,30 +133,45 @@ main { padding: 48px 0 96px; }
 .btn.primary:hover { background: #17573a; border-color: #17573a; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
 
-/* ---------- Home hero ---------- */
+/* ---------- Home hero: full-bleed, canvas behind the copy ---------- */
 .hero {
-  position: relative; display: grid; grid-template-columns: 1.05fr 1fr; gap: 32px; align-items: center;
-  min-height: min(72vh, 680px); padding: 24px 0 40px;
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  min-height: 88vh;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+  padding: 72px 0 88px;
+  background:
+    radial-gradient(58% 46% at 86% 6%, color-mix(in srgb, var(--amber-2) 40%, transparent) 0%, transparent 72%),
+    var(--grad-hero);
 }
+.hero .stage { position: absolute; inset: 0; z-index: 0; overflow: visible; }
+.hero .stage canvas { display: block; width: 100%; height: 100%; }
+.hero .hero-inner { position: relative; z-index: 1; width: 100%; }
+.hero .copy { max-width: 46rem; }
 .hero .copy h1 { font-size: clamp(38px, 6vw, 72px); line-height: 1.0; letter-spacing: -0.03em; margin: 0 0 20px; font-weight: 600; }
 .hero .copy p.lede { font-size: 19px; color: var(--ink-2); max-width: 52ch; margin: 0 0 28px; }
 .hero .status { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 14px; color: var(--ink-3); margin-bottom: 24px; }
 .hero .status span::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--ledger); margin-right: 8px; vertical-align: 1px; }
-.hero .stage {
-  position: relative; aspect-ratio: 1 / 1; max-height: 560px; width: 100%;
-  border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; background: var(--bone-2);
-}
-.hero .stage canvas { display: block; width: 100%; height: 100%; }
-.hero .stage .caption {
-  position: absolute; left: 12px; bottom: 10px; font-size: 12px; color: var(--ink-3);
+.hero .caption {
+  position: absolute; right: var(--gutter); bottom: 16px; z-index: 2;
+  font-size: 12px; color: var(--ink-3);
   background: color-mix(in srgb, var(--bone) 80%, transparent); padding: 4px 8px; border-radius: 4px;
 }
-.hero .stage .fallback { position: absolute; inset: 0; display: none; place-items: center; padding: 24px; text-align: center; color: var(--ink-3); }
+/* Reduced motion or no WebGL: same gradient, so the band never reads as blank. */
+.hero .stage .fallback {
+  position: absolute; inset: 0; display: none; place-items: center; padding: 24px;
+  text-align: center; color: var(--ink-3);
+  background:
+    radial-gradient(58% 46% at 86% 6%, color-mix(in srgb, var(--amber-2) 40%, transparent) 0%, transparent 72%),
+    var(--grad-hero);
+}
 .hero .stage.static .fallback { display: grid; }
 .hero .stage.static canvas { display: none; }
 @media (max-width: 860px) {
-  .hero { grid-template-columns: 1fr; min-height: 0; }
-  .hero .stage { max-height: 380px; aspect-ratio: 4 / 3; order: -1; }
+  .hero { min-height: 70vh; padding: 48px 0 64px; }
 }
 
 /* ---------- Home: proof strip ---------- */
