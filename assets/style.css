@@ -13,7 +13,7 @@
   --bone-2: #e9ebe6;
   --ink: #131517;
   --ink-2: #3c4045;
-  --ink-3: #6b7076;
+  --ink-3: #6a6f75;   /* darkened from #6b7076 so muted text on bone clears 4.5:1 */
   --rule: #c9ccc6;
 
   --ledger: #1e6b47;
