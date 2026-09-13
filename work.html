@@ -11,7 +11,7 @@
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f5f1ea'/%3E%3Cpath d='M6 9l5 15 5-10 5 10 5-15' fill='none' stroke='%23b6451a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
   <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body data-accent="blueprint">
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="site-header">
@@ -20,10 +20,10 @@
       <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
       <nav aria-label="Primary">
         <ul class="tabs" id="nav">
-          <li><a href="index.html">Home</a></li>
-          <li><a href="work.html" aria-current="page">Work</a></li>
-          <li><a href="about.html">About</a></li>
-          <li><a href="contact.html">Contact</a></li>
+          <li><a href="index.html" data-accent="ledger">Home</a></li>
+          <li><a href="work.html" data-accent="blueprint" aria-current="page">Work</a></li>
+          <li><a href="about.html" data-accent="violet">About</a></li>
+          <li><a href="contact.html" data-accent="coral">Contact</a></li>
         </ul>
       </nav>
     </div>
@@ -37,13 +37,13 @@
       </div>
 
       <div class="subtabs" role="tablist" aria-label="Work categories">
-        <button role="tab" data-panel="ortho" aria-selected="true">At Ortho</button>
-        <button role="tab" data-panel="products" aria-selected="false">Products</button>
-        <button role="tab" data-panel="experiments" aria-selected="false">Experiments</button>
+        <button role="tab" data-panel="ortho" data-accent="ledger" aria-selected="true">At Ortho</button>
+        <button role="tab" data-panel="products" data-accent="blueprint" aria-selected="false">Products</button>
+        <button role="tab" data-panel="experiments" data-accent="amber" aria-selected="false">Experiments</button>
       </div>
 
       <!-- ===================== AT ORTHO ===================== -->
-      <section class="panel" id="ortho" role="tabpanel">
+      <section class="panel" id="ortho" role="tabpanel" data-accent="ledger">
         <p class="small" style="margin:14px 0 0">Ortho Molecular Products, Barrington, IL. Staff Accountant working across technical solutions and financial systems, March 2026 to present. Every system below keeps accountant review and posting authority, writes audit logs, and ships with written procedures.</p>
         <table class="book">
           <thead><tr><th>System</th><th>What it does</th><th>Stack</th><th>Outcome</th></tr></thead>
@@ -83,7 +83,7 @@
       </section>
 
       <!-- ===================== PRODUCTS ===================== -->
-      <section class="panel" id="products" role="tabpanel" hidden>
+      <section class="panel" id="products" role="tabpanel" data-accent="blueprint" hidden>
         <p class="small" style="margin:14px 0 0">Built on my own time. Several are live; all are on GitHub.</p>
         <table class="book">
           <thead><tr><th>Product</th><th>What it does</th><th>Stack</th><th>Links</th></tr></thead>
@@ -135,7 +135,7 @@
       </section>
 
       <!-- ===================== EXPERIMENTS ===================== -->
-      <section class="panel" id="experiments" role="tabpanel" hidden>
+      <section class="panel" id="experiments" role="tabpanel" data-accent="amber" hidden>
         <p class="small" style="margin:14px 0 0">Learning in public. Framed as exploration, not shipped work.</p>
         <table class="book">
           <thead><tr><th>Experiment</th><th>What it is</th><th>Stack</th><th>Links</th></tr></thead>

@@ -1,6 +1,10 @@
 /* williamckim.com · shared styles
-   Palette: bone / ink / ledger green / blueprint blue / rule grey
-   Type: IBM Plex Sans (text), IBM Plex Mono (figures only) */
+   Palette: bone / ink / ledger green / blueprint / amber / coral / violet
+   Type: IBM Plex Sans (text), IBM Plex Mono (figures only)
+
+   Accent system: one generic [data-accent] lookup sets --accent and --accent-2.
+   Every coloured component then reads those two variables, so components carry
+   no colour logic of their own. */
 
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
@@ -36,6 +40,14 @@
   --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
+/* The one accent lookup. Used by body, nav tabs, proof cells, directory cards,
+   Work sub-tabs and panels. */
+[data-accent="ledger"]    { --accent: var(--ledger);    --accent-2: var(--ledger-2); }
+[data-accent="blueprint"] { --accent: var(--blueprint); --accent-2: var(--blueprint-2); }
+[data-accent="amber"]     { --accent: var(--amber);     --accent-2: var(--amber-2); }
+[data-accent="coral"]     { --accent: var(--coral);     --accent-2: var(--coral-2); }
+[data-accent="violet"]    { --accent: var(--violet);    --accent-2: var(--violet-2); }
+
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -51,7 +63,7 @@ body {
 }
 a { color: inherit; }
 a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
-  outline: 2px solid var(--blueprint);
+  outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 .skip {
@@ -88,8 +100,8 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   text-decoration: none; color: var(--ink-2); font-weight: 500;
   border-bottom: 2px solid transparent; transition: color .15s, border-color .15s;
 }
-.tabs a:hover { color: var(--ink); }
-.tabs a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--ledger); }
+/* Single styling rule; the colour comes from each tab's own data-accent. */
+.tabs a:hover, .tabs a[aria-current="page"] { color: var(--accent); border-bottom-color: var(--accent); }
 .menu-btn { display: none; }
 
 @media (max-width: 720px) {
@@ -102,7 +114,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
   .tabs { display: none; width: 100%; flex-direction: column; gap: 0; padding-top: 8px; }
   .tabs.open { display: flex; }
   .tabs a { height: auto; padding: 12px 4px; border-bottom: 1px solid var(--rule); }
-  .tabs a[aria-current="page"] { border-bottom-color: var(--ledger); }
+  .tabs a[aria-current="page"] { border-bottom-color: var(--accent); }
 }
 
 /* ---------- Layout primitives ---------- */
@@ -175,21 +187,24 @@ body.home main { padding-top: 0; }
 }
 
 /* ---------- Home: proof strip ---------- */
-.proof { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
-.proof > div { padding: 22px 18px 20px; border-right: 1px solid var(--rule); }
-.proof > div:last-child { border-right: 0; }
-.proof .num { font-size: 30px; line-height: 1; display: block; margin-bottom: 8px; color: var(--ledger); }
+.proof { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #fff; margin-top: 48px; }
+.proof > div { padding: 22px 18px 20px; background: var(--accent-2); }
+.proof .num { font-size: 30px; line-height: 1; display: block; margin-bottom: 8px; color: var(--accent); }
 .proof .label { font-size: 14px; color: var(--ink-2); }
-@media (max-width: 860px) { .proof { grid-template-columns: repeat(2, 1fr); } .proof > div:nth-child(2) { border-right: 0; } .proof > div:nth-child(-n+2) { border-bottom: 1px solid var(--rule); } }
+@media (max-width: 860px) { .proof { grid-template-columns: repeat(2, 1fr); } }
 
 /* ---------- Home: page directory ---------- */
 .directory { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; margin-top: 40px; }
-.directory a { display: block; padding: 26px 24px 28px; text-decoration: none; border-right: 1px solid var(--rule); transition: background .15s; }
+.directory a {
+  display: block; padding: 26px 24px 28px; text-decoration: none;
+  border-top: 6px solid var(--accent); border-right: 1px solid var(--rule);
+  transition: background .15s;
+}
 .directory a:last-child { border-right: 0; }
-.directory a:hover { background: var(--ledger-2); }
+.directory a:hover { background: var(--accent-2); }
 .directory h2 { margin: 0 0 8px; font-size: 20px; letter-spacing: -0.01em; }
 .directory p { margin: 0; color: var(--ink-2); font-size: 15px; }
-.directory .go { display: block; margin-top: 16px; font-weight: 500; color: var(--ledger); }
+.directory .go { display: block; margin-top: 16px; font-weight: 500; color: var(--accent); }
 @media (max-width: 720px) { .directory { grid-template-columns: 1fr; } .directory a { border-right: 0; border-bottom: 1px solid var(--rule); } .directory a:last-child { border-bottom: 0; } }
 
 /* ---------- Work: sub-tabs + table ---------- */
@@ -198,19 +213,23 @@ body.home main { padding-top: 0; }
   background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
   padding: 12px 14px; font: inherit; font-weight: 500; color: var(--ink-2); cursor: pointer;
 }
-.subtabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ledger); }
-.subtabs button:hover { color: var(--ink); }
+.subtabs button[aria-selected="true"] { color: var(--accent); border-bottom-color: var(--accent); }
+.subtabs button:hover { color: var(--accent); }
 .panel[hidden] { display: none; }
 
 table.book { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 15.5px; }
-table.book th { text-align: left; font-weight: 600; font-size: 13px; color: var(--ink-3); padding: 14px 12px 10px; border-bottom: 1px solid var(--ink); }
+table.book th { text-align: left; font-weight: 600; font-size: 13px; color: var(--ink-3); padding: 14px 12px 10px; border-bottom: 2px solid var(--accent); }
 table.book td { vertical-align: top; padding: 16px 12px; border-bottom: 1px solid var(--rule); }
 table.book td.name { font-weight: 600; white-space: nowrap; }
 table.book td.name .kind { display: block; font-weight: 400; color: var(--ink-3); font-size: 13px; margin-top: 2px; }
+table.book td.name .kind::before {
+  content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent); margin-right: 7px; vertical-align: 1px;
+}
 table.book td.stack { color: var(--ink-2); font-size: 14px; }
-table.book td.outcome { color: var(--ledger); font-weight: 500; }
+table.book td.outcome { color: var(--accent); font-weight: 500; }
 table.book td.link a { white-space: nowrap; }
-table.book tr:hover td { background: color-mix(in srgb, var(--ledger-2) 45%, transparent); }
+table.book tr:hover td { background: color-mix(in srgb, var(--accent-2) 45%, transparent); }
 @media (max-width: 860px) {
   table.book thead { display: none; }
   table.book tr { display: block; padding: 16px 0; border-bottom: 1px solid var(--rule); }
@@ -226,15 +245,29 @@ table.book tr:hover td { background: color-mix(in srgb, var(--ledger-2) 45%, tra
 .prose p:last-child { margin-bottom: 0; }
 .skills { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 0 32px; margin: 0; }
 .skills > div { padding: 14px 0; border-bottom: 1px solid var(--rule); }
-.skills dt { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+/* Rotating accent across the skill groups. */
+.skills > div:nth-child(5n+1) { --accent: var(--ledger); }
+.skills > div:nth-child(5n+2) { --accent: var(--blueprint); }
+.skills > div:nth-child(5n+3) { --accent: var(--violet); }
+.skills > div:nth-child(5n+4) { --accent: var(--amber); }
+.skills > div:nth-child(5n+5) { --accent: var(--coral); }
+.skills dt { font-weight: 600; font-size: 14px; margin-bottom: 4px; color: var(--accent); }
 .skills dd { margin: 0; color: var(--ink-2); font-size: 15px; }
 .certs { list-style: none; padding: 0; margin: 0; }
-.certs li { display: flex; justify-content: space-between; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.certs li {
+  display: flex; justify-content: space-between; gap: 16px; padding: 12px 0 12px 24px;
+  border-bottom: 1px solid var(--rule); position: relative;
+}
+.certs li::before {
+  content: "\2713"; position: absolute; left: 0; top: 12px;
+  color: var(--amber); font-weight: 600;
+}
 .certs li a { text-decoration: none; font-weight: 500; }
 .certs li a:hover { text-decoration: underline; }
 .certs .when { color: var(--ink-3); font-size: 14px; white-space: nowrap; }
-.timeline { list-style: none; padding: 0; margin: 0; }
+.timeline { list-style: none; margin: 0; padding: 0 0 0 22px; border-left: 3px solid var(--violet); }
 .timeline li { display: grid; grid-template-columns: 110px 1fr; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.timeline li:last-child { border-bottom: 0; }
 .timeline .when { color: var(--ink-3); font-size: 14px; }
 .timeline strong { display: block; }
 .timeline span { color: var(--ink-2); font-size: 15px; }
@@ -245,8 +278,15 @@ table.book tr:hover td { background: color-mix(in srgb, var(--ledger-2) 45%, tra
 .contact-list .k { color: var(--ink-3); font-size: 14px; }
 .contact-list a { text-decoration: none; font-weight: 500; }
 .contact-list a:hover { text-decoration: underline; }
-.copy-btn { margin-left: 10px; font: inherit; font-size: 13px; background: none; border: 1px solid var(--rule); border-radius: 4px; padding: 3px 8px; cursor: pointer; color: var(--ink-2); }
-.copy-btn:hover { border-color: var(--ink); color: var(--ink); }
+.copy-btn {
+  margin-left: 10px; font: inherit; font-size: 13px; background: none;
+  border: 1px solid var(--rule); border-radius: 4px; padding: 3px 8px; cursor: pointer;
+  color: var(--ink-2); transition: background .15s, color .15s, border-color .15s;
+}
+.copy-btn:hover { background: var(--coral); border-color: var(--coral); color: #fff; }
+.copy-btn.is-copied, .copy-btn.is-copied:hover {
+  background: transparent; color: var(--ledger); border-color: var(--ledger);
+}
 
 /* ---------- Footer ---------- */
 .site-footer { border-top: 1px solid var(--rule); }
