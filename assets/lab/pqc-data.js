@@ -3,12 +3,12 @@
 window.PQC_DATA = {
   "provenance": {
     "toolkit": "quantum-finance/04_security/pqc_readiness",
-    "commit": "c57a2e0",
+    "commit": "5345b40",
     "uncommitted_changes": false,
-    "pqc_config.yaml": "262f1bcc741ae9e2",
-    "sources.py": "ff951363204ffe31",
-    "toolkit_version": "2.0.0",
-    "toolkit_run": "2026-09-23T09:59:32"
+    "pqc_config.yaml": "471e6cee278cba28",
+    "sources.py": "2f310394166f780b",
+    "toolkit_version": "3.0.0",
+    "toolkit_run": "2026-09-23T11:13:20"
   },
   "as_of_year": 2026,
   "migration_years": 10,
