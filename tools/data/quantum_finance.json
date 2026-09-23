@@ -1,0 +1,153 @@
+{
+  "_generated_by": "tools/extract_qf.py",
+  "run_at": "2026-09-23T09:59:39",
+  "repo": "https://github.com/willckim/quantum-finance",
+  "commit": "4fd23235f224eb13783e001141eeb9c98f5a8f97",
+  "dirty": false,
+  "python": "3.10.11",
+  "qiskit": "2.4.1",
+  "numpy": "1.26.4",
+  "grover": {
+    "target": 7,
+    "qubits": 4,
+    "iterations_rule": "math.isqrt(total_items)",
+    "shots": 1000
+  },
+  "monte_carlo": {
+    "reference_p": 0.0522,
+    "reference_sims": 200000,
+    "target_accuracy": "0.5%",
+    "classical_to_target": 1024,
+    "quantum_to_target": 900,
+    "classical": [
+      [
+        128,
+        0.0132
+      ],
+      [
+        256,
+        0.0093
+      ],
+      [
+        512,
+        0.0068
+      ],
+      [
+        1024,
+        0.0025
+      ],
+      [
+        2048,
+        0.0032
+      ],
+      [
+        4096,
+        0.0023
+      ],
+      [
+        8192,
+        0.0014
+      ],
+      [
+        16384,
+        0.0014
+      ],
+      [
+        32768,
+        0.001
+      ]
+    ],
+    "quantum": [
+      [
+        100,
+        0.0122
+      ],
+      [
+        400,
+        0.0086
+      ],
+      [
+        900,
+        0.0025
+      ],
+      [
+        1800,
+        0.001
+      ],
+      [
+        3500,
+        0.0007
+      ],
+      [
+        6800,
+        0.0006
+      ],
+      [
+        13300,
+        0.0002
+      ],
+      [
+        26200,
+        0.0002
+      ]
+    ]
+  },
+  "forecaster": {
+    "last_actual": {
+      "month": 24,
+      "revenue": 136700
+    },
+    "forecast": [
+      {
+        "month": 25,
+        "classical": 138062,
+        "quantum": 132537
+      },
+      {
+        "month": 26,
+        "classical": 140273,
+        "quantum": 132949
+      },
+      {
+        "month": 27,
+        "classical": 142484,
+        "quantum": 133195
+      }
+    ]
+  },
+  "portfolio": {
+    "stocks": 15,
+    "held": 7,
+    "target": "8%",
+    "matched": true,
+    "circuit_evaluations": 1000,
+    "classical": {
+      "holdings": [
+        "ARVO",
+        "DLTA",
+        "FYNT",
+        "GRDN",
+        "JUNO",
+        "LMNS",
+        "ORBT"
+      ],
+      "return": "8.26%",
+      "risk": "4.64%",
+      "evaluated": 32768
+    },
+    "quantum": {
+      "holdings": [
+        "ARVO",
+        "DLTA",
+        "FYNT",
+        "GRDN",
+        "JUNO",
+        "LMNS",
+        "ORBT"
+      ],
+      "return": "8.26%",
+      "risk": "4.64%",
+      "evaluated": 3611
+    }
+  }
+}
