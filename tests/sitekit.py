@@ -11,6 +11,8 @@ A check that cannot see its subject reports NOT RUN, never PASS.
 from __future__ import annotations
 
 import functools
+import gzip
+import io
 import os
 import http.server
 import socketserver
@@ -72,7 +74,23 @@ class CleanUrlHandler(http.server.SimpleHTTPRequestHandler):
                 self.path = path + ".html" + ("?" + query if query else "")
             elif (disk / "index.html").exists():
                 self.path = path + "/index.html"
-        return super().send_head()
+        return self._maybe_gzip() or super().send_head()
+
+    def _maybe_gzip(self):
+        """Text files gzipped when the browser asks, as Vercel does, so Lighthouse
+        measures the transfer sizes production has rather than raw bytes."""
+        if "gzip" not in self.headers.get("Accept-Encoding", ""):
+            return None
+        fs = self.translate_path(self.path)
+        if not os.path.isfile(fs) or not fs.endswith((".html", ".css", ".js", ".json", ".svg")):
+            return None
+        body = gzip.compress(open(fs, "rb").read())
+        self.send_response(200)
+        self.send_header("Content-Type", self.guess_type(fs))
+        self.send_header("Content-Encoding", "gzip")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        return io.BytesIO(body)
 
 
 class _Server(socketserver.ThreadingMixIn, http.server.HTTPServer):

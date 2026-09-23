@@ -16,11 +16,26 @@
     var buttons = Array.prototype.slice.call(subtabs.querySelectorAll("button"));
     var panels = Array.prototype.slice.call(document.querySelectorAll(".panel"));
     function show(id, push) {
-      buttons.forEach(function (b) { b.setAttribute("aria-selected", b.dataset.panel === id ? "true" : "false"); });
+      buttons.forEach(function (b) {
+        var on = b.dataset.panel === id;
+        b.setAttribute("aria-selected", on ? "true" : "false");
+        b.tabIndex = on ? 0 : -1;             // roving tabindex: Tab reaches the selected tab only
+      });
       panels.forEach(function (p) { p.hidden = p.id !== id; });
       if (push && history.replaceState) history.replaceState(null, "", "#" + id);
     }
-    buttons.forEach(function (b) { b.addEventListener("click", function () { show(b.dataset.panel, true); }); });
+    buttons.forEach(function (b, i) {
+      b.addEventListener("click", function () { show(b.dataset.panel, true); });
+      // Arrow keys, Home and End move between tabs, as the ARIA tabs pattern expects.
+      b.addEventListener("keydown", function (e) {
+        var to = { ArrowRight: i + 1, ArrowLeft: i - 1, Home: 0, End: buttons.length - 1 }[e.key];
+        if (to === undefined) return;
+        e.preventDefault();
+        var next = buttons[(to + buttons.length) % buttons.length];
+        show(next.dataset.panel, true);
+        next.focus();
+      });
+    });
     var initial = location.hash.replace("#", "");
     // The Experiments tab moved to the Lab. Old links still land somewhere real.
     if (initial === "experiments") { location.replace("/lab#experiments"); return; }

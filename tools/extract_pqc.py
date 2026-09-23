@@ -71,13 +71,18 @@ def main() -> int:
         if unknown:
             raise SystemExit(f"{dt['name']}: source keys not in sources.py: {unknown}")
 
+    # check=True: a missing git or a folder that is not a repo must stop the run, not
+    # print a blank commit and "no uncommitted changes" on the site.
     git = lambda *a: subprocess.run(["git", "-C", str(root), *a], capture_output=True,  # noqa: E731
-                                    text=True).stdout.strip()
+                                    text=True, check=True).stdout.strip()
     run_log = json.loads((root / "pqc_run_log.json").read_text(encoding="utf-8"))
+    for key in ("version", "run_timestamp"):
+        if not run_log.get(key):
+            raise SystemExit(f"pqc_run_log.json has no {key}: run the toolkit first")
     data = {
         "_generated_by": "tools/extract_pqc.py",
         "extracted_at": datetime.now().isoformat(timespec="seconds"),
-        "provenance": {
+        "provenance": {  # commit checked non-empty below
             "toolkit": "quantum-finance/04_security/pqc_readiness",
             "commit": git("rev-parse", "--short", "HEAD"),
             "uncommitted_changes": bool(git("status", "--porcelain", ".")),
@@ -101,6 +106,8 @@ def main() -> int:
             "planning_year": s["planning_year"],
         } for s in cfg["scenarios"]],
     }
+    if not data["provenance"]["commit"]:
+        raise SystemExit("could not read the toolkit's commit")
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print("wrote", OUT)

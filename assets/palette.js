@@ -124,9 +124,22 @@
 
   function go(it) {
     var here = location.pathname + location.hash;
+    // Leaving for the result: focus must not return to the opener, or a jump within
+    // this page scrolls straight back up to where the palette was opened from.
+    // A modal dialog also restores focus natively as it closes, so for a jump within
+    // this page, focus moves on to the target panel, which is where a keyboard user
+    // wants to be next anyway.
+    if (it.url !== here) opener = null;
     dlg.close();
     if (it.url === here) return;
+    var parts = it.url.split("#");
     location.href = it.url;
+    var target = parts[0] === location.pathname && parts[1] && document.getElementById(parts[1]);
+    if (target) {
+      target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: true });
+      target.scrollIntoView();
+    }
   }
 
   window.Palette = {

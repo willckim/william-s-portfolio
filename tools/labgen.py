@@ -110,6 +110,11 @@ def grover_card(g: dict) -> str:
         raise SystemExit(f"unrecognised Grover iteration rule: {g['iterations_rule']}")
     n = 2 ** g["qubits"]
     iters = math.isqrt(n)
+    optimal = math.floor(math.pi / (4 * math.asin(1 / math.sqrt(n))))
+    past = iters - optimal
+    relation = ("the optimum" if past == 0 else
+                f"{abs(past)} {'past' if past > 0 else 'short of'} the optimum" if abs(past) > 1 else
+                f"one {'past' if past > 0 else 'short of'} the optimum")
     return f'''<article class="qf-card qf-wide grover" id="grover" aria-labelledby="grover-h"
                    data-qubits="{g["qubits"]}" data-target="{g["target"]}" data-repo-iterations="{iters}">
             <h3 id="grover-h">Grover search, step by step</h3>
@@ -128,7 +133,7 @@ def grover_card(g: dict) -> str:
               <div><dt>Theory, sin&sup2;((2k+1)&theta;)</dt><dd class="num g-theory"></dd></div>
             </dl>
             <p class="g-status" aria-live="polite"></p>
-            <p class="small">The optimum for {n} states is <span class="num g-optimal"></span> iterations, a <span class="num g-opt-p"></span> chance of the marked state. The repo's grover_search.py marks state {g["target"]} and runs isqrt({n}) = {iters} iterations, one past the optimum, so its {_n(g["shots"])} shots sample from a <span class="num g-repo-p"></span> chance instead. The repo does not save its measured counts, so there is no recorded hit rate to quote. Step to {iters} here to see the distribution those shots come from.</p>
+            <p class="small">The optimum for {n} states is <span class="num g-optimal"></span> iterations, a <span class="num g-opt-p"></span> chance of the marked state. The repo's grover_search.py marks state {g["target"]} and runs isqrt({n}) = {iters} iterations, {relation}, so its {_n(g["shots"])} shots sample from a <span class="num g-repo-p"></span> chance instead. The repo does not save its measured counts, so there is no recorded hit rate to quote. Step to {iters} here to see the distribution those shots come from.</p>
           </article>'''
 
 
@@ -142,6 +147,13 @@ def quantum_region() -> str:
         f'<tr><th scope="row">Month {f["month"]}</th><td class="num">${_n(f["classical"])}</td>'
         f'<td class="num">${_n(f["quantum"])}</td></tr>' for f in fc["forecast"])
     last = fc["last_actual"]
+    # The card calls this an honest loss because the linear model keeps the trend and
+    # the one-qubit model flattens. If a rerun ever disagrees, stop rather than publish.
+    rise = lambda k: fc["forecast"][-1][k] - fc["forecast"][0][k]  # noqa: E731
+    if not rise("classical") > rise("quantum"):
+        raise SystemExit("forecaster data no longer shows the quantum forecast flattening")
+    qaoa_line = (f'QAOA chose the same {pf["held"]} stocks as an exhaustive classical search.' if pf["matched"]
+                 else f'QAOA did not find the portfolio an exhaustive classical search found.')
     return f'''<!-- gen:quantum -->
         <div class="qf-grid">
           {grover_card(d["grover"])}
@@ -149,7 +161,7 @@ def quantum_region() -> str:
           <article class="qf-card" aria-labelledby="qaoa-h">
             <h3 id="qaoa-h">QAOA portfolio</h3>
             <p class="verdict"><span class="pill ok">{"Matched brute force" if pf["matched"] else "Did not match"}</span></p>
-            <p>Pick exactly {pf["held"]} of {pf["stocks"]} stocks for low risk at a {pf["target"]} return target. QAOA chose the same {pf["held"]} stocks as an exhaustive classical search.</p>
+            <p>Pick exactly {pf["held"]} of {pf["stocks"]} stocks for low risk at a {pf["target"]} return target. {qaoa_line}</p>
             <dl class="qf-stats">
               <div><dt>Brute force checked</dt><dd class="num">{_n(pf["classical"]["evaluated"])}</dd></div>
               <div><dt>QAOA measured</dt><dd class="num">{_n(pf["quantum"]["evaluated"])}</dd></div>

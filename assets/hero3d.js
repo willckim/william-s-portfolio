@@ -4,10 +4,42 @@
 // The camera fits the whole grid to the viewport, so no cell is ever clipped at any width.
 // Mouse adds slight parallax. Reduced motion renders one frame and never starts the loop.
 // Colours follow the site theme and change live on the themechange event from site.js.
-// Requires three.js (r128) loaded before this file.
+// three.js (r128) is not on the critical path: this file loads it from cdnjs after the
+// page's load event, when the browser is idle, pinned with Subresource Integrity. Until
+// then the hero shows its CSS gradient, which is what it rests on anyway.
 (function () {
   var stage = document.getElementById("stage");
-  if (!stage || typeof THREE === "undefined") { if (stage) stage.classList.add("static"); return; }
+  if (!stage) return;
+  var THREE_URL = "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js";
+  var THREE_SRI = "sha512-dLxUelApnYxpLt6K2iomGngnHO83iUvZytA3YjDUCjT0HDOHKXnVYdf3hU4JjM8uEhxf9nD1/ey98U3t2vZ0qQ==";
+  function load() {
+    var s = document.createElement("script");
+    s.src = THREE_URL;
+    s.integrity = THREE_SRI;
+    s.crossOrigin = "anonymous";
+    s.onload = initHero;
+    s.onerror = function () { stage.classList.add("static"); };
+    document.head.appendChild(s);
+  }
+  // Start on the first sign of a person (pointer, touch, key, scroll), or 2.5 s after
+  // load, whichever comes first. The grid is decoration: the words above it should
+  // never wait for WebGL, and on a phone parsing three.js costs a few hundred ms.
+  var started = false, SIGNALS = ["pointermove", "pointerdown", "touchstart", "keydown", "scroll"];
+  function start() {
+    if (started) return;
+    started = true;
+    SIGNALS.forEach(function (e) { window.removeEventListener(e, start); });
+    load();
+  }
+  SIGNALS.forEach(function (e) { window.addEventListener(e, start, { passive: true }); });
+  var idle = window.requestIdleCallback || function (f) { setTimeout(f, 200); };
+  function soon() { setTimeout(function () { idle(start); }, 2500); }
+  if (document.readyState === "complete") soon(); else window.addEventListener("load", soon);
+})();
+
+function initHero() {
+  var stage = document.getElementById("stage");
+  if (typeof THREE === "undefined") { stage.classList.add("static"); return; }
 
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   var W = stage.clientWidth, H = stage.clientHeight;
@@ -323,4 +355,5 @@
   };
 
   if (reduce) { frame(t0 + CYCLE * 0.7); } else { requestAnimationFrame(frame); }
-})();
+  stage.classList.add("ready");   // fades the canvas in (instantly under reduced motion)
+}

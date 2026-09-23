@@ -105,6 +105,25 @@ def main() -> int:
             rep.check("a Lab tool result lands on its panel", page.url.endswith("/lab#grover")
                       and page.evaluate("document.getElementById('grover').getBoundingClientRect().top < innerHeight"),
                       page.url)
+            # A jump within the page it was opened on must stay at its target: closing
+            # the dialog used to hand focus back to the opener and scroll up to it.
+            page.goto(base + "/lab")
+            page.wait_for_load_state("networkidle")
+            page.focus("#m-x")
+            page.keyboard.press("Control+k")
+            page.wait_for_selector("dialog.palette[open]")
+            page.keyboard.type("grover")
+            page.keyboard.press("Enter")
+            # Sampled until the scroll settles, not once: smooth scrolling takes a moment.
+            top, last = None, -1.0
+            for _ in range(30):
+                page.wait_for_timeout(150)
+                top = page.evaluate("document.getElementById('grover').getBoundingClientRect().top")
+                if top == last:
+                    break
+                last = top
+            rep.check("a same-page result stays scrolled to its panel", page.url.endswith("/lab#grover")
+                      and 0 <= top < 200, f"grover top {top:.0f}px")
             rep.check("no page errors", not errors, "; ".join(errors[:3]))
             browser.close()
     finally:

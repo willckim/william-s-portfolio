@@ -59,7 +59,7 @@ def header(current: str) -> str:
         </ul>
       </nav>
       <div class="tools">
-        <button class="search-btn" type="button" data-palette-open aria-keyshortcuts="Control+K Meta+K"><span>Search</span><kbd>Ctrl K</kbd></button>
+        <button class="search-btn" type="button" data-palette-open aria-keyshortcuts="Control+K Meta+K">{GLASS}<span class="search-label">Search</span><kbd>Ctrl K</kbd></button>
         <button class="theme-btn" type="button" data-theme-toggle aria-pressed="false"><span class="sr-only">Dark theme</span>{SUN}{MOON}</button>
       </div>
     </div>
@@ -74,9 +74,14 @@ THEME_SCRIPT = ('<script>(function(){var d=document.documentElement,t=null;try{t
                 'd.setAttribute("data-theme-resolved",t||(matchMedia("(prefers-color-scheme: dark)").matches'
                 '?"dark":"light"))})();</script>')
 VIEWPORT = '<meta name="viewport" content="width=device-width, initial-scale=1">'
+PRELOAD = ('<link rel="preload" href="/assets/fonts/ibm-plex-sans-latin.woff2" as="font" type="font/woff2" '
+           'crossorigin>')
+SCRIPT_RX = re.compile(r'<script src="(/assets/[^"]+)"></script>')   # every site script is deferred
 SUN = ('<svg class="sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" '
        'stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 '
        '17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>')
+GLASS = ('<svg class="search-ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" '
+         'stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>')
 MOON = ('<svg class="moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" '
         'stroke-width="2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>')
 
@@ -360,6 +365,7 @@ def case_page(i: int) -> str:
   <meta charset="utf-8">
   {VIEWPORT}
   {THEME_SCRIPT}
+  {PRELOAD}
   <title>{escape(c.name)} · Case study · William Kim</title>
   <meta name="description" content="{escape(c.description)}">
   <link rel="canonical" href="https://www.williamckim.com/work/{c.slug}">
@@ -438,7 +444,7 @@ def case_page(i: int) -> str:
     </div>
   </footer>
 
-  <script src="/assets/site.js"></script>
+  <script src="/assets/site.js" defer></script>
 </body>
 </html>
 '''
@@ -457,12 +463,21 @@ def expected() -> dict[Path, str]:
             if text.count(VIEWPORT) != 1:
                 raise SystemExit(f"{name}: expected one viewport meta to anchor the theme script")
             text = text.replace(VIEWPORT, VIEWPORT + "\n  " + THEME_SCRIPT)
+        if PRELOAD not in text:
+            text = text.replace(THEME_SCRIPT, THEME_SCRIPT + "\n  " + PRELOAD)
+        text = SCRIPT_RX.sub(r'<script src="\1" defer></script>', text)
         if name == "lab.html":
             if len(QUANTUM_RX.findall(text)) != 1:
                 raise SystemExit("lab.html: expected exactly one gen:quantum region")
             text = QUANTUM_RX.sub(lambda m: labgen.quantum_region(), text)
         out[path] = text
     out[ROOT / "assets" / "lab" / "pqc-data.js"] = labgen.pqc_js()
+    urls = [href for _, href, _, _ in NAV] + [f"/work/{c.slug}" for c in CASES] + ["/copilot"]
+    out[ROOT / "sitemap.xml"] = (
+        '<?xml version="1.0" encoding="UTF-8"?>\n'
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+        + "".join(f"  <url><loc>https://www.williamckim.com{u if u != '/' else '/'}</loc></url>\n" for u in urls)
+        + "</urlset>\n")
     for i, c in enumerate(CASES):
         out[ROOT / "work" / f"{c.slug}.html"] = case_page(i)
     return out
