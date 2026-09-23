@@ -58,6 +58,9 @@ def header(current: str) -> str:
 {items}
         </ul>
       </nav>
+      <div class="tools">
+        <button class="search-btn" type="button" data-palette-open aria-keyshortcuts="Control+K Meta+K"><span>Search</span><kbd>Ctrl K</kbd></button>
+      </div>
     </div>
   </header>'''
 
