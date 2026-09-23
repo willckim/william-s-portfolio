@@ -60,10 +60,25 @@ def header(current: str) -> str:
       </nav>
       <div class="tools">
         <button class="search-btn" type="button" data-palette-open aria-keyshortcuts="Control+K Meta+K"><span>Search</span><kbd>Ctrl K</kbd></button>
+        <button class="theme-btn" type="button" data-theme-toggle aria-pressed="false"><span class="sr-only">Dark theme</span>{SUN}{MOON}</button>
       </div>
     </div>
   </header>'''
 
+
+# Runs before first paint, so a stored dark choice never flashes light. It only
+# reads: site.js owns the toggle. data-theme is set only for an explicit choice, so
+# the CSS media query still decides for everyone who has not chosen.
+THEME_SCRIPT = ('<script>(function(){var d=document.documentElement,t=null;try{t=localStorage.getItem("theme")}'
+                'catch(e){}if(t==="dark"||t==="light")d.setAttribute("data-theme",t);'
+                'd.setAttribute("data-theme-resolved",t||(matchMedia("(prefers-color-scheme: dark)").matches'
+                '?"dark":"light"))})();</script>')
+VIEWPORT = '<meta name="viewport" content="width=device-width, initial-scale=1">'
+SUN = ('<svg class="sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" '
+       'stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 '
+       '17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>')
+MOON = ('<svg class="moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" '
+        'stroke-width="2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>')
 
 HEADER_RX = re.compile(r'<header class="site-header">.*?</header>', re.S)
 QUANTUM_RX = re.compile(r"<!-- gen:quantum -->.*?<!-- /gen:quantum -->", re.S)
@@ -343,7 +358,8 @@ def case_page(i: int) -> str:
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  {VIEWPORT}
+  {THEME_SCRIPT}
   <title>{escape(c.name)} · Case study · William Kim</title>
   <meta name="description" content="{escape(c.description)}">
   <link rel="canonical" href="https://www.williamckim.com/work/{c.slug}">
@@ -437,6 +453,10 @@ def expected() -> dict[Path, str]:
         if len(HEADER_RX.findall(text)) != 1:
             raise SystemExit(f"{name}: expected exactly one site header")
         text = HEADER_RX.sub(lambda m: header(key), text)
+        if THEME_SCRIPT not in text:
+            if text.count(VIEWPORT) != 1:
+                raise SystemExit(f"{name}: expected one viewport meta to anchor the theme script")
+            text = text.replace(VIEWPORT, VIEWPORT + "\n  " + THEME_SCRIPT)
         if name == "lab.html":
             if len(QUANTUM_RX.findall(text)) != 1:
                 raise SystemExit("lab.html: expected exactly one gen:quantum region")

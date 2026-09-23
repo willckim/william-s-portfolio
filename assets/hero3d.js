@@ -3,6 +3,7 @@
 // a handful lift into nodes, take on that cycle's accent, and connect into a graph, then settle.
 // The camera fits the whole grid to the viewport, so no cell is ever clipped at any width.
 // Mouse adds slight parallax. Reduced motion renders one frame and never starts the loop.
+// Colours follow the site theme and change live on the themechange event from site.js.
 // Requires three.js (r128) loaded before this file.
 (function () {
   var stage = document.getElementById("stage");
@@ -27,15 +28,26 @@
   var camera = new THREE.PerspectiveCamera(32, W / H, 0.1, CAM_FAR);
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.75));
-  var key = new THREE.DirectionalLight(0xffffff, 0.7);
+  var key = new THREE.DirectionalLight(0xffffff, 0.7);   // intensity set per theme below
   key.position.set(4, 8, 6);
   scene.add(key);
 
-  // Palette (matches CSS tokens)
-  var C_CELL = new THREE.Color(0xdfe2dc);
-  var C_CELL_ALT = new THREE.Color(0xd3d7d0);
+  // Palette per theme (matches the CSS tokens). Light: pale cells on the bone
+  // gradient. Dark: cells a step above the near-black page, so the grid reads as a
+  // surface rather than holes, and the brighter dark-theme accents with more glow.
+  var PALETTES = {
+    light: { cell: 0xdfe2dc, alt: 0xd3d7d0, accents: [0x1e6b47, 0xd98e04, 0xd1495b], glow: 0.25, key: 0.7 },
+    dark:  { cell: 0x2c3136, alt: 0x252a2e, accents: [0x5cc28c, 0xe3a83d, 0xf28593], glow: 0.3, key: 0.55 }
+  };
+  function themeName() {
+    return document.documentElement.getAttribute("data-theme-resolved") === "dark" ? "dark" : "light";
+  }
+  var P = PALETTES[themeName()];
+  var C_CELL = new THREE.Color(P.cell);
+  var C_CELL_ALT = new THREE.Color(P.alt);
   // One accent per cycle: ledger green, amber, coral.
-  var ACCENTS = [0x1e6b47, 0xd98e04, 0xd1495b];
+  var ACCENTS = P.accents.slice();
+  key.intensity = P.key;
 
   var COLS = 18, ROWS = 12, GAP = 0.78, CELL = 0.62, THICK = 0.12;
   var NODE_COUNT = 12, LIFT = 1.6;
@@ -238,7 +250,7 @@
     }
     nodeMesh.instanceMatrix.needsUpdate = true;
     if (nodeMesh.instanceColor) nodeMesh.instanceColor.needsUpdate = true;
-    matNode.emissiveIntensity = 0.25 * ph;   // faint glow, lifted nodes only
+    matNode.emissiveIntensity = P.glow * ph;   // faint glow, lifted nodes only
 
     // Edges follow the nodes
     var pos = lineGeo.getAttribute("position");
@@ -261,6 +273,19 @@
     renderer.render(scene, camera);
     if (!reduce) requestAnimationFrame(frame);
   }
+
+  // The toggle, or the system setting changing, recolours the scene in place.
+  document.addEventListener("themechange", function () {
+    P = PALETTES[themeName()];
+    C_CELL.setHex(P.cell);
+    C_CELL_ALT.setHex(P.alt);
+    ACCENTS = P.accents.slice();
+    key.intensity = P.key;
+    for (var i = 0; i < count; i++) mesh.setColorAt(i, colorTarget[i]);
+    mesh.instanceColor.needsUpdate = true;
+    pickGraph(lastCycle);
+    if (reduce) frame(t0 + CYCLE * 0.7);
+  });
 
   function resize() {
     W = stage.clientWidth; H = stage.clientHeight;

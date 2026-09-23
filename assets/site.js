@@ -63,6 +63,33 @@
   });
   try { if (sessionStorage.getItem("tour.resume")) loadTour(); } catch (e) { /* storage blocked: no resume */ }
 
+  // Theme. The head script already applied a stored choice before paint. This keeps
+  // the toggle, the browser's theme-color and the hero in step with it, and follows
+  // the system setting live for anyone who has not chosen.
+  var docEl = document.documentElement;
+  var darkMq = window.matchMedia("(prefers-color-scheme: dark)");
+  function resolvedTheme() { return docEl.getAttribute("data-theme") || (darkMq.matches ? "dark" : "light"); }
+  function syncTheme() {
+    var t = resolvedTheme();
+    docEl.setAttribute("data-theme-resolved", t);
+    var meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", getComputedStyle(docEl).getPropertyValue("--bone").trim());
+    var btn = document.querySelector("[data-theme-toggle]");
+    if (btn) btn.setAttribute("aria-pressed", t === "dark" ? "true" : "false");
+    document.dispatchEvent(new CustomEvent("themechange", { detail: t }));
+  }
+  var themeBtn = document.querySelector("[data-theme-toggle]");
+  if (themeBtn) {
+    themeBtn.addEventListener("click", function () {
+      var next = resolvedTheme() === "dark" ? "light" : "dark";
+      docEl.setAttribute("data-theme", next);
+      try { localStorage.setItem("theme", next); } catch (e) { /* not remembered, still applied */ }
+      syncTheme();
+    });
+  }
+  darkMq.addEventListener("change", function () { if (!docEl.getAttribute("data-theme")) syncTheme(); });
+  syncTheme();
+
   // Command palette: Cmd/Ctrl+K anywhere, or the header's Search button. The script
   // loads on first use, so pages that never search never pay for it.
   var paletteLoading = false;

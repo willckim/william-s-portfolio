@@ -43,6 +43,32 @@
   --mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 }
 
+/* Dark theme. The same tokens, retuned: every accent clears 4.5:1 on the page,
+   on raised cards and on its own tint (lowest pair 5.75:1, muted text on a tint).
+   The block appears twice because CSS cannot share it: once for the system
+   setting when no choice is stored, once for an explicit choice. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bone: #121416; --bone-2: #1b1e21; --surface: #1a1d20; --on-accent: #0f1112;
+    --ink: #e9ebe7; --ink-2: #c4c8c3; --ink-2-soft: #b6bbb5; --ink-3: #9aa09a; --rule: #3a3f44;
+    --ledger: #5cc28c; --ledger-2: #15291f; --blueprint: #8fb2ee; --blueprint-2: #182438;
+    --amber: #e3a83d; --amber-2: #2d2311; --coral: #f28593; --coral-2: #35181d;
+    --violet: #b7a8f2; --violet-2: #241f38;
+    --grad-hero: linear-gradient(135deg, #121416 0%, #13201a 45%, #141b27 100%);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bone: #121416; --bone-2: #1b1e21; --surface: #1a1d20; --on-accent: #0f1112;
+  --ink: #e9ebe7; --ink-2: #c4c8c3; --ink-2-soft: #b6bbb5; --ink-3: #9aa09a; --rule: #3a3f44;
+  --ledger: #5cc28c; --ledger-2: #15291f; --blueprint: #8fb2ee; --blueprint-2: #182438;
+  --amber: #e3a83d; --amber-2: #2d2311; --coral: #f28593; --coral-2: #35181d;
+  --violet: #b7a8f2; --violet-2: #241f38;
+  --grad-hero: linear-gradient(135deg, #121416 0%, #13201a 45%, #141b27 100%);
+}
+:root[data-theme="light"] { color-scheme: light; }
+
 /* The one accent lookup. Used by body, nav tabs, proof cells, directory cards,
    Work sub-tabs and panels. */
 [data-accent="ledger"]    { --accent: var(--ledger);    --accent-2: var(--ledger-2); }
@@ -78,7 +104,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 /* ---------- Header / tabs ---------- */
 .site-header {
   position: sticky; top: 0; z-index: 50;
-  background: color-mix(in srgb, var(--bone) 92%, white);
+  background: color-mix(in srgb, var(--bone) 92%, var(--surface));
   border-bottom: 1px solid var(--rule);
   backdrop-filter: blur(6px);
 }
@@ -146,7 +172,7 @@ body.home main { padding-top: 0; }
 }
 .btn:hover { background: var(--ink); color: var(--bone); }
 .btn.primary { background: var(--ledger); border-color: var(--ledger); color: var(--on-accent); }
-.btn.primary:hover { background: #17573a; border-color: #17573a; }
+.btn.primary:hover { background: color-mix(in srgb, var(--ledger) 85%, var(--ink)); border-color: color-mix(in srgb, var(--ledger) 85%, var(--ink)); }
 .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
 
 /* ---------- Home hero: full-bleed, canvas behind the copy ---------- */
@@ -191,7 +217,7 @@ body.home main { padding-top: 0; }
 }
 
 /* ---------- Home: proof strip ---------- */
-.proof { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: #fff; margin-top: 48px; }
+.proof { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; background: var(--surface); margin-top: 48px; }
 .proof > * { padding: 22px 18px 20px; background: var(--accent-2); }
 .proof .num { font-size: 30px; line-height: 1; display: block; margin-bottom: 8px; color: var(--accent); }
 .proof .label { font-size: 14px; color: var(--ink-2); }
@@ -444,7 +470,7 @@ details summary { cursor: pointer; font-size: 14px; font-weight: 500; color: var
   border: 1px solid var(--rule); border-radius: 4px; padding: 3px 8px; cursor: pointer;
   color: var(--ink-2); transition: background .15s, color .15s, border-color .15s;
 }
-.copy-btn:hover { background: var(--coral); border-color: var(--coral); color: #fff; }
+.copy-btn:hover { background: var(--coral); border-color: var(--coral); color: var(--on-accent); }
 .copy-btn.is-copied, .copy-btn.is-copied:hover {
   background: transparent; color: var(--ledger); border-color: var(--ledger);
 }
@@ -508,7 +534,15 @@ button.btn { font: inherit; cursor: pointer; }
 .g-status { font-weight: 600; color: var(--ink); }
 @media (max-width: 560px) { .g-chart { height: 180px; } .g-label { font-size: 10px; } .g-stats dd { font-size: 20px; } }
 
-/* ---------- Header tools and the command palette ---------- */
+/* ---------- Header tools, theme toggle and the command palette ---------- */
+.theme-btn {
+  display: inline-grid; place-items: center; width: 36px; height: 36px; padding: 0; cursor: pointer;
+  border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); color: var(--ink-2);
+}
+.theme-btn:hover { border-color: var(--ink-3); color: var(--ink); }
+.theme-btn svg { width: 18px; height: 18px; }
+.theme-btn .moon, [data-theme-resolved="dark"] .theme-btn .sun { display: none; }
+[data-theme-resolved="dark"] .theme-btn .moon { display: block; }
 .site-header nav { margin-left: auto; }
 .tools { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
 .search-btn {
@@ -543,4 +577,5 @@ button.btn { font: inherit; cursor: pointer; }
 .palette li[aria-selected="true"] { background: var(--accent-2); box-shadow: inset 3px 0 0 var(--accent); }
 .pal-title { font-weight: 500; }
 .pal-group { font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+.palette li[aria-selected="true"] .pal-group { color: var(--ink-2); }   /* ink-3 is under 4.5:1 on a tint */
 .pal-empty { padding: 16px; margin: 0; color: var(--ink-2); }
