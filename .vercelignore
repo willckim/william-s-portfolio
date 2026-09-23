@@ -1,2 +1,6 @@
 # Old single-page versions, kept in git history but not deployed.
 _archive
+# Checks, tooling, and task tracking: repo-only.
+tests
+tools
+TASKS.md
