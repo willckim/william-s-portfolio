@@ -27,6 +27,42 @@
     show(panels.some(function (p) { return p.id === initial; }) ? initial : buttons[0].dataset.panel, false);
   }
 
+  // Tour Engine: loaded only when asked for, or when a tour is already under way
+  // (the engine keeps its place in sessionStorage across a page load).
+  var tourQueue = null, launcher = null;
+  function loadTour(then) {
+    if (window.Tour) { if (then) then(); return; }
+    if (tourQueue) { if (then) tourQueue.push(then); return; }
+    tourQueue = then ? [then] : [];
+    var host = document.createElement("script");
+    host.src = "/assets/tour/tour-host.js";
+    host.onload = function () {
+      var engine = document.createElement("script");
+      engine.src = "/assets/tour/tour.js";
+      engine.setAttribute("data-tour-host", "");
+      engine.onload = function () { tourQueue.forEach(function (f) { f(); }); watchTour(); };
+      document.body.appendChild(engine);
+    };
+    document.body.appendChild(host);
+  }
+  // The engine hands focus back to its own trigger, which this site hides, so
+  // focus goes back to the button that started the tour instead.
+  function watchTour() {
+    var wasActive = false;
+    setInterval(function () {
+      var on = window.Tour && Tour.state().active;
+      if (wasActive && !on && launcher && document.activeElement === document.body) launcher.focus();
+      wasActive = on;
+    }, 400);
+  }
+  document.querySelectorAll("[data-tour-start]").forEach(function (b) {
+    b.addEventListener("click", function () {
+      launcher = b;
+      loadTour(function () { Tour.start(); });
+    });
+  });
+  try { if (sessionStorage.getItem("tour.resume")) loadTour(); } catch (e) { /* storage blocked: no resume */ }
+
   // Copy buttons. Markup: button.copy-btn[data-copy]
   document.querySelectorAll(".copy-btn").forEach(function (b) {
     b.addEventListener("click", function () {

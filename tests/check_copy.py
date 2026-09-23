@@ -63,6 +63,12 @@ def main() -> int:
     if not pages:
         rep.not_run("pages found", "no deployed HTML pages were found")
         return rep.finish()
+    # Copy that lives in scripts: the tour's cards.
+    tour = (ROOT / "assets" / "tour" / "tour-host.js").read_text(encoding="utf-8")
+    strings = " ".join(re.findall(r'(?:title|body|targetName|instruction): "([^"]*)"', tour))
+    for name, rx in RULES:
+        hits = [strings[max(0, m.start() - 40): m.end() + 20] for m in rx.finditer(strings)]
+        rep.check(f"tour cards: {name}", bool(strings) and not hits, "; ".join(repr(h) for h in hits[:3]))
     for url in pages:
         parser = TextOf()
         parser.feed(page_file(url).read_text(encoding="utf-8"))

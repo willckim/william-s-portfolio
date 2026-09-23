@@ -33,13 +33,38 @@
     <div class="wrap">
       <div class="page-head display">
         <h1>Lab</h1>
-        <p>Things to use, not just read. Each panel is live: move the inputs and the answer changes in front of you. Everything runs in your browser, with no network calls.</p>
+        <p>Things to use, not just read. Each panel is live: move the inputs and the answer changes in front of you. The math runs in your browser, with no network calls.</p>
         <nav class="jump" aria-label="Lab panels">
+          <a href="#tour">Tour Engine</a>
           <a href="#pqc">Post-Quantum Readiness</a>
           <a href="#quantum">Quantum Finance</a>
           <a href="#experiments">More experiments</a>
         </nav>
       </div>
+
+      <!-- ===================== TOUR ENGINE ===================== -->
+      <section class="lab-panel" id="tour" aria-labelledby="tour-h" data-accent="ledger">
+        <header class="lab-head">
+          <p class="kind">Personal project · active development</p>
+          <h2 id="tour-h">Tour Engine, running on this site</h2>
+          <p>A guided tour engine for web apps: a spotlight, a ghost cursor and a card that walk a person through a task on their own page, one step at a time. One script, no build step, no dependencies.</p>
+        </header>
+        <div class="tour-demo">
+          <div class="tour-try">
+            <button class="btn primary" type="button" data-tour-start>Try it: tour this site</button>
+            <p class="small">Seven steps across five pages. Press Escape at any point to leave.</p>
+          </div>
+          <dl class="tour-proof">
+            <div><dt>Injected defects caught</dt><dd class="num">145 of 145</dd></div>
+            <div><dt>Checks in the mutation-tested suites</dt><dd class="num">251</dd></div>
+          </dl>
+        </div>
+        <div class="lab-foot">
+          <p><strong>The host adapter.</strong> The engine knows nothing about the page it runs on: a host adapter describes the page through one object, with its steps, when it is ready, and how its tabs open. That is how the same engine ports across apps, and on this site each page is a tab, which is how the tour crosses page loads.</p>
+          <p><strong>The recorder.</strong> The engine can also record a tour while someone does the task once, with a privacy screen on what it keeps. It is switched off in this build.</p>
+          <p><a class="btn" href="https://github.com/willckim/tour-engine">Read the engine on GitHub</a></p>
+        </div>
+      </section>
 
       <!-- ===================== POST-QUANTUM READINESS ===================== -->
       <section class="lab-panel" id="pqc" aria-labelledby="pqc-h" data-accent="coral">

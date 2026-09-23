@@ -213,7 +213,7 @@ body.home main { padding-top: 0; }
 @media (max-width: 720px) { .now { grid-template-columns: 1fr; } }
 
 /* ---------- Home: page directory ---------- */
-.directory { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; margin-top: 40px; }
+.directory { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; margin-top: 40px; }
 .directory a {
   display: block; padding: 26px 24px 28px; text-decoration: none;
   border-top: 6px solid var(--accent); border-right: 1px solid var(--rule);
@@ -224,6 +224,7 @@ body.home main { padding-top: 0; }
 .directory h2 { margin: 0 0 8px; font-size: 20px; letter-spacing: -0.01em; }
 .directory p { margin: 0; color: var(--ink-2); font-size: 15px; }
 .directory .go { display: block; margin-top: 16px; font-weight: 500; color: var(--accent); }
+@media (max-width: 960px) { .directory { grid-template-columns: repeat(2, 1fr); } .directory a:nth-child(2n) { border-right: 0; } .directory a:nth-child(-n+2) { border-bottom: 1px solid var(--rule); } }
 @media (max-width: 720px) { .directory { grid-template-columns: 1fr; } .directory a { border-right: 0; border-bottom: 1px solid var(--rule); } .directory a:last-child { border-bottom: 0; } }
 
 /* ---------- Work: sub-tabs + table ---------- */
@@ -456,3 +457,26 @@ details summary { cursor: pointer; font-size: 14px; font-weight: 500; color: var
   html { scroll-behavior: auto; }
   * { transition: none !important; }
 }
+
+/* ---------- Tour Engine, themed from the site's tokens ----------
+   html:root outranks the engine's own :root rule, which arrives in an adopted
+   stylesheet and would otherwise win on order. */
+html:root {
+  --tour-surface: var(--surface);
+  --tour-border: var(--rule);
+  --tour-text: var(--ink);
+  --tour-muted: var(--ink-2);
+  --tour-accent: var(--ledger);
+  --tour-accent-ink: var(--on-accent);
+}
+/* The site starts tours from its own buttons, so the engine's floating trigger stays hidden. */
+[data-tour-trigger] { display: none !important; }
+button.btn { font: inherit; cursor: pointer; }
+.tour-demo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: stretch; }
+.tour-try { background: var(--accent-2); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+.tour-try .small { color: var(--ink-2); margin: 10px 0 0; }
+.tour-proof { margin: 0; display: grid; gap: 2px; background: var(--bone); }
+.tour-proof > div { display: flex; flex-direction: column-reverse; justify-content: center; padding: 16px 20px; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; }
+.tour-proof dt { font-size: 14px; color: var(--ink-2); }
+.tour-proof dd { margin: 0; font-size: clamp(28px, 3vw, 36px); color: var(--accent); }
+@media (max-width: 720px) { .tour-demo { grid-template-columns: 1fr; } }
