@@ -1,4 +1,4 @@
-/* Tour Engine, vendored from github.com/willckim/tour-engine at de22e29.
+/* Tour Engine, vendored from the private tour-engine repo at de22e29.
  * Recorder disabled: see tools/vendor_tour.py and TOUR_ENGINE.md. */
 /* ── Guided tour engine, v1 ───────────────────────────────────────────────────
  * Walks a person through a task on the real page: a spotlight on the element

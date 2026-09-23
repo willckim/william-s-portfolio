@@ -37,11 +37,17 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
 - [x] check_themes: axe WCAG 2.1 AA on every page in both themes, token contrast, toggle
 - [x] check_pages: zero console errors on every page
 - [x] lighthouse: 95+ in all four categories, mobile, on Home, Work, a case study, Lab
-- [ ] check_pages links: tour-engine repo is private (404), LinkedIn returns 999 to
-      signed-out visitors. Push is held until William decides both.
+- [x] check_pages links: tour-engine link removed (repo stays private). linkedin.com
+      excluded, as it answers 999 to every signed-out request.
 
-## Open questions (need William)
-- Make `willckim/tour-engine` public, or drop the Lab's repo link.
-- LinkedIn cannot pass an automated 200 check. Waive it, or verify by hand.
-- Home proof strip: "~40 hrs" and "4 production systems" are aggregates, so they link
-  to the Ortho ledger, not one case study. "4" is not stated on the résumé.
+## Decided (2026-09-23)
+- Tour Engine repo stays private: no links, "Source is private for now" line instead.
+- LinkedIn is checked by hand, not by the automated link check.
+- Mutation figure is the engine's own suites only: 109 of 109 across 140 checks
+  (record 38/28, CSP 11/42, host 60/70), run against de22e29 on 2026-09-23.
+- Three production systems (Concur, Royalty, Time Tracker). Fast Close is a fix.
+- Mosca inputs come from a clean checkout of the pushed toolkit (c57a2e0). Set
+  PQC_DIR to it for tools/extract_pqc.py and tests/check_mosca.py.
+
+## Open
+- The résumé PDF still says "145 of 145". It is a PDF, so it needs updating at source.

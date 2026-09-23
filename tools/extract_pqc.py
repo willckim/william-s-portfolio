@@ -108,6 +108,11 @@ def main() -> int:
     }
     if not data["provenance"]["commit"]:
         raise SystemExit("could not read the toolkit's commit")
+    # The site publishes what the toolkit has published: a folder with local edits is
+    # not a commit anyone else can read. Point at a clean checkout of the pushed commit.
+    if data["provenance"]["uncommitted_changes"] and "--allow-dirty" not in sys.argv:
+        raise SystemExit("the toolkit folder has uncommitted changes: extract from a clean checkout "
+                         "of the pushed commit, or pass --allow-dirty to override")
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print("wrote", OUT)

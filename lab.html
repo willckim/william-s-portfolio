@@ -61,14 +61,15 @@
             <p class="small">Seven steps across five pages. Press Escape at any point to leave.</p>
           </div>
           <dl class="tour-proof">
-            <div><dt>Injected defects caught</dt><dd class="num">145 of 145</dd></div>
-            <div><dt>Checks in the mutation-tested suites</dt><dd class="num">251</dd></div>
+            <div><dt>Injected defects caught</dt><dd class="num">109 of 109</dd></div>
+            <div><dt>Checks across the engine's own suites</dt><dd class="num">140</dd></div>
           </dl>
         </div>
         <div class="lab-foot">
           <p><strong>The host adapter.</strong> The engine knows nothing about the page it runs on: a host adapter describes the page through one object, with its steps, when it is ready, and how its tabs open. That is how the same engine ports across apps, and on this site each page is a tab, which is how the tour crosses page loads.</p>
+          <p><strong>The mutation run.</strong> 109 of 109 injected defects caught across 140 checks, from the engine's own record, CSP and host suites, run against engine commit de22e29 on September 23, 2026. Each defect had to be caught by the check written for it.</p>
           <p><strong>The recorder.</strong> The engine can also record a tour while someone does the task once, with a privacy screen on what it keeps. It is switched off in this build.</p>
-          <p><a class="btn" href="https://github.com/willckim/tour-engine">Read the engine on GitHub</a></p>
+          <p class="small">Source is private for now. Happy to walk through it in a call.</p>
         </div>
       </section>
 
