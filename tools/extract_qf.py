@@ -72,12 +72,16 @@ def portfolio(out: str) -> dict:
     def side(label: str) -> dict:
         b = next(x for x in blocks if x.startswith(label))
         return {
-            "holdings": re.findall(r"^\s{4}([A-Z]{4})\s", b, re.M),
+            "holdings": re.findall(r"^\s{4}([A-Z]+)\s+\$", b, re.M),
             "return": need(r"Expected portfolio return : ([\d.]+%)", b, f"{label} return").group(1),
             "risk": need(r"Expected portfolio risk   : ([\d.]+%)", b, f"{label} risk").group(1),
             "evaluated": int(need(r"Combinations evaluated    : ([\d,]+)", b,
                                   f"{label} count").group(1).replace(",", "")),
         }
+    held = int(need(r"exactly (\d+) held", out, "the holding count").group(1))
+    for label in ("CLASSICAL", "QUANTUM"):
+        if len(side(label)["holdings"]) != held:
+            raise SystemExit(f"{label}: parsed {len(side(label)['holdings'])} holdings, expected {held}")
     return {
         "stocks": int(need(r"\| (\d+) stocks \|", out, "the stock count").group(1)),
         "held": int(need(r"exactly (\d+) held", out, "the holding count").group(1)),
@@ -108,16 +112,19 @@ def main() -> int:
     repo = Path(sys.argv[1]).resolve()
     py = sys.argv[2] if len(sys.argv) > 2 else sys.executable
     git = lambda *a: subprocess.run(["git", "-C", str(repo), *a], capture_output=True,  # noqa: E731
-                                    text=True).stdout.strip()
+                                    text=True, check=True).stdout.strip()
     versions = subprocess.run(
         [py, "-c", "import sys, qiskit, numpy; print(sys.version.split()[0], qiskit.__version__, "
                    "numpy.__version__)"], capture_output=True, text=True).stdout.split()
     fin = repo / "03_finance"
+    commit = git("rev-parse", "HEAD")
+    if not commit:
+        raise SystemExit("could not read the repo's commit")
     data = {
         "_generated_by": "tools/extract_qf.py",
         "run_at": datetime.now().isoformat(timespec="seconds"),
         "repo": "https://github.com/willckim/quantum-finance",
-        "commit": git("rev-parse", "HEAD"),
+        "commit": commit,
         "dirty": bool(git("status", "--porcelain", "03_finance", "02_algorithms")),
         "python": versions[0], "qiskit": versions[1], "numpy": versions[2],
         "grover": {  # read from the source: there is no printed number to parse

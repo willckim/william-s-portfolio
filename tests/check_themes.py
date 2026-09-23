@@ -69,15 +69,19 @@ def main() -> int:
         rep.not_run("axe-core on every page", "run: npm --prefix tests install")
         return rep.finish()
     pages = [p for p in site_pages() if not p.startswith("/copilot")]
+    for skipped in sorted(set(site_pages()) - set(pages)):
+        rep.not_run(f"themes on {skipped}", "the Copilot guide has its own stylesheet and theme, outside this site's tokens")
     base, server = serve()
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch()
+            seen: dict[str, dict] = {}
             for scheme in ("light", "dark"):
                 ctx = browser.new_context(color_scheme=scheme, viewport={"width": 1280, "height": 900})
                 page = ctx.new_page()
                 page.goto(base + "/")
                 t = tokens(page)
+                seen[scheme] = t
                 low = sorted((ratio(t[f], t[b]), f, b) for f, b in pairs(t))
                 fails = [f"{f} on {b} {r:.2f}" for r, f, b in low if r < 4.5]
                 rep.check(f"{scheme}: {len(low)} token pairs at 4.5:1 or better", not fails,
@@ -100,6 +104,21 @@ def main() -> int:
                 v = axe(page, '[data-tour-ui="tooltip"]')
                 rep.check(f"{scheme}: axe on a tour card", not v, "; ".join(v[:3]))
                 page.keyboard.press("Escape")
+                ctx.close()
+
+            # The dark tokens live twice in the CSS: under the system media query and
+            # under an explicit choice. Only the first is graded above, so the second
+            # must equal it. Same for an explicit light choice against a dark system.
+            for stored, system in (("dark", "light"), ("light", "dark")):
+                ctx = browser.new_context(color_scheme=system)
+                page = ctx.new_page()
+                page.goto(base + "/")
+                page.evaluate(f"localStorage.setItem('theme', '{stored}')")
+                page.reload()
+                t = tokens(page)
+                diff = [k for k in t if t[k] != seen[stored][k]]
+                rep.check(f"explicit {stored} choice over a {system} system: same tokens as system {stored}",
+                          not diff and bool(t["bone"]), f"differs: {diff}")
                 ctx.close()
 
             # The toggle, against a dark system setting.

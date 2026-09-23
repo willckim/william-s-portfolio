@@ -6,7 +6,15 @@
    Every coloured component then reads those two variables, so components carry
    no colour logic of their own. */
 
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap");
+/* IBM Plex, self-hosted (SIL Open Font License), latin subset. Sans is one variable
+   file for every weight. Served from this origin, so the first paint waits on no
+   third party: the Google Fonts @import chain cost about 850 ms on mobile. */
+@font-face { font-family: "IBM Plex Sans"; font-style: normal; font-weight: 400 600; font-display: swap;
+  src: url("/assets/fonts/ibm-plex-sans-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 400; font-display: swap;
+  src: url("/assets/fonts/ibm-plex-mono-400-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "IBM Plex Mono"; font-style: normal; font-weight: 500; font-display: swap;
+  src: url("/assets/fonts/ibm-plex-mono-500-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 
 :root {
   --bone: #f2f3f0;
@@ -36,6 +44,12 @@
 
   --accent: var(--ledger);
   --accent-2: var(--ledger-2);
+
+  /* Type scale: body 17px, three heading steps and one display size. The display
+     size is for the two pages people come to use, Home and Lab. */
+  --t-h2: clamp(26px, 3.2vw, 36px);
+  --t-h1: clamp(32px, 4.8vw, 52px);
+  --t-display: clamp(42px, 7.4vw, 92px);
 
   --max: 1120px;
   --gutter: clamp(20px, 4vw, 48px);
@@ -119,7 +133,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 }
 .brand .mark {
   width: 28px; height: 28px; display: grid; place-items: center;
-  border: 1.5px solid var(--ink); border-radius: 4px; font-family: var(--mono); font-size: 13px;
+  border: 1.5px solid var(--ink); border-radius: 4px; font-size: 12px; font-weight: 700; letter-spacing: -0.02em;
 }
 .brand .sub { color: var(--ink-3); font-weight: 400; margin-left: 6px; }
 
@@ -135,7 +149,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 .menu-btn { display: none; }
 
 @media (max-width: 720px) {
-  .site-header .wrap { flex-wrap: wrap; padding-top: 10px; padding-bottom: 10px; min-height: 0; }
+  .site-header .wrap { flex-wrap: wrap; column-gap: 10px; padding-top: 10px; padding-bottom: 10px; min-height: 0; }
   .brand .sub { display: none; }
   .menu-btn {
     display: inline-flex; align-items: center; gap: 8px; background: none; border: 1px solid var(--rule);
@@ -152,7 +166,7 @@ a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
 main { padding: 48px 0 96px; }
 body.home main { padding-top: 0; }
 .page-head { padding: 24px 0 8px; }
-.page-head h1 { font-size: clamp(30px, 4.6vw, 52px); line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 12px; font-weight: 600; }
+.page-head h1 { font-size: var(--t-h1); line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 12px; font-weight: 600; }
 .page-head p { max-width: 62ch; color: var(--ink-2); margin: 0; font-size: 18px; }
 
 .ledger {
@@ -190,10 +204,11 @@ body.home main { padding-top: 0; }
     var(--grad-hero);
 }
 .hero .stage { position: absolute; inset: 0; z-index: 0; overflow: visible; }
-.hero .stage canvas { display: block; width: 100%; height: 100%; }
+.hero .stage canvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity .8s ease; }
+.hero .stage.ready canvas { opacity: 1; }
 .hero .hero-inner { position: relative; z-index: 1; width: 100%; }
 .hero .copy { max-width: 46rem; }
-.hero .copy h1 { font-size: clamp(38px, 6vw, 72px); line-height: 1.0; letter-spacing: -0.03em; margin: 0 0 20px; font-weight: 600; }
+.hero .copy h1 { font-size: var(--t-display); line-height: 0.98; letter-spacing: -0.035em; margin: 0 0 20px; font-weight: 600; }
 .hero .copy p.lede { font-size: 19px; color: var(--ink-2); max-width: 52ch; margin: 0 0 28px; }
 .hero .status { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: 14px; color: var(--ink-2-soft); margin-bottom: 24px; }
 .hero .status span::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--ledger); margin-right: 8px; vertical-align: 1px; }
@@ -366,7 +381,7 @@ svg.diagram { display: block; width: 100%; max-width: 520px; height: auto; font-
 
 /* ---------- Lab ---------- */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-.page-head.display h1 { font-size: clamp(44px, 7vw, 84px); letter-spacing: -0.035em; line-height: 0.95; }
+.page-head.display h1 { font-size: var(--t-display); letter-spacing: -0.035em; line-height: 0.95; }
 .jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
 .jump a { font-size: 14px; font-weight: 500; text-decoration: none; padding: 7px 12px; border: 1px solid var(--rule); border-radius: 999px; }
 .jump a:hover { border-color: var(--accent); color: var(--accent); }
@@ -374,7 +389,7 @@ svg.diagram { display: block; width: 100%; max-width: 520px; height: auto; font-
 .lab-head { max-width: 72ch; margin-bottom: 24px; }
 .lab-head .kind { font-size: 14px; color: var(--ink-3); margin: 0 0 6px; }
 .lab-head .kind::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: 8px; vertical-align: 1px; }
-.lab-head h2 { font-size: clamp(26px, 3.2vw, 36px); line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 12px; font-weight: 600; }
+.lab-head h2 { font-size: var(--t-h2); line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 12px; font-weight: 600; }
 .lab-head p { color: var(--ink-2); margin: 0 0 10px; }
 .lab-foot { margin-top: 28px; max-width: 72ch; }
 .lab-foot p { color: var(--ink-2); }
@@ -479,6 +494,15 @@ details summary { cursor: pointer; font-size: 14px; font-weight: 500; color: var
 .site-footer { border-top: 1px solid var(--rule); }
 .site-footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 20px; padding-bottom: 28px; font-size: 14px; color: var(--ink-3); }
 
+/* Page transitions: a short cross-fade between pages where the browser supports
+   cross-document View Transitions. Progressive enhancement only, and none at all
+   under reduced motion. The header is named so it holds still while pages change. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 180ms; }
+  .site-header { view-transition-name: site-header; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   * { transition: none !important; }
@@ -550,6 +574,7 @@ button.btn { font: inherit; cursor: pointer; }
   padding: 7px 8px 7px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); color: var(--ink-2);
 }
 .search-btn:hover { border-color: var(--ink-3); color: var(--ink); }
+.search-ico { width: 16px; height: 16px; flex: none; }
 .search-btn kbd, .palette kbd {
   font-family: var(--mono); font-size: 12px; padding: 1px 6px; border-radius: 4px;
   border: 1px solid var(--rule); background: var(--bone); color: var(--ink-2);
@@ -560,7 +585,10 @@ button.btn { font: inherit; cursor: pointer; }
   .menu-btn { order: 2; }
   .site-header nav { order: 3; width: 100%; margin-left: 0; }
   .search-btn kbd { display: none; }
-  .search-btn { font-size: inherit; padding: 8px 12px; border-radius: 6px; }
+  /* Icon only on a phone, so brand, Search, theme and Menu always fit one row: the
+     wider web font used to push Menu onto a second row after load (CLS 0.34). */
+  .search-btn { width: 40px; height: 40px; padding: 0; justify-content: center; border-radius: 6px; }
+  .search-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 }
 .palette {
   width: min(640px, calc(100vw - 32px)); max-height: min(560px, 76vh); margin: 12vh auto auto; padding: 0;
@@ -579,3 +607,6 @@ button.btn { font: inherit; cursor: pointer; }
 .pal-group { font-size: 12px; color: var(--ink-3); white-space: nowrap; }
 .palette li[aria-selected="true"] .pal-group { color: var(--ink-2); }   /* ink-3 is under 4.5:1 on a tint */
 .pal-empty { padding: 16px; margin: 0; color: var(--ink-2); }
+
+/* Anchored panels clear the sticky header when jumped to. */
+section[id], article[id] { scroll-margin-top: 80px; }

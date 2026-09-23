@@ -65,7 +65,7 @@
     b.className = "preset";
     b.dataset.preset = s.name;
     b.setAttribute("aria-pressed", "false");
-    b.innerHTML = "<strong></strong><span class=\"num\"></span>";
+    b.innerHTML = "<strong></strong><span></span>";
     b.querySelector("strong").textContent = s.name;
     b.querySelector("span").textContent = s.planning_year + " · window " + s.window[0] + " to " + s.window[1];
     b.addEventListener("click", function () { applyPreset(s); });
@@ -139,13 +139,13 @@
   yIn.addEventListener("input", function () { state.y = +yIn.value; render(); });
   zIn.addEventListener("input", function () { state.z = +zIn.value; render(); });
 
-  var p = D.provenance;
-  $("m-provenance").textContent = "Inputs from the toolkit's pqc_config.yaml, version " + p.toolkit_version +
-    " (run " + p.toolkit_run.slice(0, 10) + ", commit " + p.commit +
-    (p.uncommitted_changes ? " with uncommitted changes" : "") + "). As of " + D.as_of_year + ".";
-
-  // Start on the toolkit's Base scenario.
+  // Start on the toolkit's Base scenario, before anything optional can fail.
   resetX();
   var base = D.scenarios.filter(function (s) { return s.name === "Base"; })[0] || D.scenarios[0];
   applyPreset(base);
+
+  var p = D.provenance || {};
+  $("m-provenance").textContent = "Inputs from the toolkit's pqc_config.yaml, version " + p.toolkit_version +
+    " (run " + String(p.toolkit_run || "").slice(0, 10) + ", commit " + p.commit +
+    (p.uncommitted_changes ? " with uncommitted changes" : "") + "). As of " + D.as_of_year + ".";
 })();

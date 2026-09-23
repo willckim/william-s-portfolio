@@ -76,7 +76,43 @@ def main() -> int:
         for name, rx in RULES:
             hits = [text[max(0, m.start() - 40): m.end() + 20] for m in rx.finditer(text)]
             rep.check(f"{url}: {name}", not hits, "; ".join(repr(h) for h in hits[:3]))
+    rendered(rep)
     return rep.finish()
+
+
+def rendered(rep: Report) -> None:
+    """The same rules on what a browser shows: text drawn by scripts (the Mosca table
+    and its notes from the toolkit's config, Grover's status, the palette) never
+    appears in the HTML files the static pass reads."""
+    from playwright.sync_api import sync_playwright
+
+    from sitekit import serve
+
+    base, server = serve()
+    try:
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            page = browser.new_page()
+            for url in site_pages():
+                page.goto(base + url, wait_until="networkidle")
+                texts = [page.inner_text("body")]
+                if url == "/lab":
+                    for t in page.eval_on_selector_all("#m-type option", "os => os.map(o => o.value)"):
+                        page.select_option("#m-type", t)             # each record type's basis note
+                        texts.append(page.inner_text("#m-x-note"))
+                    page.click("[data-g=oracle]")
+                    texts.append(page.inner_text("#grover"))
+                    page.keyboard.press("Control+k")
+                    page.wait_for_selector("dialog.palette[open]")
+                    texts.append(page.inner_text("dialog.palette"))
+                text = re.sub(r"\s+", " ", " ".join(texts))
+                for name, rx in RULES:
+                    hits = [text[max(0, m.start() - 40): m.end() + 20] for m in rx.finditer(text)]
+                    rep.check(f"rendered {url}: {name}", bool(text.strip()) and not hits,
+                              "; ".join(repr(h) for h in hits[:3]))
+            browser.close()
+    finally:
+        server.shutdown()
 
 
 if __name__ == "__main__":
