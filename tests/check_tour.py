@@ -25,7 +25,7 @@ from sitekit import ROOT, Report, serve
 EXPECTED = [  # (page, card title) for the seven authored steps, in order
     ("home", "Five tabs, the whole site"),
     ("home", "Every number has a source"),
-    ("work", "Five systems, five case studies"),
+    ("work", "Five projects, five case studies"),
     ("case-concur", "The model suggests, a person decides"),
     ("lab", "Try the calculator"),
     ("lab", "Which records are exposed"),

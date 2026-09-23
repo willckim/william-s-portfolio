@@ -54,6 +54,11 @@ RULES = [
     ("no em dash", re.compile("—")),
     ("no semicolon", re.compile(";")),
     ("no October 2026 CPA date", re.compile(r"October\s+2026", re.I)),
+    # Figures corrected on 2026-09-23: the toolkit's latest scenario is 2040, the
+    # mutation figure is the engine's own suites only, and there are three systems.
+    ("no retired 2041 scenario", re.compile(r"\b2041\b")),
+    ("no retired mutation figures", re.compile(r"145 of 145|\b251\b")),
+    ("no retired system count", re.compile(r"four production systems|\b4\b Production systems", re.I)),
 ]
 
 

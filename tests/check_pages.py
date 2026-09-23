@@ -90,6 +90,10 @@ def main() -> int:
         rep.not_run("external links", "skipped with --no-links")
         return rep.finish()
     links = external_links()
+    # LinkedIn answers 999 to every signed-out request, browsers included: its standard
+    # block on automated and anonymous visits, not a broken link. It cannot pass an
+    # automated 200 check, so it is excluded here and checked by hand.
+    links = {u: w for u, w in links.items() if "linkedin.com" not in u}
     # A pattern that matches nothing would pass every link it never saw: it happened once.
     rep.check("the link scan found the site's external links", len(links) >= 20, f"{len(links)} found")
     for url, where in sorted(links.items()):

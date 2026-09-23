@@ -63,7 +63,7 @@ def main() -> int:
             raise SystemExit(f"patch target found {n} times, expected 1:\n{old}")
         out = out.replace(old, new)
     commit = git(repo, "rev-parse", "HEAD")
-    header = (f"/* Tour Engine, vendored from github.com/willckim/tour-engine at {commit[:7]}.\n"
+    header = (f"/* Tour Engine, vendored from the private tour-engine repo at {commit[:7]}.\n"
               f" * Recorder disabled: see tools/vendor_tour.py and TOUR_ENGINE.md. */\n")
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(header + out, encoding="utf-8", newline="\n")

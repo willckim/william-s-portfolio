@@ -4,9 +4,9 @@ window.PQC_DATA = {
   "provenance": {
     "toolkit": "quantum-finance/04_security/pqc_readiness",
     "commit": "c57a2e0",
-    "uncommitted_changes": true,
-    "pqc_config.yaml": "1c2237d8d828a635",
-    "sources.py": "6790a3d72a4cb7dc",
+    "uncommitted_changes": false,
+    "pqc_config.yaml": "262f1bcc741ae9e2",
+    "sources.py": "ff951363204ffe31",
     "toolkit_version": "2.0.0",
     "toolkit_run": "2026-09-23T09:59:32"
   },
