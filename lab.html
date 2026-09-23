@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lab · William Kim</title>
+  <meta name="description" content="Tools to use, not read: a Mosca's inequality calculator for post-quantum readiness of finance records, quantum finance results with honest losses, and a guided tour engine.">
+  <link rel="canonical" href="https://www.williamckim.com/lab">
+  <meta name="theme-color" content="#f2f3f0">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f5f1ea'/%3E%3Cpath d='M6 9l5 15 5-10 5 10 5-15' fill='none' stroke='%23b6451a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="/assets/style.css">
+</head>
+<body data-accent="amber" data-page="lab">
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/"><span class="mark">WK</span>William Kim<span class="sub">Finance × Engineering</span></a>
+      <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
+      <nav aria-label="Primary">
+        <ul class="tabs" id="nav">
+          <li><a href="/" data-accent="ledger">Home</a></li>
+          <li><a href="/work" data-accent="blueprint">Work</a></li>
+          <li><a href="/lab" data-accent="amber" aria-current="page">Lab</a></li>
+          <li><a href="/about" data-accent="violet">About</a></li>
+          <li><a href="/contact" data-accent="coral">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="wrap">
+      <div class="page-head display">
+        <h1>Lab</h1>
+        <p>Things to use, not just read. Each panel is live: move the inputs and the answer changes in front of you. Everything runs in your browser, with no network calls.</p>
+        <nav class="jump" aria-label="Lab panels">
+          <a href="#pqc">Post-Quantum Readiness</a>
+          <a href="#quantum">Quantum Finance</a>
+          <a href="#experiments">More experiments</a>
+        </nav>
+      </div>
+
+      <!-- ===================== POST-QUANTUM READINESS ===================== -->
+      <section class="lab-panel" id="pqc" aria-labelledby="pqc-h" data-accent="coral">
+        <header class="lab-head">
+          <p class="kind">Personal project · Post-Quantum Readiness Toolkit</p>
+          <h2 id="pqc-h">Which finance records are already exposed?</h2>
+          <p>Harvest now, decrypt later: an adversary can record encrypted traffic today and read it once a quantum computer can break RSA and elliptic-curve keys, so any record that must stay secret past that day is at risk now. Mosca's inequality turns that into arithmetic. If the years a record must stay secret (x) plus the years a migration takes (y) exceed the years until a cryptographically relevant quantum computer (z), the record is exposed.</p>
+        </header>
+
+        <div class="mosca" id="mosca">
+          <div class="presets" role="group" aria-labelledby="presets-l">
+            <span id="presets-l" class="presets-label">Scenarios the toolkit reports</span>
+            <div class="preset-row" id="m-presets"></div>
+          </div>
+
+          <div class="mosca-controls">
+            <div class="field">
+              <label for="m-type">Record type</label>
+              <select id="m-type"></select>
+            </div>
+            <div class="field">
+              <label for="m-x">Years it must stay secret <span class="hint">x</span></label>
+              <div class="slider"><input type="range" id="m-x" min="0" max="40" step="1"><output for="m-x" id="m-x-out" class="num"></output></div>
+              <p class="field-note" id="m-x-note"></p>
+            </div>
+            <div class="field">
+              <label for="m-y">Migration time in years <span class="hint">y</span></label>
+              <div class="slider"><input type="range" id="m-y" min="0" max="25" step="1"><output for="m-y" id="m-y-out" class="num"></output></div>
+            </div>
+            <div class="field">
+              <label for="m-z">Years until a quantum computer can break RSA <span class="hint">z</span></label>
+              <div class="slider"><input type="range" id="m-z" min="1" max="30" step="1"><output for="m-z" id="m-z-out" class="num"></output></div>
+            </div>
+          </div>
+
+          <p class="mosca-summary" id="m-summary" aria-live="polite"></p>
+
+          <div class="table-scroll">
+            <table class="mosca-table" id="m-table">
+              <caption class="sr-only">Exposure of each finance record type under the current inputs</caption>
+              <thead><tr><th scope="col">Record type</th><th scope="col">Secret for (x)</th><th scope="col">Source rule</th><th scope="col">Status</th><th scope="col">Margin</th><th scope="col"><span class="sr-only">Timeline</span></th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <noscript><p>The calculator needs JavaScript. The toolkit's own report lists the same results.</p></noscript>
+          <p class="small">* marks an assumption, not a retention rule. Margin is how many years a record stays sensitive after the quantum computer arrives, or how many years it has to spare. Retention periods are a lower bound on how long data must stay secret, so these results understate exposure. Scenarios are planning windows, not predictions.</p>
+        </div>
+
+        <div class="lab-foot">
+          <p>The full toolkit goes further than this calculator: it scans code and configuration for quantum-vulnerable encryption and reports findings in audit format, Condition, Criteria, Cause, Effect, and Recommendation.</p>
+          <p><a class="btn" href="https://github.com/willckim/quantum-finance/tree/main/04_security">Read the toolkit on GitHub</a></p>
+          <p class="small provenance" id="m-provenance"></p>
+        </div>
+      </section>
+
+      <!-- ===================== QUANTUM FINANCE ===================== -->
+      <section class="lab-panel" id="quantum" aria-labelledby="quantum-h" data-accent="violet">
+        <header class="lab-head">
+          <p class="kind">Self-directed · learning in public on a simulator</p>
+          <h2 id="quantum-h">Quantum finance, honestly</h2>
+          <p>Qiskit programs run on a local simulator, each compared against the classical method an analyst would use today. This is study, not production quantum work, and the losses stay in.</p>
+        </header>
+        <!-- gen:quantum -->
+        <div class="qf-grid">
+          <article class="qf-card" aria-labelledby="qaoa-h">
+            <h3 id="qaoa-h">QAOA portfolio</h3>
+            <p class="verdict"><span class="pill ok">Matched brute force</span></p>
+            <p>Pick exactly 7 of 15 stocks for low risk at a 8% return target. QAOA chose the same 7 stocks as an exhaustive classical search.</p>
+            <dl class="qf-stats">
+              <div><dt>Brute force checked</dt><dd class="num">32,768</dd></div>
+              <div><dt>QAOA measured</dt><dd class="num">3,611</dd></div>
+              <div><dt>Circuit runs to tune angles</dt><dd class="num">1,000</dd></div>
+              <div><dt>Expected return</dt><dd class="num">8.26%</dd></div>
+              <div><dt>Risk, annual std dev</dt><dd class="num">4.64%</dd></div>
+            </dl>
+            <p class="small">At 15 stocks brute force still wins easily. The case for QAOA is at 100 or more stocks, where checking every portfolio becomes impossible.</p>
+          </article>
+
+          <article class="qf-card" aria-labelledby="fc-h">
+            <h3 id="fc-h">Revenue forecaster</h3>
+            <p class="verdict"><span class="pill loss">Honest loss: classical won</span></p>
+            <p>Forecast three months past 24 months of rising revenue (month 24: <span class="num">$136,700</span>).</p>
+            <table class="mini"><thead><tr><th scope="col"><span class="sr-only">Month</span></th><th scope="col">Linear regression</th><th scope="col">1-qubit VQR</th></tr></thead><tbody><tr><th scope="row">Month 25</th><td class="num">$138,062</td><td class="num">$132,537</td></tr><tr><th scope="row">Month 26</th><td class="num">$140,273</td><td class="num">$132,949</td></tr><tr><th scope="row">Month 27</th><td class="num">$142,484</td><td class="num">$133,195</td></tr></tbody></table>
+            <p class="small">Linear regression extends the trend. A one-qubit, angle-encoded model interpolates inside the range it saw and cannot extrapolate a straight trend, so its forecast flattens. Kept on the site on purpose.</p>
+          </article>
+
+          <article class="qf-card qf-wide" aria-labelledby="mc-h">
+            <h3 id="mc-h">Monte Carlo risk: the quadratic speedup</h3>
+            <p>The probability a small business runs low on cash during the year, estimated two ways. Classical error falls like 1/&radic;N, amplitude estimation error like 1/M, so halving the error costs 4x the samples but only 2x the queries.</p>
+            <figure class="chart-wrap">
+              <svg class="chart" viewBox="0 0 480 320" width="480" height="320" role="img" aria-labelledby="mc-t mc-d"><title id="mc-t">Estimation error against cost, classical Monte Carlo and quantum amplitude estimation, log-log</title><desc id="mc-d">Classical Monte Carlo error falls from 0.0132 at 128 samples to 0.001 at 32,768 samples, about a slope of minus one half. Quantum amplitude estimation error falls from 0.0122 at 100 queries to 0.0002 at 26,200 queries, closer to a slope of minus one. The full numbers are in the table below the chart.</desc><line class="ch-grid" x1="78.0" y1="14" x2="78.0" y2="276"/><text class="ch-tick" x="78.0" y="294" text-anchor="middle">100</text><line class="ch-grid" x1="227.2" y1="14" x2="227.2" y2="276"/><text class="ch-tick" x="227.2" y="294" text-anchor="middle">1,000</text><line class="ch-grid" x1="376.5" y1="14" x2="376.5" y2="276"/><text class="ch-tick" x="376.5" y="294" text-anchor="middle">10,000</text><line class="ch-grid" x1="78" y1="233.1" x2="466" y2="233.1"/><text class="ch-tick" x="70" y="237.1" text-anchor="end">0.0001</text><line class="ch-grid" x1="78" y1="137.9" x2="466" y2="137.9"/><text class="ch-tick" x="70" y="141.9" text-anchor="end">0.001</text><line class="ch-grid" x1="78" y1="42.6" x2="466" y2="42.6"/><text class="ch-tick" x="70" y="46.6" text-anchor="end">0.01</text><text class="ch-axis" x="272.0" y="314" text-anchor="middle">Samples or oracle queries</text><text class="ch-axis" transform="translate(16 145.0) rotate(-90)" text-anchor="middle">Error</text><path class="ch-ref ch-classical" d="M94.0 31.1 L453.4 145.8"/><path class="ch-ref ch-quantum" d="M78.0 34.4 L438.9 264.8"/><path class="ch-line ch-classical" d="M94.0 31.1 L138.9 45.6 L183.8 58.5 L228.8 99.9 L273.7 89.7 L318.6 103.4 L363.5 123.9 L408.5 123.9 L453.4 137.9"/><path class="ch-line ch-quantum" d="M78.0 34.4 L167.8 48.8 L220.4 99.9 L265.3 137.9 L308.4 152.6 L351.5 159.0 L394.9 204.4 L438.9 204.4"/><circle class="ch-dot ch-classical" cx="94.0" cy="31.1" r="4"/><circle class="ch-dot ch-classical" cx="138.9" cy="45.6" r="4"/><circle class="ch-dot ch-classical" cx="183.8" cy="58.5" r="4"/><circle class="ch-dot ch-classical" cx="228.8" cy="99.9" r="4"/><circle class="ch-dot ch-classical" cx="273.7" cy="89.7" r="4"/><circle class="ch-dot ch-classical" cx="318.6" cy="103.4" r="4"/><circle class="ch-dot ch-classical" cx="363.5" cy="123.9" r="4"/><circle class="ch-dot ch-classical" cx="408.5" cy="123.9" r="4"/><circle class="ch-dot ch-classical" cx="453.4" cy="137.9" r="4"/><rect class="ch-dot ch-quantum" x="74.0" y="30.4" width="8" height="8"/><rect class="ch-dot ch-quantum" x="163.8" y="44.8" width="8" height="8"/><rect class="ch-dot ch-quantum" x="216.4" y="95.9" width="8" height="8"/><rect class="ch-dot ch-quantum" x="261.3" y="133.9" width="8" height="8"/><rect class="ch-dot ch-quantum" x="304.4" y="148.6" width="8" height="8"/><rect class="ch-dot ch-quantum" x="347.5" y="155.0" width="8" height="8"/><rect class="ch-dot ch-quantum" x="390.9" y="200.4" width="8" height="8"/><rect class="ch-dot ch-quantum" x="434.9" y="200.4" width="8" height="8"/></svg>
+              <figcaption><span class="key ch-classical">Classical Monte Carlo</span><span class="key ch-quantum">Quantum amplitude estimation</span><span class="key ch-ref-key">Reference slopes</span></figcaption>
+            </figure>
+            <p>To reach 0.5% error: <span class="num">1,024</span> classical samples, <span class="num">900</span> quantum oracle queries. The reference probability is <span class="num">0.0522</span>, from <span class="num">200,000</span> classical simulations.</p>
+            <p class="small">The honest caveat: the quantum side uses a one-qubit oracle calibrated to the same probability, because loading the full cash-flow model into a circuit is the hard, open part. On a laptop simulator, classical still finishes first in wall-clock time. The advantage shown is in query counts.</p>
+            <details><summary>Show the numbers</summary><table class="mini"><thead><tr><th scope="col">Samples</th><th scope="col">Classical error</th><th scope="col">Queries</th><th scope="col">Quantum error</th></tr></thead><tbody><tr><td class="num">128</td><td class="num">0.0132</td><td class="num">100</td><td class="num">0.0122</td></tr><tr><td class="num">256</td><td class="num">0.0093</td><td class="num">400</td><td class="num">0.0086</td></tr><tr><td class="num">512</td><td class="num">0.0068</td><td class="num">900</td><td class="num">0.0025</td></tr><tr><td class="num">1,024</td><td class="num">0.0025</td><td class="num">1,800</td><td class="num">0.001</td></tr><tr><td class="num">2,048</td><td class="num">0.0032</td><td class="num">3,500</td><td class="num">0.0007</td></tr><tr><td class="num">4,096</td><td class="num">0.0023</td><td class="num">6,800</td><td class="num">0.0006</td></tr><tr><td class="num">8,192</td><td class="num">0.0014</td><td class="num">13,300</td><td class="num">0.0002</td></tr><tr><td class="num">16,384</td><td class="num">0.0014</td><td class="num">26,200</td><td class="num">0.0002</td></tr><tr><td class="num">32,768</td><td class="num">0.001</td><td class="num"></td><td class="num"></td></tr></tbody></table></details>
+          </article>
+        </div>
+        <p class="small provenance">Numbers are the printed output of the repo's own seeded scripts, run as committed at 4fd2323 (Python 3.10.11, Qiskit 2.4.1). The repo commits its charts, not its numbers.</p>
+        <p><a class="btn" href="https://github.com/willckim/quantum-finance">Read the code on GitHub</a></p>
+        <!-- /gen:quantum -->
+      </section>
+
+      <!-- ===================== MORE EXPERIMENTS ===================== -->
+      <section class="lab-panel" id="experiments" aria-labelledby="experiments-h" data-accent="amber">
+        <header class="lab-head">
+          <h2 id="experiments-h">More experiments</h2>
+          <p>Moved here from the Work ledger. Framed as exploration, not shipped work.</p>
+        </header>
+        <table class="book">
+          <thead><tr><th>Experiment</th><th>What it is</th><th>Stack</th><th>Links</th></tr></thead>
+          <tbody>
+            <tr>
+              <td class="name">FP&amp;A AI Dashboard<span class="kind">Prototype</span></td>
+              <td>Automated variance analysis, rolling three to six month forecasts, and AI-drafted executive briefs on a sample dataset.</td>
+              <td class="stack">Python · Pandas · Power BI</td>
+              <td class="link"><a href="https://github.com/willckim/fpna-ai-dashboard">GitHub</a></td>
+            </tr>
+            <tr>
+              <td class="name">Snowflake + Power BI Sales Analytics<span class="kind">Live · analytics</span></td>
+              <td>End-to-end pipeline: ETL into a star-schema warehouse and interactive dashboards with KPI drilldowns.</td>
+              <td class="stack">Snowflake · SQL · ETL · Power BI · DAX</td>
+              <td class="link"><a href="https://app.snowflake.com/zmydbpf/fq34862/w3u0HWZNPryg/query">Demo</a> · <a href="https://github.com/willckim/snowflake-powerbi-sales-dashboard">GitHub</a></td>
+            </tr>
+            <tr>
+              <td class="name">Prompting Copilot for Accounting Work<span class="kind">Guide</span></td>
+              <td>A prompting guide for accounting teams: which reconciliation steps belong to deterministic tools (XLOOKUP, Power Query) and which to AI-assisted exception handling, with a prompt library and a one-page guardrail card.</td>
+              <td class="stack">Microsoft 365 Copilot · Excel · Power Query</td>
+              <td class="link"><a href="/copilot">Read the guide</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span>© 2026 William Kim</span>
+      <span><a href="https://github.com/willckim">All repos on GitHub</a></span>
+    </div>
+  </footer>
+
+  <script src="/assets/site.js"></script>
+  <script src="/assets/lab/pqc-data.js"></script>
+  <script src="/assets/lab/mosca.js"></script>
+</body>
+</html>

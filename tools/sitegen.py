@@ -22,6 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from diagram import Diagram, Group, Stage, render  # noqa: E402
+import labgen  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -29,6 +30,7 @@ ROOT = Path(__file__).resolve().parent.parent
 NAV = (
     ("home", "/", "ledger", "Home"),
     ("work", "/work", "blueprint", "Work"),
+    ("lab", "/lab", "amber", "Lab"),
     ("about", "/about", "violet", "About"),
     ("contact", "/contact", "coral", "Contact"),
 )
@@ -36,6 +38,7 @@ NAV = (
 PAGES = {  # file -> the nav tab it sits under
     "index.html": "home",
     "work.html": "work",
+    "lab.html": "lab",
     "about.html": "about",
     "contact.html": "contact",
 }
@@ -60,6 +63,7 @@ def header(current: str) -> str:
 
 
 HEADER_RX = re.compile(r'<header class="site-header">.*?</header>', re.S)
+QUANTUM_RX = re.compile(r"<!-- gen:quantum -->.*?<!-- /gen:quantum -->", re.S)
 
 FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E"
            "%3Crect width='32' height='32' rx='7' fill='%23f5f1ea'/%3E%3Cpath d='M6 9l5 15 5-10 5 10 "
@@ -429,7 +433,13 @@ def expected() -> dict[Path, str]:
         text = path.read_text(encoding="utf-8")
         if len(HEADER_RX.findall(text)) != 1:
             raise SystemExit(f"{name}: expected exactly one site header")
-        out[path] = HEADER_RX.sub(lambda m: header(key), text)
+        text = HEADER_RX.sub(lambda m: header(key), text)
+        if name == "lab.html":
+            if len(QUANTUM_RX.findall(text)) != 1:
+                raise SystemExit("lab.html: expected exactly one gen:quantum region")
+            text = QUANTUM_RX.sub(lambda m: labgen.quantum_region(), text)
+        out[path] = text
+    out[ROOT / "assets" / "lab" / "pqc-data.js"] = labgen.pqc_js()
     for i, c in enumerate(CASES):
         out[ROOT / "work" / f"{c.slug}.html"] = case_page(i)
     return out

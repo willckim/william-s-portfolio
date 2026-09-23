@@ -17,6 +17,7 @@
   --ink-3: #6a6f75;   /* darkened from #6b7076 so muted text on bone clears 4.5:1 */
   --rule: #c9ccc6;
   --surface: #fbfbf9;   /* raised card, a step lighter than bone */
+  --on-accent: #ffffff; /* text on a solid accent fill */
 
   --ledger: #1e6b47;
   --ledger-2: #d9e9df;
@@ -144,7 +145,7 @@ body.home main { padding-top: 0; }
   background: transparent; transition: background .15s, color .15s;
 }
 .btn:hover { background: var(--ink); color: var(--bone); }
-.btn.primary { background: var(--ledger); border-color: var(--ledger); color: #fff; }
+.btn.primary { background: var(--ledger); border-color: var(--ledger); color: var(--on-accent); }
 .btn.primary:hover { background: #17573a; border-color: #17573a; }
 .btn-row { display: flex; flex-wrap: wrap; gap: 12px; }
 
@@ -335,6 +336,95 @@ svg.diagram { display: block; width: 100%; max-width: 520px; height: auto; font-
 .case-nav a:last-child { text-align: right; }
 .case-nav span { display: block; font-size: 13px; font-weight: 400; color: var(--ink-3); }
 @media (max-width: 560px) { .case-nav { grid-template-columns: 1fr; } .case-nav a:last-child { text-align: left; } }
+
+/* ---------- Lab ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.page-head.display h1 { font-size: clamp(44px, 7vw, 84px); letter-spacing: -0.035em; line-height: 0.95; }
+.jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+.jump a { font-size: 14px; font-weight: 500; text-decoration: none; padding: 7px 12px; border: 1px solid var(--rule); border-radius: 999px; }
+.jump a:hover { border-color: var(--accent); color: var(--accent); }
+.lab-panel { padding: 48px 0; border-top: 1px solid var(--rule); margin-top: 32px; scroll-margin-top: 72px; }
+.lab-head { max-width: 72ch; margin-bottom: 24px; }
+.lab-head .kind { font-size: 14px; color: var(--ink-3); margin: 0 0 6px; }
+.lab-head .kind::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: 8px; vertical-align: 1px; }
+.lab-head h2 { font-size: clamp(26px, 3.2vw, 36px); line-height: 1.1; letter-spacing: -0.02em; margin: 0 0 12px; font-weight: 600; }
+.lab-head p { color: var(--ink-2); margin: 0 0 10px; }
+.lab-foot { margin-top: 28px; max-width: 72ch; }
+.lab-foot p { color: var(--ink-2); }
+.provenance { margin-top: 12px; }
+
+.mosca { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: clamp(16px, 3vw, 28px); }
+.presets-label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+.preset-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.preset { font: inherit; text-align: left; cursor: pointer; padding: 10px 14px; border-radius: 8px; border: 1px solid var(--rule); background: var(--bone); color: var(--ink); }
+.preset strong { display: block; font-weight: 600; }
+.preset span { font-size: 13px; color: var(--ink-2); }
+.preset:hover { border-color: var(--accent); }
+.preset[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-2); box-shadow: inset 0 0 0 1px var(--accent); }
+.mosca-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px 28px; margin: 22px 0 8px; }
+.field label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 6px; }
+.field .hint { font-family: var(--mono); font-weight: 400; color: var(--ink-3); margin-left: 4px; }
+.field select { width: 100%; font: inherit; padding: 9px 10px; border-radius: 6px; border: 1px solid var(--ink-3); background: var(--bone); color: var(--ink); }
+.slider { display: flex; align-items: center; gap: 12px; }
+.slider input[type="range"] { flex: 1; min-width: 0; accent-color: var(--accent); height: 28px; }
+.slider output { min-width: 9ch; font-size: 14px; text-align: right; }
+.field-note { font-size: 13px; color: var(--ink-3); margin: 6px 0 0; }
+.mosca-summary { font-weight: 600; margin: 18px 0 10px; }
+.table-scroll { overflow-x: auto; position: relative; }
+.mosca-table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.mosca-table th, .mosca-table td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+.mosca-table thead th { font-size: 13px; color: var(--ink-3); font-weight: 600; border-bottom: 2px solid var(--accent); }
+.mosca-table tbody th { font-weight: 600; }
+.mosca-table tr.is-current { background: color-mix(in srgb, var(--accent-2) 55%, transparent); }
+.mosca-table .rule { display: inline-block; font-size: 12px; padding: 2px 7px; margin: 2px 4px 2px 0; border-radius: 4px; background: var(--bone-2); color: var(--ink-2); white-space: nowrap; }
+.pill { display: inline-block; font-size: 13px; font-weight: 600; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+[data-status="now"] .pill { background: var(--coral); color: var(--on-accent); }
+[data-status="exposed"] .pill { background: var(--amber-2); color: var(--amber); box-shadow: inset 0 0 0 1px var(--amber); }
+[data-status="safe"] .pill { background: var(--ledger-2); color: var(--ledger); }
+.mosca-table .margin { white-space: nowrap; font-size: 14px; color: var(--ink-2); }
+.mosca-table .tlcell { width: 140px; min-width: 110px; }
+.tl { position: relative; display: flex; align-items: center; height: 20px; }
+.tl .seg { display: block; height: 10px; flex: none; }
+.tl .seg.y { background: var(--rule); border-radius: 3px 0 0 3px; }
+.tl .seg.x { background: var(--coral); opacity: .75; border-radius: 0 3px 3px 0; }
+.tl .z { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--ink); }
+
+.qf-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.qf-card { position: relative; background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: 20px 22px; }
+.qf-card.qf-wide { grid-column: 1 / -1; }
+.qf-card h3 { margin: 0 0 8px; font-size: 20px; letter-spacing: -0.01em; }
+.qf-card p { color: var(--ink-2); max-width: 70ch; }
+.verdict { margin: 0 0 8px; }
+.pill.ok { background: var(--ledger-2); color: var(--ledger); }
+.pill.loss { background: var(--coral-2); color: var(--coral); }
+.qf-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px 16px; margin: 14px 0; }
+.qf-stats dt { font-size: 13px; color: var(--ink-3); }
+.qf-stats dd { margin: 2px 0 0; font-size: 24px; color: var(--accent); }
+.chart-wrap { margin: 12px 0; }
+svg.chart { display: block; width: 100%; max-width: 640px; height: auto; font-family: var(--sans); }
+.ch-grid { stroke: var(--rule); stroke-width: 1; }
+.ch-tick { fill: var(--ink-2); font-size: 13px; }
+.ch-axis { fill: var(--ink-2); font-size: 13px; font-weight: 600; }
+.ch-line { fill: none; stroke-width: 2.5; }
+.ch-ref { fill: none; stroke-width: 1.5; stroke-dasharray: 5 4; opacity: .55; }
+.ch-classical { --c: var(--blueprint); stroke: var(--c); }
+.ch-quantum { --c: var(--coral); stroke: var(--c); }
+.ch-dot { fill: var(--c); stroke: var(--surface); stroke-width: 1.5; }
+.chart-wrap figcaption { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--ink-2); margin-top: 6px; }
+.key::before { content: ""; display: inline-block; width: 18px; height: 3px; margin-right: 6px; vertical-align: 3px; background: var(--c); }
+.key.ch-ref-key::before { background: none; border-top: 2px dashed var(--ink-3); height: 0; }
+table.mini { border-collapse: collapse; font-size: 14px; margin: 8px 0; }
+table.mini th, table.mini td { padding: 6px 12px 6px 0; border-bottom: 1px solid var(--rule); text-align: left; }
+table.mini thead th { font-size: 12px; color: var(--ink-3); }
+details summary { cursor: pointer; font-size: 14px; font-weight: 500; color: var(--accent); }
+@media (max-width: 760px) {
+  .qf-grid { grid-template-columns: 1fr; }
+  .mosca-table .rules, .mosca-table .tlcell, .mosca-table thead th:nth-child(3), .mosca-table thead th:nth-child(6) { display: none; }
+  .mosca-table { font-size: 14px; }
+  .mosca-table th, .mosca-table td { padding: 8px 4px; }
+  .mosca-table .margin { white-space: normal; font-size: 13px; }
+  .mosca-table .pill { font-size: 12px; padding: 3px 7px; }
+}
 
 /* ---------- Chips ---------- */
 .chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }

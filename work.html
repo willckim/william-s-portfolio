@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Work · William Kim</title>
-  <meta name="description" content="Production systems at Ortho Molecular Products, shipped products, and experiments. Finance systems, automation, and applied AI.">
+  <meta name="description" content="Production systems at Ortho Molecular Products, each with a case study, and products shipped on my own time. Finance systems, automation, and applied AI.">
   <link rel="canonical" href="https://www.williamckim.com/work">
   <meta name="theme-color" content="#f2f3f0">
   <!-- Favicon: inline SVG data URI, preserved from the previous site. -->
@@ -22,6 +22,7 @@
         <ul class="tabs" id="nav">
           <li><a href="/" data-accent="ledger">Home</a></li>
           <li><a href="/work" data-accent="blueprint" aria-current="page">Work</a></li>
+          <li><a href="/lab" data-accent="amber">Lab</a></li>
           <li><a href="/about" data-accent="violet">About</a></li>
           <li><a href="/contact" data-accent="coral">Contact</a></li>
         </ul>
@@ -33,13 +34,12 @@
     <div class="wrap">
       <div class="page-head">
         <h1>Work</h1>
-        <p>Kept like a ledger: what it is, what it does, what it runs on, and what changed because of it. Three books: production work at Ortho, products I have shipped on my own, and experiments.</p>
+        <p>Kept like a ledger: what it is, what it does, what it runs on, and what changed because of it. Two books: production work at Ortho, and products I have shipped on my own. Experiments now live in the <a href="/lab">Lab</a>.</p>
       </div>
 
       <div class="subtabs" role="tablist" aria-label="Work categories">
         <button role="tab" data-panel="ortho" data-accent="ledger" aria-selected="true">At Ortho</button>
         <button role="tab" data-panel="products" data-accent="blueprint" aria-selected="false">Products</button>
-        <button role="tab" data-panel="experiments" data-accent="amber" aria-selected="false">Experiments</button>
       </div>
 
       <!-- ===================== AT ORTHO ===================== -->
@@ -89,6 +89,12 @@
           <thead><tr><th>Product</th><th>What it does</th><th>Stack</th><th>Links</th></tr></thead>
           <tbody>
             <tr>
+              <td class="name">Post-Quantum Readiness Toolkit<span class="kind">Personal project · security and audit</span></td>
+              <td>Estimates which finance records are already exposed to harvest-now, decrypt-later risk, using Mosca's inequality and retention rules (SEC, PCAOB, IRS, ERISA, BSA). Scans code for quantum-vulnerable encryption and reports findings in audit format.</td>
+              <td class="stack">Python · Qiskit · cryptography · NIST FIPS 203</td>
+              <td class="link"><a href="/lab#pqc">Try the calculator</a></td>
+            </tr>
+            <tr>
               <td class="name">LLM Orchestration Engine<span class="kind">Live · orchestration</span></td>
               <td>Provider-agnostic backend that routes requests across OpenAI, Azure, ONNX, and AWS Bedrock by task, cost, and latency, with a real-time p50/p95 dashboard.</td>
               <td class="stack">Python · FastAPI · Docker · AWS</td>
@@ -134,39 +140,6 @@
         </table>
       </section>
 
-      <!-- ===================== EXPERIMENTS ===================== -->
-      <section class="panel" id="experiments" role="tabpanel" data-accent="amber" hidden>
-        <p class="small" style="margin:14px 0 0">Learning in public. Framed as exploration, not shipped work.</p>
-        <table class="book">
-          <thead><tr><th>Experiment</th><th>What it is</th><th>Stack</th><th>Links</th></tr></thead>
-          <tbody>
-            <tr>
-              <td class="name">Quantum Finance<span class="kind">Active learning</span></td>
-              <td>Eight working Qiskit programs: superposition, entanglement, teleportation, Bernstein-Vazirani, Grover's search, then QAOA portfolio optimization, quantum Monte Carlo risk estimation, and a variational quantum regressor, each benchmarked against a classical baseline. The honest finding so far: classical wins on simple trends, and quantum earns its keep only when the combinations explode.</td>
-              <td class="stack">Python · Qiskit · Qiskit Aer · Qiskit ML</td>
-              <td class="link"><a href="https://github.com/willckim/quantum-finance">GitHub</a></td>
-            </tr>
-            <tr>
-              <td class="name">FP&amp;A AI Dashboard<span class="kind">Prototype</span></td>
-              <td>Automated variance analysis, rolling three to six month forecasts, and AI-drafted executive briefs on a sample dataset.</td>
-              <td class="stack">Python · Pandas · Power BI</td>
-              <td class="link"><a href="https://github.com/willckim/fpna-ai-dashboard">GitHub</a></td>
-            </tr>
-            <tr>
-              <td class="name">Snowflake + Power BI Sales Analytics<span class="kind">Live · analytics</span></td>
-              <td>End-to-end pipeline: ETL into a star-schema warehouse and interactive dashboards with KPI drilldowns.</td>
-              <td class="stack">Snowflake · SQL · ETL · Power BI · DAX</td>
-              <td class="link"><a href="https://app.snowflake.com/zmydbpf/fq34862/w3u0HWZNPryg/query">Demo</a> · <a href="https://github.com/willckim/snowflake-powerbi-sales-dashboard">GitHub</a></td>
-            </tr>
-            <tr>
-              <td class="name">Prompting Copilot for Accounting Work<span class="kind">Guide</span></td>
-              <td>A prompting guide for accounting teams: which reconciliation steps belong to deterministic tools (XLOOKUP, Power Query) and which to AI-assisted exception handling, with a prompt library and a one-page guardrail card.</td>
-              <td class="stack">Microsoft 365 Copilot · Excel · Power Query</td>
-              <td class="link"><a href="/copilot">Read the guide</a></td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
     </div>
   </main>
 

@@ -22,6 +22,8 @@
     }
     buttons.forEach(function (b) { b.addEventListener("click", function () { show(b.dataset.panel, true); }); });
     var initial = location.hash.replace("#", "");
+    // The Experiments tab moved to the Lab. Old links still land somewhere real.
+    if (initial === "experiments") { location.replace("/lab#experiments"); return; }
     show(panels.some(function (p) { return p.id === initial; }) ? initial : buttons[0].dataset.panel, false);
   }
 
