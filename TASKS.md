@@ -8,7 +8,7 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
 - `resume.pdf` (September 2026 master): every claim on the site
 - `willckim/quantum-finance` at 4fd2323: QAOA, Monte Carlo, forecaster, Grover values
   (`tools/extract_qf.py` runs the seeded scripts and parses their output)
-- `quantum-finance/04_security/pqc_readiness` at c57a2e0: Mosca inputs
+- `quantum-finance/04_security/pqc_readiness` at 5345b40: Mosca inputs
   (`tools/extract_pqc.py`) and published results (graded by `tests/check_mosca.py`)
 - `willckim/tour-engine` at de22e29: vendored with the recorder disabled
 
@@ -46,7 +46,7 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
 - Mutation figure is the engine's own suites only: 109 of 109 across 140 checks
   (record 38/28, CSP 11/42, host 60/70), run against de22e29 on 2026-09-23.
 - Three production systems (Concur, Royalty, Time Tracker). Fast Close is a fix.
-- Mosca inputs come from a clean checkout of the pushed toolkit (c57a2e0). Set
+- Mosca inputs come from a clean checkout of the pushed toolkit (5345b40). Set
   PQC_DIR to it for tools/extract_pqc.py and tests/check_mosca.py.
 
 ## Open
