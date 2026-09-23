@@ -104,6 +104,34 @@ def mc_table(mc: dict) -> str:
             + "".join(rows) + "</tbody></table>")
 
 
+def grover_card(g: dict) -> str:
+    # The repo sets its iteration count with a rule, not a number: evaluate that rule.
+    if g["iterations_rule"] != "math.isqrt(total_items)":
+        raise SystemExit(f"unrecognised Grover iteration rule: {g['iterations_rule']}")
+    n = 2 ** g["qubits"]
+    iters = math.isqrt(n)
+    return f'''<article class="qf-card qf-wide grover" id="grover" aria-labelledby="grover-h"
+                   data-qubits="{g["qubits"]}" data-target="{g["target"]}" data-repo-iterations="{iters}">
+            <h3 id="grover-h">Grover search, step by step</h3>
+            <p>{n} states, one marked. The oracle flips the marked state's sign, then diffusion reflects every amplitude about the mean. Step through it and watch the marked amplitude grow. This is the real algorithm on a {n}-number state vector, computed in your browser.</p>
+            <div class="g-controls">
+              <label for="g-target">Marked state</label>
+              <select id="g-target"></select>
+              <button class="btn" type="button" data-g="oracle">Apply oracle</button>
+              <button class="btn primary" type="button" data-g="step">One full iteration</button>
+              <button class="btn" type="button" data-g="reset">Reset</button>
+            </div>
+            <div class="g-chart" aria-hidden="true"><div class="g-bars"></div><div class="g-zero"></div><div class="g-mean" hidden></div></div>
+            <dl class="qf-stats g-stats">
+              <div><dt>Iterations</dt><dd class="num g-k">0</dd></div>
+              <div><dt>Marked state probability</dt><dd class="num g-p"></dd></div>
+              <div><dt>Theory, sin&sup2;((2k+1)&theta;)</dt><dd class="num g-theory"></dd></div>
+            </dl>
+            <p class="g-status" aria-live="polite"></p>
+            <p class="small">The optimum for {n} states is <span class="num g-optimal"></span> iterations, a <span class="num g-opt-p"></span> chance of the marked state. The repo's grover_search.py marks state {g["target"]} and runs isqrt({n}) = {iters} iterations, one past the optimum, so its {_n(g["shots"])} shots sample from a <span class="num g-repo-p"></span> chance instead. The repo does not save its measured counts, so there is no recorded hit rate to quote. Step to {iters} here to see the distribution those shots come from.</p>
+          </article>'''
+
+
 def quantum_region() -> str:
     d = load("quantum_finance.json")
     pf, mc, fc = d["portfolio"], d["monte_carlo"], d["forecaster"]
@@ -116,6 +144,8 @@ def quantum_region() -> str:
     last = fc["last_actual"]
     return f'''<!-- gen:quantum -->
         <div class="qf-grid">
+          {grover_card(d["grover"])}
+
           <article class="qf-card" aria-labelledby="qaoa-h">
             <h3 id="qaoa-h">QAOA portfolio</h3>
             <p class="verdict"><span class="pill ok">{"Matched brute force" if pf["matched"] else "Did not match"}</span></p>
