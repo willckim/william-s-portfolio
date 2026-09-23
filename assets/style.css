@@ -194,6 +194,16 @@ body.home main { padding-top: 0; }
 .proof .label { font-size: 14px; color: var(--ink-2); }
 @media (max-width: 860px) { .proof { grid-template-columns: repeat(2, 1fr); } }
 
+/* ---------- Home: now ---------- */
+.now { margin-top: 40px; display: grid; grid-template-columns: minmax(120px, 180px) 1fr; gap: 16px 40px; align-items: start; }
+.now h2 { margin: 0; font-size: 15px; font-weight: 600; }
+.now ul { list-style: none; margin: 0; padding: 0; }
+.now li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding: 10px 0; border-bottom: 1px solid var(--rule); }
+.now li:first-child { padding-top: 0; }
+.now li span:last-child { color: var(--ink-2); }
+.now .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex: none; align-self: center; }
+@media (max-width: 720px) { .now { grid-template-columns: 1fr; } }
+
 /* ---------- Home: page directory ---------- */
 .directory { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; margin-top: 40px; }
 .directory a {
@@ -272,6 +282,19 @@ table.book tr:hover td { background: color-mix(in srgb, var(--accent-2) 45%, tra
 .timeline .when { color: var(--ink-3); font-size: 14px; }
 .timeline strong { display: block; }
 .timeline span { color: var(--ink-2); font-size: 15px; }
+
+.principles { list-style: none; counter-reset: p; margin: 0; padding: 0; }
+.principles li { counter-increment: p; display: grid; grid-template-columns: 32px 1fr; gap: 2px 8px; padding: 12px 0; border-bottom: 1px solid var(--rule); }
+.principles li:last-child { border-bottom: 0; }
+.principles li::before { content: counter(p); grid-row: span 2; font-family: var(--mono); color: var(--violet); font-weight: 500; }
+.principles strong { font-weight: 600; }
+.principles span { color: var(--ink-2); font-size: 15px; max-width: 64ch; }
+
+/* ---------- Chips ---------- */
+.chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
+.chips li { font-size: 14px; padding: 5px 12px; border-radius: 999px; background: var(--accent-2); color: var(--ink); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }
+.open-to { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-top: 18px; }
+.open-label { font-weight: 600; font-size: 15px; }
 
 /* ---------- Contact ---------- */
 .contact-list { list-style: none; padding: 0; margin: 0; }
