@@ -64,8 +64,9 @@ class CleanUrlHandler(http.server.SimpleHTTPRequestHandler):
             self.end_headers()
             return None
         disk = ROOT / path.lstrip("/")
-        if path != "/" and not disk.exists():
-            html = disk.with_suffix(".html")
+        # /work serves work.html even though a work/ folder exists beside it.
+        if path != "/" and (not disk.exists() or disk.is_dir()):
+            html = disk.parent / (disk.name + ".html")
             if html.exists():
                 query = urlsplit(self.path).query
                 self.path = path + ".html" + ("?" + query if query else "")

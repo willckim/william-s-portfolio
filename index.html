@@ -13,9 +13,9 @@
   <meta name="theme-color" content="#f2f3f0">
   <!-- Favicon: inline SVG data URI, preserved from the previous site. -->
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23f5f1ea'/%3E%3Cpath d='M6 9l5 15 5-10 5 10 5-15' fill='none' stroke='%23b6451a' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
-<body class="home" data-accent="ledger">
+<body class="home" data-accent="ledger" data-page="home">
   <a class="skip" href="#main">Skip to content</a>
 
   <header class="site-header">
@@ -50,7 +50,7 @@
             <p class="lede">I close the books, then build the systems that close them faster. Production automation, financial systems work, and applied AI at a $200M manufacturer, with a Computer Science degree behind it and a CPA on the way.</p>
             <div class="btn-row">
               <a class="btn primary" href="/work">See the work</a>
-              <a class="btn" href="resume.pdf">Résumé (PDF)</a>
+              <a class="btn" href="/resume.pdf">Résumé (PDF)</a>
             </div>
           </div>
         </div>
@@ -58,10 +58,10 @@
       </section>
 
       <section class="proof" aria-label="Results">
-        <div data-accent="ledger"><span class="num">36h → 10m</span><span class="label">Monthly expense review, after a C#/.NET classifier on Azure Functions calling the OpenAI API with rule guardrails</span></div>
-        <div data-accent="blueprint"><span class="num">95–97%</span><span class="label">Exact match to human reviewers, with zero misclassifications</span></div>
-        <div data-accent="amber"><span class="num">~40 hrs</span><span class="label">Manual close work removed per month, first six months</span></div>
-        <div data-accent="violet"><span class="num">4</span><span class="label">Production systems in use by the accounting team</span></div>
+        <a href="/work/concur" data-accent="ledger"><span class="num">36h → 10m</span><span class="label">Monthly expense review, after a C#/.NET classifier on Azure Functions calling the OpenAI API with rule guardrails</span><span class="go">Concur case study</span></a>
+        <a href="/work/concur#results-h" data-accent="blueprint"><span class="num">95–97%</span><span class="label">Exact match to human reviewers, with zero misclassifications</span><span class="go">Concur benchmark</span></a>
+        <a href="/work#ortho" data-accent="amber"><span class="num">~40 hrs</span><span class="label">Manual close work removed per month, first six months</span><span class="go">Across the Ortho systems</span></a>
+        <a href="/work#ortho" data-accent="violet"><span class="num">4</span><span class="label">Production systems in use by the accounting team</span><span class="go">The Ortho ledger</span></a>
       </section>
 
       <section class="now" aria-labelledby="now-h">
@@ -101,7 +101,7 @@
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="assets/hero3d.js"></script>
-  <script src="assets/site.js"></script>
+  <script src="/assets/hero3d.js"></script>
+  <script src="/assets/site.js"></script>
 </body>
 </html>
