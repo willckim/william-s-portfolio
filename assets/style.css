@@ -507,3 +507,40 @@ button.btn { font: inherit; cursor: pointer; }
 .g-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .g-status { font-weight: 600; color: var(--ink); }
 @media (max-width: 560px) { .g-chart { height: 180px; } .g-label { font-size: 10px; } .g-stats dd { font-size: 20px; } }
+
+/* ---------- Header tools and the command palette ---------- */
+.site-header nav { margin-left: auto; }
+.tools { display: flex; align-items: center; gap: 8px; margin-left: 8px; }
+.search-btn {
+  display: inline-flex; align-items: center; gap: 10px; font: inherit; font-size: 14px; cursor: pointer;
+  padding: 7px 8px 7px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); color: var(--ink-2);
+}
+.search-btn:hover { border-color: var(--ink-3); color: var(--ink); }
+.search-btn kbd, .palette kbd {
+  font-family: var(--mono); font-size: 12px; padding: 1px 6px; border-radius: 4px;
+  border: 1px solid var(--rule); background: var(--bone); color: var(--ink-2);
+}
+@media (max-width: 720px) {
+  .brand { margin-right: auto; }
+  .tools { order: 1; margin-left: 0; }
+  .menu-btn { order: 2; }
+  .site-header nav { order: 3; width: 100%; margin-left: 0; }
+  .search-btn kbd { display: none; }
+  .search-btn { font-size: inherit; padding: 8px 12px; border-radius: 6px; }
+}
+.palette {
+  width: min(640px, calc(100vw - 32px)); max-height: min(560px, 76vh); margin: 12vh auto auto; padding: 0;
+  border: 1px solid var(--rule); border-radius: 12px; background: var(--surface); color: var(--ink);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, .25); overflow: hidden;
+}
+.palette[open] { display: flex; flex-direction: column; }
+.palette::backdrop { background: rgba(15, 17, 19, .45); }
+.pal-field { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-bottom: 1px solid var(--rule); }
+.pal-field input { flex: 1; min-width: 0; font: inherit; font-size: 18px; border: 0; outline: 0; background: transparent; color: var(--ink); }
+.pal-field input::placeholder { color: var(--ink-3); }
+.palette ul { list-style: none; margin: 0; padding: 6px; overflow-y: auto; }
+.palette li { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 10px 12px; border-radius: 8px; cursor: pointer; }
+.palette li[aria-selected="true"] { background: var(--accent-2); box-shadow: inset 3px 0 0 var(--accent); }
+.pal-title { font-weight: 500; }
+.pal-group { font-size: 12px; color: var(--ink-3); white-space: nowrap; }
+.pal-empty { padding: 16px; margin: 0; color: var(--ink-2); }

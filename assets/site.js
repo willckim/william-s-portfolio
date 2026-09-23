@@ -63,6 +63,32 @@
   });
   try { if (sessionStorage.getItem("tour.resume")) loadTour(); } catch (e) { /* storage blocked: no resume */ }
 
+  // Command palette: Cmd/Ctrl+K anywhere, or the header's Search button. The script
+  // loads on first use, so pages that never search never pay for it.
+  var paletteLoading = false;
+  function openPalette(from) {
+    if (window.Palette) return Palette.open(from);
+    if (paletteLoading) return;
+    paletteLoading = true;
+    var s = document.createElement("script");
+    s.src = "/assets/palette.js";
+    s.onload = function () { Palette.open(from); };
+    document.head.appendChild(s);
+  }
+  var searchBtn = document.querySelector("[data-palette-open]");
+  if (searchBtn) {
+    if (/Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent)) {
+      searchBtn.querySelector("kbd").textContent = "⌘K";
+    }
+    searchBtn.addEventListener("click", function () { openPalette(searchBtn); });
+  }
+  document.addEventListener("keydown", function (e) {
+    if ((e.metaKey || e.ctrlKey) && !e.altKey && (e.key === "k" || e.key === "K")) {
+      e.preventDefault();
+      openPalette(document.activeElement);
+    }
+  });
+
   // Copy buttons. Markup: button.copy-btn[data-copy]
   document.querySelectorAll(".copy-btn").forEach(function (b) {
     b.addEventListener("click", function () {
