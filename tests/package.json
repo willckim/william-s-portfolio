@@ -1,0 +1,9 @@
+{
+  "name": "williamckim-site-checks",
+  "private": true,
+  "description": "Test-only dependencies for the site checks. Not deployed.",
+  "devDependencies": {
+    "axe-core": "^4.10.0",
+    "lighthouse": "^12.0.0"
+  }
+}
