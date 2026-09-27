@@ -54,7 +54,7 @@ Motion is enhancement only: every page reads in full without JavaScript, and und
 prefers-reduced-motion it behaves like the calm version. /quick is the recruiter escape
 hatch: text only, no script. Push only after all five phases pass the gates.
 - [x] 1. Foundation and quick view (GSAP 3.15.0, Lenis 1.3.26, three 0.186.1 import map, /quick)
-- [ ] 2. Preloader and hero
+- [x] 2. Preloader and hero (intro once per session, 1.5 s cap, particle hero with bloom, split headline)
 - [ ] 3. Scroll story
 - [ ] 4. Work index previews
 - [ ] 5. Polish
