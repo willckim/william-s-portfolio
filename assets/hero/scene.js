@@ -313,12 +313,12 @@ export function init(stage) {
   function barsStage(iterations) {
     const s = stageOf("amber");
     const amps = grover(iterations);
-    const box = planeBox(1.6, small ? 0.86 : 0.56, 0.42, small ? 0.34 : 0.2);
+    const box = planeBox(1.6, small ? 0.86 : 0.5, 0.3, small ? 0.36 : 0.3);
     const per = Math.floor(N / 16), bw = box.w / 16;
     const base = box.cy - box.h / 2;
     for (let i = 0; i < N; i++) {
       const b = Math.min(15, Math.floor(i / per)), k = i - b * per;
-      const hgt = Math.max(0.02, Math.abs(amps[b])) * box.h;
+      const hgt = Math.max(0.06, Math.abs(amps[b])) * box.h;   // a floor keeps all 16 bars visible
       const cols = 4, rows = Math.ceil(per / cols);
       const x = -box.w / 2 + (b + 0.5) * bw + ((k % cols) / (cols - 1) - 0.5) * bw * 0.55;
       const y = base + (Math.floor(k / cols) / rows) * hgt;
@@ -338,6 +338,7 @@ export function init(stage) {
   }
   const hasStory = !!document.getElementById("story");
   let stages = [];
+  let fontsReady = false;
   function build() {
     const list = [gridStage(), graphStage()];
     if (hasStory) {
@@ -347,6 +348,10 @@ export function init(stage) {
                              maxH: 0.34, outline: true }));
     }
     stages = list;
+    // The HTML numbers step back (still read aloud) only once the particles draw them
+    // in the real faces, and never under reduced motion, where the story is a list.
+    const drawn = hasStory && fontsReady && !reduce && list.every((st) => !st.sample || st.sample.inked > 0);
+    document.documentElement.classList.toggle("glyphs-live", drawn);
   }
 
   // ---- camera: fit the ledger to the viewport (with the parallax envelope)
@@ -371,11 +376,11 @@ export function init(stage) {
   layout();
   // The numbers are drawn in IBM Plex Mono and the monogram in Plex Sans: sample again
   // once those faces have loaded, so the shapes are never a fallback font's.
-  let fontsReady = false;
   if (document.fonts && document.fonts.load) {
     Promise.all([document.fonts.load('500 100px "IBM Plex Mono"', "0123456789%"),
                  document.fonts.load('700 100px "IBM Plex Sans"', "WK")])
-      .then(() => { fontsReady = true; glyphCache.clear(); build(); }, () => { fontsReady = true; });
+      .then(() => { fontsReady = true; glyphCache.clear(); build(); if (reduce || !running) draw(performance.now()); },
+            () => { fontsReady = true; });
   } else fontsReady = true;
 
   // ---- input: pointer parallax, theme, resize, visibility
@@ -403,12 +408,14 @@ export function init(stage) {
   const ambient = new Float32Array(CELLS);   // the hero's gentle lift, on a few cells at a time
   let ambientCycle = -1, ambientCells = [];
   const smooth = (x) => x * x * (3 - 2 * x);
-  let shown = 0;   // eased stage value actually drawn
+  let shown = 0, lastT = 0;   // eased stage value actually drawn
   const accent = new THREE.Color();
   function draw(now) {
     const t = now / 1000;
     const target = Math.max(0, Math.min(stages.length - 1, (window.__story && window.__story.stage) || 0));
-    shown = reduce ? target : shown + (target - shown) * 0.12;
+    const dt = Math.min(0.1, Math.max(0, t - (lastT || t)));
+    lastT = t;
+    shown = reduce ? target : shown + (target - shown) * (1 - Math.exp(-dt * 7));   // same pace at any frame rate
     if (Math.abs(target - shown) < 0.0005) shown = target;
     const s0 = Math.min(stages.length - 1, Math.floor(shown)), s1 = Math.min(stages.length - 1, s0 + 1);
     const f = shown - s0, A = stages[s0], B = stages[s1];
@@ -449,11 +456,16 @@ export function init(stage) {
     // The ledger sits beside the hero copy on wide screens, and centres for the story.
     const wide = W / H > 1.3;
     const aside = wide ? 1.6 * heroness : 0;
-    mat.uniforms.uScrim.value = wide ? heroness : 0;
-    mat.uniforms.uDim.value = wide ? 0 : 0.45 * heroness;
+    // Thin the points under the words only while the hero copy is actually on screen.
+    const copyOn = Math.max(0, 1 - window.scrollY / (H * 0.7)) * heroness;
+    mat.uniforms.uScrim.value = wide ? copyOn : 0;
+    mat.uniforms.uDim.value = wide ? 0 : 0.45 * copyOn;
     group.position.x += (aside - group.position.x) * (reduce ? 1 : 0.08);
-    ry += (mx * 0.3 - ry) * 0.05;
-    rx += (my * 0.14 - rx) * 0.05;
+    // Full parallax on the ledger and the graph. On the flat shapes (numbers, bars,
+    // monogram) only a hint of it, so they read square to the screen.
+    const sway = 0.2 + 0.8 * Math.max(0, 1 - Math.max(0, shown - 1));
+    ry += (mx * 0.3 * sway - ry) * 0.05;
+    rx += (my * 0.14 * sway - rx) * 0.05;
     group.rotation.y = ry;
     group.rotation.x = rx;
     // Slow drift, a few percent of the distance, so the frame is never quite still.

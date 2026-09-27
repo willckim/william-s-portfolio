@@ -75,11 +75,17 @@ if(shown>=100||now-t0>=CAP)end(false);else requestAnimationFrame(tick)})(t0);})(
   </header>
 
   <main id="main">
-    <div class="wrap">
-      <section class="hero">
-        <div class="stage" id="stage" role="img" aria-label="Animated ledger grid of points, where a few cells lift and glow, then settle back">
+    <!-- The story: one sticky stage behind the hero and five chapters. The canvas stays in
+         place while the chapters scroll past it, and the scroll scrubs its shapes. Nothing
+         is pinned: the page always scrolls freely. Under reduced motion the chapters are a
+         plain list and the stage sits behind the hero only. -->
+    <div class="cine" id="cine">
+      <div class="cine-stage">
+        <div class="stage" id="stage" role="img" aria-label="Animated field of points: a ledger grid that lifts into a connected graph, forms each chapter's number, then sixteen bars and the WK monogram">
           <div class="fallback">A ledger grid that becomes a system graph. Animation is off for reduced motion or unsupported browsers.</div>
         </div>
+      </div>
+      <section class="hero">
         <div class="wrap hero-inner">
           <div class="copy">
             <div class="status">
@@ -94,12 +100,73 @@ if(shown>=100||now-t0>=CAP)end(false);else requestAnimationFrame(tick)})(t0);})(
               <a class="btn" href="/resume.pdf">Résumé (PDF)</a>
               <button class="btn" type="button" data-tour-start>Take the tour</button>
             </div>
+            <a class="story-skip" href="#facts">Skip the story, see the numbers</a>
           </div>
         </div>
-        <div class="caption">Ledger to graph. Move your cursor.</div>
+        <div class="caption">Ledger to graph. Move your cursor, then scroll.</div>
       </section>
 
-      <section class="proof" aria-label="Results">
+      <div class="story" id="story">
+        <section class="chapter" data-stage="0" aria-labelledby="ch1-h">
+          <div class="wrap"><div class="ch-card">
+            <p class="ch-n num">01</p>
+            <h2 id="ch1-h" class="ch-title">I close the books.</h2>
+          </div></div>
+        </section>
+        <section class="chapter" data-stage="1" aria-labelledby="ch2-h">
+          <div class="wrap"><div class="ch-card">
+            <p class="ch-n num">02</p>
+            <h2 id="ch2-h" class="ch-title">Then I build the systems that close them faster.</h2>
+          </div></div>
+        </section>
+        <section class="chapter ch-figure" data-stage="2" aria-labelledby="ch3a-h" data-accent="ledger">
+          <div class="wrap"><div class="ch-card">
+            <p class="ch-n num">03</p>
+            <h2 id="ch3a-h" class="ch-big num" data-glyph="ledger">36h → 10m</h2>
+            <p class="ch-label">Monthly expense review, after a C#/.NET classifier on Azure Functions calling the OpenAI API with rule guardrails</p>
+            <a class="ch-go" href="/work/concur">Concur case study</a>
+          </div></div>
+        </section>
+        <section class="chapter ch-figure" data-stage="3" aria-labelledby="ch3b-h" data-accent="blueprint">
+          <div class="wrap"><div class="ch-card">
+            <p class="ch-n num">03</p>
+            <h2 id="ch3b-h" class="ch-big num" data-glyph="blueprint">95–97%</h2>
+            <p class="ch-label">Exact match to human reviewers, with zero misclassifications</p>
+            <a class="ch-go" href="/work/concur#results-h">Concur benchmark</a>
+          </div></div>
+        </section>
+        <section class="chapter ch-figure" data-stage="4" aria-labelledby="ch3c-h" data-accent="violet">
+          <div class="wrap"><div class="ch-card">
+            <p class="ch-n num">03</p>
+            <h2 id="ch3c-h" class="ch-big num" data-glyph="violet">3</h2>
+            <p class="ch-label">Production systems in use by the accounting team: Concur, Royalty, Time Tracker</p>
+            <a class="ch-go" href="/work#ortho">The Ortho ledger</a>
+          </div></div>
+        </section>
+        <section class="chapter ch-tall" data-stage="5 6" aria-labelledby="ch4-h" data-accent="amber">
+          <div class="wrap"><div class="ch-card">
+            <p class="ch-n num">04</p>
+            <h2 id="ch4-h" class="ch-title">And I learn in public.</h2>
+            <p class="ch-label">Sixteen states, one marked: the Lab's Grover visualizer steps through it, next to a post-quantum exposure calculator for finance records.</p>
+            <a class="ch-go" href="/lab">Open the Lab</a>
+          </div></div>
+        </section>
+        <section class="chapter ch-end" data-stage="7" aria-labelledby="ch5-h">
+          <div class="wrap"><div class="ch-card">
+            <p class="ch-n num">05</p>
+            <h2 id="ch5-h" class="ch-mark"><span class="mark" aria-hidden="true">WK</span><span class="sr-only">William Kim</span></h2>
+            <div class="btn-row">
+              <a class="btn primary" href="/work">See the work</a>
+              <a class="btn" href="/resume.pdf">Résumé (PDF)</a>
+              <a class="btn" href="/contact">Contact</a>
+            </div>
+          </div></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <section class="proof" id="facts" aria-label="Results">
         <a href="/work/concur" data-accent="ledger"><span class="num">36h → 10m</span><span class="label">Monthly expense review, after a C#/.NET classifier on Azure Functions calling the OpenAI API with rule guardrails</span><span class="go">Concur case study</span></a>
         <a href="/work/concur#results-h" data-accent="blueprint"><span class="num">95–97%</span><span class="label">Exact match to human reviewers, with zero misclassifications</span><span class="go">Concur benchmark</span></a>
         <a href="/work#ortho" data-accent="amber"><span class="num">~40 hrs</span><span class="label">Manual close work removed per month, first six months</span><span class="go">Across the Ortho systems</span></a>
