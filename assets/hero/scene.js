@@ -1,323 +1,493 @@
-// williamckim.com · Home hero scene (ES module, three.js 0.186.1 through the page's import map)
-// Loaded by /assets/hero3d.js once the page is idle. Light intensities are scaled by pi
-// because three.js now uses physical light units.
+// williamckim.com · Home hero and scroll story: one particle system, many shapes.
+// ES module on three.js 0.186.1, through the page's import map. Loaded by hero3d.js.
+//
+// Every particle has a target position in each "stage": the ledger grid (the hero and
+// chapter 1), a lifted system graph (chapter 2), each number in the story (chapter 3,
+// sampled from text drawn on an offscreen canvas), 16 Grover bars (chapter 4) and the
+// WK monogram (chapter 5). The page tells the scene which stage it is at through
+// window.__story.stage, a float the scroll scrubs. The scene only reads it.
+//
+// The numbers are read from the chapter captions in the HTML ([data-glyph]), so the
+// particles always draw what the page says. tests/check_motion.py compares the shapes
+// the particles form against the proof strip's own text, drawn independently.
+//
+// Colours follow the site theme, and change live on the themechange event. Bloom
+// (UnrealBloomPass) lights the lifted nodes in the dark theme. Rendering pauses when
+// the tab is hidden or the stage is off screen. Reduced motion draws one still frame.
 import * as THREE from "three";
+import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
+import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+
+// Theme palettes. Background stops match --grad-hero in style.css, so the canvas
+// fades in over the CSS gradient without a visible change.
+const PALETTES = {
+  light: {
+    bg: ["#f2f3f0", "#e2efe8", "#dbe3ef"], glow: "#fbeed0", base: "#8d948c",
+    ledger: "#1e6b47", blueprint: "#2a4a78", violet: "#5b4b8a", amber: "#b27405",
+    additive: false, bloom: 0, halo: 0.55
+  },
+  dark: {
+    bg: ["#121416", "#13201a", "#141b27"], glow: "#2d2311", base: "#59626b",
+    ledger: "#5cc28c", blueprint: "#8fb2ee", violet: "#b7a8f2", amber: "#e3a83d",
+    additive: true, bloom: 0.85, halo: 0.4
+  }
+};
+const FOV = 32, TILT = 38 * Math.PI / 180, GAP = 0.78, CELL = 0.62, LIFT = 1.6;
+
+// ---- text to points -------------------------------------------------------------
+// Draws text on an offscreen canvas and returns n points on its inked pixels, as
+// [u, v] in 0..1 of the ink's bounding box (v down), plus the box's aspect ratio.
+// Deterministic: the same text and n always give the same points.
+export function sampleText(text, font, n, outline) {
+  const px = 220, pad = 40;
+  const c = document.createElement("canvas");
+  const g = c.getContext("2d", { willReadFrequently: true });
+  g.font = font.replace("{px}", px);
+  const w = Math.ceil(g.measureText(text).width) + pad * 2 + (outline ? px * 0.5 : 0);
+  const h = Math.ceil(px * 1.35) + pad * 2 + (outline ? px * 0.3 : 0);
+  c.width = w; c.height = h;
+  g.font = font.replace("{px}", px);
+  g.fillStyle = "#000"; g.textAlign = "center"; g.textBaseline = "middle";
+  g.fillText(text, w / 2, h / 2 + px * 0.04);
+  if (outline) {
+    g.lineWidth = px * 0.075;
+    const bw = w - pad * 2, bh = h - pad * 2, r = px * 0.12;
+    g.beginPath(); g.roundRect(pad, pad, bw, bh, r); g.stroke();
+  }
+  const data = g.getImageData(0, 0, w, h).data;
+  const ink = [];
+  let x0 = w, y0 = h, x1 = 0, y1 = 0;
+  for (let y = 0; y < h; y += 2) {
+    for (let x = 0; x < w; x += 2) {
+      if (data[(y * w + x) * 4 + 3] > 140) {
+        ink.push(x, y);
+        if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+      }
+    }
+  }
+  const count = ink.length / 2, out = new Float32Array(n * 2);
+  const bw = Math.max(1, x1 - x0), bh = Math.max(1, y1 - y0);
+  let seed = 7;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  for (let i = 0; i < n; i++) {
+    // Even coverage: walk the ink in a strided order, jitter within a pixel pair.
+    const k = count ? Math.floor((i * count) / n + rnd() * (count / n)) % count : 0;
+    out[i * 2] = (ink[k * 2] - x0 + rnd() * 2) / bw;
+    out[i * 2 + 1] = (ink[k * 2 + 1] - y0 + rnd() * 2) / bh;
+  }
+  return { points: out, aspect: bw / bh, inked: count };
+}
+
+// Grover's algorithm on 16 states, marked state 7 as in the Lab's source repo:
+// amplitudes after k iterations (oracle flips the sign, diffusion reflects about the mean).
+function grover(k) {
+  const a = new Array(16).fill(0.25);
+  for (let it = 0; it < k; it++) {
+    a[7] = -a[7];
+    const mean = a.reduce((s, x) => s + x, 0) / 16;
+    for (let i = 0; i < 16; i++) a[i] = 2 * mean - a[i];
+  }
+  return a;
+}
 
 export function init(stage) {
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const small = matchMedia("(max-width: 720px), (pointer: coarse)").matches;
+  // Particle budget: a ledger of COLS x ROWS cells, K x K points in each.
+  const COLS = small ? 16 : 26, ROWS = 14, K = small ? 3 : 4;
+  const CELLS = COLS * ROWS, N = CELLS * K * K;
 
-  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  var W = stage.clientWidth, H = stage.clientHeight;
-
-  var renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
-  } catch (e) { stage.classList.add("static"); return; }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  let W = stage.clientWidth, H = stage.clientHeight;
+  const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: "high-performance" });
+  const DPR = Math.min(window.devicePixelRatio || 1, 2);
+  renderer.setPixelRatio(DPR);
   renderer.setSize(W, H);
-  renderer.setClearColor(0x000000, 0);   // transparent over the CSS gradient
   stage.appendChild(renderer.domElement);
 
-  var scene = new THREE.Scene();
-  // Far plane must comfortably exceed any distance the fit search can reach, otherwise
-  // the fit test fails on far-plane clipping and the search runs away to its ceiling.
-  var CAM_FAR = 500, FIT_MAX = 320;
-  var camera = new THREE.PerspectiveCamera(32, W / H, 0.1, CAM_FAR);
-
-  scene.add(new THREE.AmbientLight(0xffffff, 0.75 * Math.PI));
-  var key = new THREE.DirectionalLight(0xffffff, 0.7);   // intensity set per theme below
-  key.position.set(4, 8, 6);
-  scene.add(key);
-
-  // Palette per theme (matches the CSS tokens). Light: pale cells on the bone
-  // gradient. Dark: cells a step above the near-black page, so the grid reads as a
-  // surface rather than holes, and the brighter dark-theme accents with more glow.
-  var PALETTES = {
-    light: { cell: 0xdfe2dc, alt: 0xd3d7d0, accents: [0x1e6b47, 0xd98e04, 0xd1495b], glow: 0.25, key: 0.7 },
-    dark:  { cell: 0x2c3136, alt: 0x252a2e, accents: [0x5cc28c, 0xe3a83d, 0xf28593], glow: 0.3, key: 0.55 }
-  };
-  function themeName() {
-    return document.documentElement.getAttribute("data-theme-resolved") === "dark" ? "dark" : "light";
-  }
-  var P = PALETTES[themeName()];
-  var C_CELL = new THREE.Color(P.cell);
-  var C_CELL_ALT = new THREE.Color(P.alt);
-  // One accent per cycle: ledger green, amber, coral.
-  var ACCENTS = P.accents.slice();
-  key.intensity = P.key * Math.PI;
-
-  var COLS = 18, ROWS = 12, GAP = 0.78, CELL = 0.62, THICK = 0.12;
-  var NODE_COUNT = 12, LIFT = 1.6;
-  var TILT = 38 * Math.PI / 180;   // camera elevation, so the grid reads as a receding plane
-  var count = COLS * ROWS;
-
-  var geo = new THREE.BoxGeometry(CELL, THICK, CELL);
-  // Slight transparency gives the cells a soft, shadowed feel against the gradient.
-  var matBase = new THREE.MeshStandardMaterial({ roughness: 0.85, metalness: 0.0, transparent: true, opacity: 0.9 });
-  var matNode = new THREE.MeshStandardMaterial({ roughness: 0.85, metalness: 0.0, transparent: true, opacity: 0.9 });
-
-  // Two meshes: the flat ledger, and the lifted nodes. Nodes get their own material so the
-  // emissive glow lands only on them (emissive is per material, not per instance).
-  var mesh = new THREE.InstancedMesh(geo, matBase, count);
-  var nodeMesh = new THREE.InstancedMesh(geo, matNode, NODE_COUNT);
-  var group = new THREE.Group();
-  group.add(mesh);
-  group.add(nodeMesh);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(FOV, W / H, 0.1, 500);
+  const group = new THREE.Group();
   scene.add(group);
 
-  var dummy = new THREE.Object3D();
-  var base = [], colorTarget = [];
-  var color = new THREE.Color();
-  var accent = new THREE.Color(ACCENTS[0]);
-  for (var r = 0; r < ROWS; r++) {
-    for (var c = 0; c < COLS; c++) {
-      var i = r * COLS + c;
-      base.push({ x: (c - (COLS - 1) / 2) * GAP, z: (r - (ROWS - 1) / 2) * GAP, phase: (c * 0.35 + r * 0.55) });
-      colorTarget[i] = (r % 2 === 0) ? C_CELL : C_CELL_ALT;
-      mesh.setColorAt(i, colorTarget[i]);
+  // ---- background: the hero gradient, drawn in the scene so bloom and fog sit on it
+  const bgMat = new THREE.ShaderMaterial({
+    depthWrite: false, depthTest: false,
+    uniforms: { c0: { value: new THREE.Color() }, c1: { value: new THREE.Color() },
+                c2: { value: new THREE.Color() }, cg: { value: new THREE.Color() }, uAspect: { value: W / H } },
+    vertexShader: "varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }",
+    fragmentShader: `varying vec2 vUv; uniform vec3 c0, c1, c2, cg; uniform float uAspect;
+      void main(){
+        float t = clamp((vUv.x * uAspect + (1.0 - vUv.y)) / (uAspect + 1.0), 0.0, 1.0);
+        vec3 c = t < 0.45 ? mix(c0, c1, t / 0.45) : mix(c1, c2, (t - 0.45) / 0.55);
+        vec2 d = (vUv - vec2(0.86, 0.94)) / vec2(0.58, 0.46);
+        c = mix(c, cg, 0.4 * (1.0 - smoothstep(0.0, 0.72, length(d))));
+        gl_FragColor = vec4(c, 1.0);
+      }`
+  });
+  const bg = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), bgMat);
+  bg.frustumCulled = false;
+  bg.renderOrder = -1;
+  scene.add(bg);
+
+  // ---- particles
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(N * 3), aAlpha = new Float32Array(N), aMix = new Float32Array(N),
+        aGlow = new Float32Array(N), aSize = new Float32Array(N), seed = new Float32Array(N);
+  for (let i = 0; i < N; i++) seed[i] = ((i * 2654435761) % 1000) / 1000;
+  geo.setAttribute("position", new THREE.BufferAttribute(pos, 3).setUsage(THREE.DynamicDrawUsage));
+  geo.setAttribute("aAlpha", new THREE.BufferAttribute(aAlpha, 1).setUsage(THREE.DynamicDrawUsage));
+  geo.setAttribute("aMix", new THREE.BufferAttribute(aMix, 1).setUsage(THREE.DynamicDrawUsage));
+  geo.setAttribute("aGlow", new THREE.BufferAttribute(aGlow, 1).setUsage(THREE.DynamicDrawUsage));
+  geo.setAttribute("aSize", new THREE.BufferAttribute(aSize, 1).setUsage(THREE.DynamicDrawUsage));
+  const mat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false,
+    uniforms: {
+      uBase: { value: new THREE.Color() }, uAccent: { value: new THREE.Color() },
+      uPx: { value: 1 }, uFogNear: { value: 10 }, uFogFar: { value: 20 }, uHalo: { value: 0.5 },
+      uGlowBoost: { value: 1.6 }, uScrim: { value: 0 }, uDim: { value: 0 }
+    },
+    vertexShader: `attribute float aAlpha; attribute float aMix; attribute float aGlow; attribute float aSize;
+      uniform float uPx, uFogNear, uFogFar, uScrim, uDim;
+      varying float vAlpha; varying float vMix; varying float vGlow;
+      void main(){
+        vec4 mv = modelViewMatrix * vec4(position, 1.0);
+        gl_Position = projectionMatrix * mv;
+        float depth = -mv.z;
+        gl_PointSize = aSize * (1.0 + aGlow * 1.2) * uPx / depth;
+        vAlpha = aAlpha * (1.0 - smoothstep(uFogNear, uFogFar, depth));
+        // Keep the words readable: in the hero, points thin out under the copy column
+        // (left side on wide screens, everywhere on narrow ones).
+        float sx = gl_Position.x / gl_Position.w;
+        vAlpha *= 1.0 - uScrim * (1.0 - smoothstep(-0.25, 0.3, sx)) * 0.8;
+        vAlpha *= 1.0 - uDim;
+        vMix = aMix; vGlow = aGlow;
+      }`,
+    fragmentShader: `uniform vec3 uBase, uAccent; uniform float uHalo, uGlowBoost;
+      varying float vAlpha; varying float vMix; varying float vGlow;
+      void main(){
+        float d = length(gl_PointCoord - 0.5);
+        float core = 1.0 - smoothstep(0.16, 0.3, d);
+        float halo = (1.0 - smoothstep(0.1, 0.5, d)) * uHalo * vGlow;
+        float a = max(core, halo) * vAlpha;
+        if (a < 0.01) discard;
+        vec3 c = mix(uBase, uAccent, vMix) * (1.0 + vGlow * uGlowBoost * core);
+        gl_FragColor = vec4(c, a);
+      }`
+  });
+  const points = new THREE.Points(geo, mat);
+  points.frustumCulled = false;
+  group.add(points);
+
+  // ---- post: render, bloom, output (tone and colour space)
+  const composer = new EffectComposer(renderer);
+  composer.addPass(new RenderPass(scene, camera));
+  const bloom = new UnrealBloomPass(new THREE.Vector2(W / 2, H / 2), 0.85, 0.55, 0.42);
+  composer.addPass(bloom);
+  composer.addPass(new OutputPass());
+
+  // ---- theme
+  let P, accentOf = {};
+  function applyTheme() {
+    const dark = document.documentElement.getAttribute("data-theme-resolved") === "dark";
+    P = PALETTES[dark ? "dark" : "light"];
+    bgMat.uniforms.c0.value.set(P.bg[0]); bgMat.uniforms.c1.value.set(P.bg[1]);
+    bgMat.uniforms.c2.value.set(P.bg[2]); bgMat.uniforms.cg.value.set(P.glow);
+    mat.uniforms.uBase.value.set(P.base);
+    mat.uniforms.uHalo.value = P.halo;
+    mat.uniforms.uGlowBoost.value = P.additive ? 1.6 : 0.15;
+    mat.blending = P.additive ? THREE.AdditiveBlending : THREE.NormalBlending;
+    mat.needsUpdate = true;
+    bloom.enabled = P.bloom > 0;
+    bloom.strength = P.bloom;
+    for (const k of ["ledger", "blueprint", "violet", "amber"]) accentOf[k] = new THREE.Color(P[k]);
+  }
+  applyTheme();
+
+  // ---- the ledger: base positions, cell of each particle
+  const cellOf = new Uint16Array(N), grid = new Float32Array(N * 3);
+  const halfW = ((COLS - 1) / 2) * GAP + CELL / 2, halfD = ((ROWS - 1) / 2) * GAP + CELL / 2;
+  const cellX = (c) => (c % COLS - (COLS - 1) / 2) * GAP, cellZ = (c) => (Math.floor(c / COLS) - (ROWS - 1) / 2) * GAP;
+  for (let c = 0, i = 0; c < CELLS; c++) {
+    for (let a = 0; a < K; a++) {
+      for (let b = 0; b < K; b++, i++) {
+        cellOf[i] = c;
+        grid[i * 3] = cellX(c) + (a / (K - 1) - 0.5) * CELL * 0.8;
+        grid[i * 3 + 1] = 0;
+        grid[i * 3 + 2] = cellZ(c) + (b / (K - 1) - 0.5) * CELL * 0.8;
+      }
     }
   }
-  mesh.instanceColor.needsUpdate = true;
-  for (var k = 0; k < NODE_COUNT; k++) nodeMesh.setColorAt(k, C_CELL);
-  nodeMesh.instanceColor.needsUpdate = true;
 
-  // Graph edges (rebuilt each cycle)
-  var lineGeo = new THREE.BufferGeometry();
-  var lineMat = new THREE.LineBasicMaterial({ color: ACCENTS[0], transparent: true, opacity: 0 });
-  var lines = new THREE.LineSegments(lineGeo, lineMat);
-  group.add(lines);
+  // ---- stages. Each: positions (N*3), alpha, mix, glow, size (N), and an accent.
+  function stageOf(accent) {
+    return { pos: new Float32Array(N * 3), alpha: new Float32Array(N).fill(1), mix: new Float32Array(N),
+             glow: new Float32Array(N), size: new Float32Array(N).fill(1), accent: accent };
+  }
+  const DOT = 0.075;   // world size of a ledger point
 
-  var nodes = [], edges = [];
-  function pickGraph(cycle) {
-    accent.setHex(ACCENTS[((cycle % ACCENTS.length) + ACCENTS.length) % ACCENTS.length]);
-    lineMat.color.copy(accent);
-    matNode.emissive.copy(accent);
-    nodes = [];
-    var tries = 0;
-    while (nodes.length < NODE_COUNT && tries < 400) {
-      tries++;
-      var i = Math.floor(Math.random() * count);
-      if (nodes.indexOf(i) !== -1) continue;
-      var ok = nodes.every(function (n) {
-        var dx = base[n].x - base[i].x, dz = base[n].z - base[i].z;
-        return Math.sqrt(dx * dx + dz * dz) > 1.5;
-      });
-      if (ok) nodes.push(i);
+  function gridStage() {
+    const s = stageOf("ledger");
+    s.pos.set(grid);
+    s.size.fill(DOT);
+    return s;
+  }
+
+  // Nodes: cells spread across the ledger, lifted and lit. Edges: each node to its two
+  // nearest, drawn by particles borrowed from other cells. The rest stay, dimmed.
+  let rngState = 11;
+  const rnd = () => ((rngState = (rngState * 16807) % 2147483647) / 2147483647);
+  function pickNodes(count, minDist) {
+    const out = [];
+    for (let tries = 0; out.length < count && tries < 2000; tries++) {
+      const c = Math.floor(rnd() * CELLS);
+      if (out.every((o) => Math.hypot(cellX(o) - cellX(c), cellZ(o) - cellZ(c)) > minDist)) out.push(c);
     }
-    // Connect each node to its two nearest neighbors
-    edges = [];
-    nodes.forEach(function (a) {
-      var others = nodes.filter(function (b) { return b !== a; }).map(function (b) {
-        var dx = base[a].x - base[b].x, dz = base[a].z - base[b].z;
-        return { b: b, d: dx * dx + dz * dz };
-      }).sort(function (p, q) { return p.d - q.d; }).slice(0, 2);
-      others.forEach(function (o) {
-        var ek = a < o.b ? a + "-" + o.b : o.b + "-" + a;
-        if (!edges.some(function (e) { return e.key === ek; })) edges.push({ key: ek, a: a, b: o.b });
-      });
+    return out;
+  }
+  function graphStage() {
+    const s = stageOf("ledger");
+    s.pos.set(grid);
+    s.size.fill(DOT);
+    rngState = 11;
+    const nodes = pickNodes(small ? 10 : 14, small ? 2.2 : 2.6);
+    const isNode = new Map(nodes.map((c, k) => [c, k]));
+    const edges = [];
+    nodes.forEach((a) => {
+      nodes.filter((b) => b !== a)
+        .sort((p, q) => Math.hypot(cellX(p) - cellX(a), cellZ(p) - cellZ(a)) - Math.hypot(cellX(q) - cellX(a), cellZ(q) - cellZ(a)))
+        .slice(0, 2).forEach((b) => {
+          if (!edges.some((e) => (e[0] === a && e[1] === b) || (e[0] === b && e[1] === a))) edges.push([a, b]);
+        });
     });
-    lineGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(edges.length * 6), 3));
-  }
-
-  // ---- Fit the whole grid into the frustum, at any aspect ratio ----
-  // Extremes include the lift height and the full mouse-parallax rotation envelope, so the
-  // corner cells stay inside the frame even while the group is tilted by the cursor.
-  var MAX_RY = 0.5 * 0.35, MAX_RX = 0.5 * 0.18;   // mouse range is -0.5..0.5
-  var halfW = ((COLS - 1) / 2) * GAP + CELL / 2;
-  var halfD = ((ROWS - 1) / 2) * GAP + CELL / 2;
-
-  function extremePoints() {
-    var pts = [], e = new THREE.Euler(), m = new THREE.Matrix4(), v;
-    var rxs = [-MAX_RX, 0, MAX_RX], rys = [-MAX_RY, 0, MAX_RY];
-    for (var a = 0; a < rxs.length; a++) {
-      for (var b = 0; b < rys.length; b++) {
-        e.set(rxs[a], rys[b], 0);
-        m.makeRotationFromEuler(e);
-        for (var sx = -1; sx <= 1; sx += 2) {
-          for (var sz = -1; sz <= 1; sz += 2) {
-            for (var yy = 0; yy <= 1; yy++) {
-              v = new THREE.Vector3(sx * halfW, yy * (LIFT + THICK * 3), sz * halfD);
-              v.applyMatrix4(m).add(group.position);
-              pts.push(v);
-            }
-          }
-        }
+    let e = 0;
+    for (let i = 0; i < N; i++) {
+      const c = cellOf[i];
+      if (isNode.has(c)) {
+        s.pos[i * 3 + 1] = LIFT + (seed[i] - 0.5) * 0.18;
+        s.mix[i] = 1; s.glow[i] = 1; s.size[i] = DOT * 1.1;
+      } else if (seed[i] < 0.36 && edges.length) {
+        const [a, b] = edges[e++ % edges.length], t = (i % 97) / 97;
+        s.pos[i * 3] = cellX(a) + (cellX(b) - cellX(a)) * t;
+        s.pos[i * 3 + 1] = LIFT;
+        s.pos[i * 3 + 2] = cellZ(a) + (cellZ(b) - cellZ(a)) * t;
+        s.mix[i] = 0.85; s.glow[i] = 0.35; s.size[i] = DOT * 0.7;
+      } else {
+        s.alpha[i] = 0.32;
       }
     }
-    return pts;
+    return s;
   }
 
-  function fitCamera() {
-    var dir = new THREE.Vector3(0, Math.sin(TILT), Math.cos(TILT));
-    var pts = extremePoints();
-    function fitsAt(d) {
-      camera.position.copy(dir).multiplyScalar(d);
-      camera.lookAt(0, 0, 0);
-      camera.updateMatrixWorld(true);
-      camera.updateProjectionMatrix();
-      for (var i = 0; i < pts.length; i++) {
-        var p = pts[i].clone().project(camera);
-        if (!(Math.abs(p.x) <= 1 && Math.abs(p.y) <= 1 && p.z < 1)) return false;
-      }
-      return true;
+  // Shapes that face the camera: in the plane through the origin, perpendicular to the
+  // view, measured in fractions of the visible half-height (hh) and half-width (hw).
+  const view = { hw: 1, hh: 1, right: new THREE.Vector3(1, 0, 0), up: new THREE.Vector3(0, Math.cos(TILT), -Math.sin(TILT)) };
+  function place(s, i, x, y) {   // x, y in world units on the view plane
+    s.pos[i * 3] = view.right.x * x + view.up.x * y;
+    s.pos[i * 3 + 1] = view.right.y * x + view.up.y * y;
+    s.pos[i * 3 + 2] = view.right.z * x + view.up.z * y;
+  }
+  function planeBox(aspect, maxW, maxH, cy) {   // fit a box of this aspect, centred at cy (fraction of hh)
+    let w = view.hw * 2 * maxW, h = w / aspect;
+    if (h > view.hh * 2 * maxH) { h = view.hh * 2 * maxH; w = h * aspect; }
+    return { w, h, cy: cy * view.hh };
+  }
+  const glyphCache = new Map();
+  function glyphStage(g) {
+    const s = stageOf(g.accent);
+    const key = g.text + "|" + g.font;
+    if (!glyphCache.has(key)) glyphCache.set(key, sampleText(g.text, g.font, N, g.outline));
+    const smp = glyphCache.get(key);
+    const box = planeBox(smp.aspect, small ? 0.86 : 0.62, g.maxH, small ? 0.34 : 0.2);
+    const pointSize = Math.max(0.035, Math.min(0.07, box.h / 38));
+    for (let i = 0; i < N; i++) {
+      const u = smp.points[i * 2], v = smp.points[i * 2 + 1];
+      place(s, i, (u - 0.5) * box.w, box.cy - (v - 0.5) * box.h);
+      s.mix[i] = 1; s.glow[i] = 0.3; s.size[i] = pointSize;
     }
-    // Grow the upper bound until the grid genuinely fits, so the search starts from a
-    // bracket where lo does not fit and hi does.
-    var lo = 1, hi = 20;
-    while (hi < FIT_MAX && !fitsAt(hi)) { lo = hi; hi *= 1.6; }
-    for (var it = 0; it < 44; it++) {
-      var mid = (lo + hi) / 2;
-      if (fitsAt(mid)) hi = mid; else lo = mid;
+    s.sample = smp;
+    s.text = g.text;
+    return s;
+  }
+  function barsStage(iterations) {
+    const s = stageOf("amber");
+    const amps = grover(iterations);
+    const box = planeBox(1.6, small ? 0.86 : 0.56, 0.42, small ? 0.34 : 0.2);
+    const per = Math.floor(N / 16), bw = box.w / 16;
+    const base = box.cy - box.h / 2;
+    for (let i = 0; i < N; i++) {
+      const b = Math.min(15, Math.floor(i / per)), k = i - b * per;
+      const hgt = Math.max(0.02, Math.abs(amps[b])) * box.h;
+      const cols = 4, rows = Math.ceil(per / cols);
+      const x = -box.w / 2 + (b + 0.5) * bw + ((k % cols) / (cols - 1) - 0.5) * bw * 0.55;
+      const y = base + (Math.floor(k / cols) / rows) * hgt;
+      place(s, i, x, y);
+      const marked = b === 7;
+      s.mix[i] = marked ? 1 : 0.25; s.glow[i] = marked ? 0.9 : 0.1;
+      s.size[i] = Math.max(0.03, Math.min(0.06, box.h / 50));
     }
-    fitsAt(hi * 1.12);   // 12% padding around the fitted grid
+    return s;
   }
 
+  // Story stages come from the page: the chapter captions carry the numbers as text.
+  function storyGlyphs() {
+    const els = Array.prototype.slice.call(document.querySelectorAll("[data-glyph]"));
+    return els.map((el) => ({ text: el.textContent.trim(), accent: el.getAttribute("data-glyph") || "ledger",
+                              font: '500 {px}px "IBM Plex Mono", ui-monospace, monospace', maxH: 0.3 }));
+  }
+  const hasStory = !!document.getElementById("story");
+  let stages = [];
+  function build() {
+    const list = [gridStage(), graphStage()];
+    if (hasStory) {
+      storyGlyphs().forEach((g) => list.push(glyphStage(g)));
+      list.push(barsStage(0), barsStage(3));
+      list.push(glyphStage({ text: "WK", accent: "ledger", font: '700 {px}px "IBM Plex Sans", system-ui, sans-serif',
+                             maxH: 0.34, outline: true }));
+    }
+    stages = list;
+  }
+
+  // ---- camera: fit the ledger to the viewport (with the parallax envelope)
+  let dist = 20;
   function layout() {
-    var aspect = W / H;
-    // On wide screens nudge the grid right so it sits beside the hero copy, not under it.
-    group.position.x = aspect > 1.3 ? 1.5 : 0;
+    const aspect = W / H;
     camera.aspect = aspect;
-    fitCamera();
+    camera.updateProjectionMatrix();
+    const tanH = Math.tan((FOV / 2) * Math.PI / 180);
+    // The ledger's projected footprint: width is what binds, except on short, wide screens.
+    const needW = (halfW * 1.1) / (tanH * aspect * (aspect < 0.8 ? 1.45 : 1));
+    const needH = (halfD * Math.sin(TILT) + LIFT * Math.cos(TILT) + 0.6) / tanH;
+    dist = Math.max(needW, needH) * 1.08 + halfD * Math.cos(TILT) * 0.6;
+    view.hh = dist * tanH;
+    view.hw = view.hh * aspect;
+    mat.uniforms.uPx.value = (H * DPR) / (2 * tanH);
+    mat.uniforms.uFogNear.value = dist * 0.92;
+    mat.uniforms.uFogFar.value = dist * 1.75;
+    bgMat.uniforms.uAspect.value = aspect;
+    build();
   }
-
-  pickGraph(0);
   layout();
+  // The numbers are drawn in IBM Plex Mono and the monogram in Plex Sans: sample again
+  // once those faces have loaded, so the shapes are never a fallback font's.
+  let fontsReady = false;
+  if (document.fonts && document.fonts.load) {
+    Promise.all([document.fonts.load('500 100px "IBM Plex Mono"', "0123456789%"),
+                 document.fonts.load('700 100px "IBM Plex Sans"', "WK")])
+      .then(() => { fontsReady = true; glyphCache.clear(); build(); }, () => { fontsReady = true; });
+  } else fontsReady = true;
 
-  var mouseX = 0, mouseY = 0, targetRX = 0, targetRY = 0;
-  function onMove(e) {
-    var rect = stage.getBoundingClientRect();
-    mouseX = (e.clientX - rect.left) / rect.width - 0.5;
-    mouseY = (e.clientY - rect.top) / rect.height - 0.5;
-  }
+  // ---- input: pointer parallax, theme, resize, visibility
+  let mx = 0, my = 0, rx = 0, ry = 0;
   if (!reduce) {
-    stage.addEventListener("mousemove", onMove);
-    stage.addEventListener("mouseleave", function () { mouseX = 0; mouseY = 0; });
+    window.addEventListener("pointermove", (e) => {
+      if (e.pointerType !== "mouse") return;
+      mx = e.clientX / innerWidth - 0.5;
+      my = e.clientY / innerHeight - 0.5;
+    }, { passive: true });
   }
-
-  // Cycle: ledger (rest) -> lift -> hold -> settle. Period ~8s.
-  var t0 = performance.now(), CYCLE = 8000;
-  function phaseAt(ms) {
-    var p = (ms % CYCLE) / CYCLE;           // 0..1
-    if (p < 0.50) return 0;                 // rest
-    if (p < 0.62) return (p - 0.50) / 0.12; // lifting
-    if (p < 0.86) return 1;                 // hold
-    return 1 - (p - 0.86) / 0.14;           // settling
-  }
-  function ease(x) { return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2; }
-
-  var lastCycle = 0;
-  function frame(now) {
-    var ms = now - t0;
-    var cycle = Math.floor(ms / CYCLE);
-    if (cycle !== lastCycle) { lastCycle = cycle; pickGraph(cycle); }
-    var ph = ease(phaseAt(ms));
-    var tsec = ms / 1000;
-
-    // Flat ledger. Node cells are collapsed here and drawn by nodeMesh instead.
-    for (var i = 0; i < count; i++) {
-      var b = base[i];
-      var isNode = nodes.indexOf(i) !== -1;
-      var wave = Math.sin(tsec * 1.2 + b.phase) * 0.05;
-      dummy.position.set(b.x, wave, b.z);
-      dummy.rotation.set(0, 0, 0);
-      dummy.scale.set(isNode ? 0 : 1, isNode ? 0 : 1, isNode ? 0 : 1);
-      dummy.updateMatrix();
-      mesh.setMatrixAt(i, dummy.matrix);
-    }
-    mesh.instanceMatrix.needsUpdate = true;
-
-    // Lifted nodes, with this cycle's accent.
-    for (var n = 0; n < NODE_COUNT; n++) {
-      var idx = nodes[n];
-      if (idx === undefined) {
-        dummy.position.set(0, 0, 0); dummy.rotation.set(0, 0, 0); dummy.scale.set(0, 0, 0);
-        dummy.updateMatrix(); nodeMesh.setMatrixAt(n, dummy.matrix);
-        continue;
-      }
-      var nb = base[idx];
-      var nwave = Math.sin(tsec * 1.2 + nb.phase) * 0.05;
-      var s = 1 - ph * 0.35;
-      dummy.position.set(nb.x, nwave + ph * LIFT, nb.z);
-      dummy.rotation.set(0, ph * Math.PI * 0.5, 0);
-      dummy.scale.set(s, 1 + ph * 2.2, s);
-      dummy.updateMatrix();
-      nodeMesh.setMatrixAt(n, dummy.matrix);
-      color.copy(colorTarget[idx]).lerp(accent, ph);
-      nodeMesh.setColorAt(n, color);
-    }
-    nodeMesh.instanceMatrix.needsUpdate = true;
-    if (nodeMesh.instanceColor) nodeMesh.instanceColor.needsUpdate = true;
-    matNode.emissiveIntensity = P.glow * ph;   // faint glow, lifted nodes only
-
-    // Edges follow the nodes
-    var pos = lineGeo.getAttribute("position");
-    if (pos) {
-      for (var e = 0; e < edges.length; e++) {
-        var A = base[edges[e].a], B = base[edges[e].b];
-        var y = ph * LIFT + 0.15;
-        pos.setXYZ(e * 2, A.x, y, A.z);
-        pos.setXYZ(e * 2 + 1, B.x, y, B.z);
-      }
-      pos.needsUpdate = true;
-      lineMat.opacity = ph * 0.9;
-    }
-
-    targetRY += ((mouseX * 0.35) - targetRY) * 0.06;
-    targetRX += ((mouseY * 0.18) - targetRX) * 0.06;
-    group.rotation.y = targetRY;
-    group.rotation.x = targetRX;
-
-    renderer.render(scene, camera);
-    if (!reduce) requestAnimationFrame(frame);
-  }
-
-  // The toggle, or the system setting changing, recolours the scene in place.
-  document.addEventListener("themechange", function () {
-    P = PALETTES[themeName()];
-    C_CELL.setHex(P.cell);
-    C_CELL_ALT.setHex(P.alt);
-    ACCENTS = P.accents.slice();
-    key.intensity = P.key * Math.PI;
-    for (var i = 0; i < count; i++) mesh.setColorAt(i, colorTarget[i]);
-    mesh.instanceColor.needsUpdate = true;
-    pickGraph(lastCycle);
-    if (reduce) frame(t0 + CYCLE * 0.7);
+  document.addEventListener("themechange", () => { applyTheme(); if (reduce || !running) draw(performance.now()); });
+  window.addEventListener("resize", () => {
+    const w = stage.clientWidth, h = stage.clientHeight;
+    if (!w || !h || (w === W && Math.abs(h - H) < 80 && small)) return;   // ignore mobile toolbar resizes
+    W = w; H = h;
+    renderer.setSize(W, H);
+    composer.setSize(W, H);
+    bloom.resolution.set(W / 2, H / 2);
+    layout();
+    if (reduce || !running) draw(performance.now());
   });
 
-  function resize() {
-    W = stage.clientWidth; H = stage.clientHeight;
-    if (!W || !H) return;
-    renderer.setSize(W, H);
-    layout();
-    if (reduce) frame(t0 + CYCLE * 0.7);
-  }
-  window.addEventListener("resize", resize);
+  // ---- per frame
+  const ambient = new Float32Array(CELLS);   // the hero's gentle lift, on a few cells at a time
+  let ambientCycle = -1, ambientCells = [];
+  const smooth = (x) => x * x * (3 - 2 * x);
+  let shown = 0;   // eased stage value actually drawn
+  const accent = new THREE.Color();
+  function draw(now) {
+    const t = now / 1000;
+    const target = Math.max(0, Math.min(stages.length - 1, (window.__story && window.__story.stage) || 0));
+    shown = reduce ? target : shown + (target - shown) * 0.12;
+    if (Math.abs(target - shown) < 0.0005) shown = target;
+    const s0 = Math.min(stages.length - 1, Math.floor(shown)), s1 = Math.min(stages.length - 1, s0 + 1);
+    const f = shown - s0, A = stages[s0], B = stages[s1];
 
-  // Small read-only hook so the corner-cell clipping check can be verified in a real browser.
+    // Ambient lift in the hero: every 8 s a few cells rise and glow, then settle.
+    const CYCLE = 8, cyc = Math.floor(t / CYCLE), p = (t % CYCLE) / CYCLE;
+    if (cyc !== ambientCycle) {
+      ambientCycle = cyc;
+      rngState = 101 + cyc;
+      ambientCells = pickNodes(small ? 5 : 8, 2.2);
+    }
+    const lift = reduce ? 1 : smooth(p < 0.45 ? 0 : p < 0.6 ? (p - 0.45) / 0.15 : p < 0.85 ? 1 : Math.max(0, 1 - (p - 0.85) / 0.15));
+    ambient.fill(0);
+    const heroness = Math.max(0, 1 - shown);   // fades out as the story moves on
+    ambientCells.forEach((c) => { ambient[c] = lift * heroness; });
+
+    for (let i = 0; i < N; i++) {
+      // Stagger per particle so shapes dissolve and re-form rather than slide.
+      const local = smooth(Math.max(0, Math.min(1, f * 1.5 - seed[i] * 0.5)));
+      const i3 = i * 3, amb = ambient[cellOf[i]];
+      const wave = Math.sin(t * 1.2 + (cellOf[i] % COLS) * 0.35 + Math.floor(cellOf[i] / COLS) * 0.55) * 0.05 * heroness;
+      pos[i3] = A.pos[i3] + (B.pos[i3] - A.pos[i3]) * local;
+      pos[i3 + 1] = A.pos[i3 + 1] + (B.pos[i3 + 1] - A.pos[i3 + 1]) * local + wave + amb * 0.9;
+      pos[i3 + 2] = A.pos[i3 + 2] + (B.pos[i3 + 2] - A.pos[i3 + 2]) * local;
+      aAlpha[i] = A.alpha[i] + (B.alpha[i] - A.alpha[i]) * local;
+      aMix[i] = Math.max(A.mix[i] + (B.mix[i] - A.mix[i]) * local, amb);
+      aGlow[i] = Math.max(A.glow[i] + (B.glow[i] - A.glow[i]) * local, amb);
+      aSize[i] = A.size[i] + (B.size[i] - A.size[i]) * local;
+    }
+    geo.attributes.position.needsUpdate = true;
+    geo.attributes.aAlpha.needsUpdate = true;
+    geo.attributes.aMix.needsUpdate = true;
+    geo.attributes.aGlow.needsUpdate = true;
+    geo.attributes.aSize.needsUpdate = true;
+    accent.copy(accentOf[A.accent]).lerp(accentOf[B.accent], smooth(f));
+    mat.uniforms.uAccent.value.copy(accent);
+
+    // The ledger sits beside the hero copy on wide screens, and centres for the story.
+    const wide = W / H > 1.3;
+    const aside = wide ? 1.6 * heroness : 0;
+    mat.uniforms.uScrim.value = wide ? heroness : 0;
+    mat.uniforms.uDim.value = wide ? 0 : 0.45 * heroness;
+    group.position.x += (aside - group.position.x) * (reduce ? 1 : 0.08);
+    ry += (mx * 0.3 - ry) * 0.05;
+    rx += (my * 0.14 - rx) * 0.05;
+    group.rotation.y = ry;
+    group.rotation.x = rx;
+    // Slow drift, a few percent of the distance, so the frame is never quite still.
+    const drift = reduce ? 0 : 1;
+    camera.position.set(Math.sin(t * 0.07) * dist * 0.03 * drift,
+                        Math.sin(TILT) * dist + Math.sin(t * 0.05) * dist * 0.015 * drift,
+                        Math.cos(TILT) * dist);
+    camera.lookAt(0, 0, 0);
+    composer.render();
+  }
+
+  // ---- run only while it can be seen
+  let running = false, visible = true, raf = 0;
+  function loop(now) { if (!running) return; draw(now); raf = requestAnimationFrame(loop); }
+  function update() {
+    const want = !reduce && visible && !document.hidden;
+    if (want && !running) { running = true; raf = requestAnimationFrame(loop); }
+    if (!want && running) { running = false; cancelAnimationFrame(raf); }
+  }
+  new IntersectionObserver((es) => { visible = es[es.length - 1].isIntersecting; update(); }).observe(stage);
+  document.addEventListener("visibilitychange", update);
+
+  // Read-only hooks for the checks: the stage list and the points each number was drawn with.
   window.__hero = {
-    cols: COLS, rows: ROWS,
-    cornerScreen: function () {
-      var rect = renderer.domElement.getBoundingClientRect();
-      var corners = [0, COLS - 1, (ROWS - 1) * COLS, count - 1];
-      return corners.map(function (idx) {
-        var b = base[idx];
-        var v = new THREE.Vector3(b.x, 0, b.z);
-        group.updateMatrixWorld(true);
-        v.applyMatrix4(group.matrixWorld).project(camera);
-        return {
-          index: idx,
-          x: (v.x + 1) / 2 * rect.width,
-          y: (1 - v.y) / 2 * rect.height,
-          ndcX: v.x, ndcY: v.y
-        };
-      });
-    },
-    canvasSize: function () {
-      var rect = renderer.domElement.getBoundingClientRect();
-      return { w: rect.width, h: rect.height };
-    },
-    camDistance: function () { return camera.position.length(); }
+    count: N,
+    fontsReady: () => fontsReady,
+    stages: () => stages.map((s) => s.text || null),
+    shown: () => shown,
+    running: () => running,
+    glyphs: () => stages.filter((s) => s.sample && s.text !== "WK")
+      .map((s) => ({ text: s.text, points: Array.from(s.sample.points), aspect: s.sample.aspect }))
   };
 
-  if (reduce) { frame(t0 + CYCLE * 0.7); } else { requestAnimationFrame(frame); }
-  stage.classList.add("ready");   // fades the canvas in (instantly under reduced motion)
+  if (reduce) draw(performance.now()); else update();
+  stage.classList.add("ready");   // fades the canvas in over the CSS gradient
+  document.dispatchEvent(new CustomEvent("hero:ready"));
 }

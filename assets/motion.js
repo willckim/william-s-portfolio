@@ -27,6 +27,8 @@
     }
     M.lenis = lenis;
 
+    heroReveal();
+
     return function () {
       M.on = false;
       document.documentElement.classList.remove("motion");
@@ -35,4 +37,37 @@
       M.lenis = null;
     };
   });
+
+  // Home headline: split into lines and revealed line by line from under a mask, when
+  // the intro wipes away, or at once on a later visit. The headline is real text that
+  // painted first, so a reveal only ever runs where the words are already covered: under
+  // the intro, or held back by html.hl-pending (whose CSS failsafe shows them at 1.2 s;
+  // after that the reveal is skipped rather than hiding text a person can already see).
+  function heroReveal() {
+    var d = document.documentElement;
+    var copy = document.querySelector(".hero .copy"), h1 = copy && copy.querySelector("h1");
+    var intro = d.classList.contains("intro-on"), pending = d.classList.contains("hl-pending");
+    if (!h1 || !window.SplitText || !(intro || pending) || (pending && performance.now() > 1100)) {
+      d.classList.remove("hl-pending");
+      return;
+    }
+    var rest = copy.querySelectorAll(".status, .lede, .btn-row");
+    var started = false, lines = null;
+    SplitText.create(h1, {
+      type: "lines", mask: "lines", linesClass: "hl-line", autoSplit: true,
+      onSplit: function (self) {
+        lines = gsap.from(self.lines, { yPercent: 118, duration: 1.05, ease: "expo.out", stagger: 0.09, paused: !started });
+        return lines;
+      }
+    });
+    gsap.set(rest, { autoAlpha: 0, y: 14 });
+    d.classList.remove("hl-pending");
+    function go() {
+      started = true;
+      if (lines) lines.play();
+      gsap.to(rest, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.07, delay: 0.3,
+                      clearProps: "opacity,visibility,transform" });
+    }
+    if (intro && !window.__introDone) document.addEventListener("intro:done", go, { once: true }); else go();
+  }
 })();

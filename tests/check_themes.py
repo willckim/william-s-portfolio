@@ -54,7 +54,14 @@ def pairs(t: dict) -> list[tuple[str, str]]:
     return out
 
 
+SETTLED = """() => !document.documentElement.classList.contains('intro-on')
+    && !(window.gsap && gsap.globalTimeline.getChildren(true, true, false).some(t => t.isActive()))"""
+
+
 def axe(page, context: str | None = None) -> list[str]:
+    # Contrast is graded on the page at rest: after the intro, with no reveal mid-fade.
+    # A page that never settles fails here on the timeout rather than being skipped.
+    page.wait_for_function(SETTLED, timeout=8000)
     page.add_script_tag(path=str(AXE))
     res = page.evaluate("""ctx => axe.run(ctx || document, { runOnly: { type: 'tag',
         values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] } })
