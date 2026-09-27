@@ -55,7 +55,7 @@ prefers-reduced-motion it behaves like the calm version. /quick is the recruiter
 hatch: text only, no script. Push only after all five phases pass the gates.
 - [x] 1. Foundation and quick view (GSAP 3.15.0, Lenis 1.3.26, three 0.186.1 import map, /quick)
 - [x] 2. Preloader and hero (intro once per session, 1.5 s cap, particle hero with bloom, split headline)
-- [ ] 3. Scroll story
+- [x] 3. Scroll story (sticky stage, 7 chapter sections, particle numbers graded against the proof strip)
 - [ ] 4. Work index previews
 - [ ] 5. Polish
 - Checks added: check_motion (quick, header link, reduced motion, CDN down). Lighthouse

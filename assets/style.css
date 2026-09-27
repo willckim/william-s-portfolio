@@ -217,9 +217,25 @@ body.home main { padding-top: 0; }
     radial-gradient(58% 46% at 86% 6%, color-mix(in srgb, var(--amber-2) 40%, transparent) 0%, transparent 72%),
     var(--grad-hero);
 }
-.hero .stage { position: absolute; inset: 0; z-index: 0; overflow: visible; }
-.hero .stage canvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity .8s ease; }
-.hero .stage.ready canvas { opacity: 1; }
+/* The stage sits behind the hero (and, with motion, stays put behind the story). */
+.cine { position: relative; }
+.cine-stage {
+  position: absolute; top: 0; left: 0; right: 0; height: calc(100vh - 64px); z-index: 0;
+  background:
+    radial-gradient(58% 46% at 86% 6%, color-mix(in srgb, var(--amber-2) 40%, transparent) 0%, transparent 72%),
+    var(--grad-hero);
+}
+.stage { position: absolute; inset: 0; overflow: hidden; }
+.stage canvas { display: block; width: 100%; height: 100%; opacity: 0; transition: opacity .8s ease; }
+.stage.ready canvas { opacity: 1; }
+.hero, .story { position: relative; z-index: 1; }
+.hero { background: none; }   /* the stage behind it carries the gradient */
+/* Without motion the stage shares the hero's grid cell, so it is exactly the hero's size. */
+@media (prefers-reduced-motion: reduce) {
+  .cine { display: grid; }
+  .cine-stage { position: relative; height: auto; grid-area: 1 / 1; }
+  .hero { grid-area: 1 / 1; }
+}
 .hero .hero-inner { position: relative; z-index: 1; width: 100%; }
 .hero .copy { max-width: 52rem; }
 .hero .copy h1 { font-size: var(--t-hero); line-height: 0.95; letter-spacing: -0.045em; margin: 0 0 24px; font-weight: 680; }
@@ -234,17 +250,55 @@ body.home main { padding-top: 0; }
   background: color-mix(in srgb, var(--bone) 80%, transparent); padding: 4px 8px; border-radius: 4px;
 }
 /* Reduced motion or no WebGL: same gradient, so the band never reads as blank. */
-.hero .stage .fallback {
+.stage .fallback {
   position: absolute; inset: 0; display: none; place-items: center; padding: 24px;
   text-align: center; color: var(--ink-2-soft);
   background:
     radial-gradient(58% 46% at 86% 6%, color-mix(in srgb, var(--amber-2) 40%, transparent) 0%, transparent 72%),
     var(--grad-hero);
 }
-.hero .stage.static .fallback { display: grid; }
-.hero .stage.static canvas { display: none; }
+.stage.static .fallback { display: grid; }
+.stage.static canvas { display: none; }
 @media (max-width: 860px) {
   .hero { min-height: 78vh; min-height: 78svh; padding: 48px 0 64px; }
+}
+.story-skip { display: inline-block; margin-top: 22px; font-size: 14px; font-weight: 500; color: var(--ink-2-soft); text-underline-offset: 3px; }
+.story-skip:hover { color: var(--ledger); }
+
+/* ---------- Home: the story's chapters ----------
+   Without motion (or without JavaScript) they are a list of captions. With motion
+   allowed, each is a screen tall and the stage stays behind them. */
+.story { padding: 32px 0 8px; }
+.chapter { position: relative; }
+.ch-card { max-width: 44rem; padding: 18px 0; border-bottom: 1px solid var(--rule); }
+.ch-n { font-size: 13px; letter-spacing: .08em; color: var(--ink-3); margin: 0 0 8px; }
+.ch-title { font-size: var(--t-h2); line-height: 1.05; letter-spacing: -.03em; font-weight: 680; margin: 0; }
+.ch-title .ch-line-mask { padding-bottom: .1em; margin-bottom: -.1em; }
+.ch-big { font-size: clamp(40px, 6vw, 72px); line-height: 1; letter-spacing: -.02em; color: var(--accent); margin: 0; }
+.ch-label { color: var(--ink-2); margin: 10px 0 12px; max-width: 54ch; }
+.ch-go { font-weight: 600; color: var(--accent); text-underline-offset: 3px; }
+.ch-go::after { content: " \2192"; }
+.ch-mark { margin: 0 0 16px; }
+.ch-mark .mark {
+  display: inline-grid; place-items: center; height: 1.5em; padding: 0 .28em; font-size: clamp(40px, 6vw, 64px);
+  font-weight: 700; letter-spacing: -.03em; border: 3px solid var(--ink); border-radius: .22em;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cine-stage { position: sticky; height: 100vh; margin-bottom: -100vh; }
+  .story { padding: 0; }
+  .chapter { min-height: 100vh; display: flex; align-items: flex-end; padding-bottom: 11vh; }
+  .chapter > .wrap { width: 100%; }
+  .chapter.ch-tall { min-height: 160vh; }
+  .ch-card {
+    padding: 20px 24px 22px; border: 1px solid color-mix(in srgb, var(--rule) 70%, transparent); border-radius: 14px;
+    background: color-mix(in srgb, var(--bone) 84%, transparent); backdrop-filter: blur(10px);
+  }
+  .ch-title { font-size: clamp(30px, 5vw, 68px); }
+  /* Once the particles are drawing the numbers and the monogram, the HTML copies step
+     back: still read by screen readers, no longer drawn twice. */
+  html.glyphs-live .ch-big { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  html.glyphs-live .ch-mark .mark { display: none; }
+  html.glyphs-live .ch-mark { margin: 0; }
 }
 
 /* ---------- Home: intro (first visit per session) ---------- */

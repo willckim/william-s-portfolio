@@ -32,7 +32,7 @@
         target: [{ by: "css", value: "section.proof" }],
         title: "Every number has a source",
         body: "Each figure links to the case study behind it. None of them is a number without its work shown.",
-        targetName: "the row of results", instruction: "Find the four results under the header" },
+        targetName: "the row of results", instruction: "Find the four results below the story" },
       { tab: "work", kind: "region", advance: "next",
         target: [{ by: "css", value: "#ortho table.book" }],
         title: "Five projects, five case studies",

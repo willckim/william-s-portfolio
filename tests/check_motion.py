@@ -6,6 +6,10 @@
    (the control, so the reduced-motion case cannot pass by the layer never loading).
 4. The CDN down: every page still renders its content with no page errors.
 5. The intro: once per session, 1.5 s cap under a stalled CDN, Skip, the headline as LCP.
+6. The story: the particle numbers are the proof strip's values and form their shapes
+   (graded against text drawn independently, with a mismatched pairing as the mutant),
+   scroll scrubs each chapter, rendering pauses off screen, and reduced motion shows
+   all five chapters' captions as a plain list.
 
 Every guard is run on a case where it must pass as well as where it must fail.
 
@@ -178,6 +182,147 @@ def intro(rep: Report, browser, base: str) -> None:
     ctx.close()
 
 
+# Draws `text` in the proof strip's own face, independently of the hero's sampler, and
+# grades the hero's points against it: the share of points that land on ink, and the
+# share of ink that has a point near it. Both are measured in the text's ink box.
+SHAPE = """async ({ text, points }) => {
+  await document.fonts.load('500 100px "IBM Plex Mono"', text);
+  const px = 160, c = document.createElement('canvas'), g = c.getContext('2d');
+  g.font = `500 ${px}px "IBM Plex Mono", monospace`;
+  const w = Math.ceil(g.measureText(text).width) + 40, h = Math.ceil(px * 1.6);
+  c.width = w; c.height = h;
+  g.font = `500 ${px}px "IBM Plex Mono", monospace`; g.textBaseline = 'middle'; g.fillText(text, 20, h / 2);
+  const d = g.getImageData(0, 0, w, h).data, ink = (x, y) => x >= 0 && y >= 0 && x < w && y < h && d[(y * w + x) * 4 + 3] > 100;
+  let x0 = w, y0 = h, x1 = 0, y1 = 0;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) if (ink(x, y)) {
+    x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+  const near = (x, y, r) => { for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) if (ink(x + dx, y + dy)) return true; return false; };
+  const cell = new Set(); let on = 0; const n = points.length / 2;
+  for (let i = 0; i < n; i++) {
+    const x = Math.round(x0 + points[2 * i] * (x1 - x0)), y = Math.round(y0 + points[2 * i + 1] * (y1 - y0));
+    if (near(x, y, 2)) on++;
+    cell.add((x >> 2) + ',' + (y >> 2));
+  }
+  let total = 0, covered = 0;
+  for (let y = y0; y <= y1; y += 3) for (let x = x0; x <= x1; x += 3) if (ink(x, y)) {
+    total++;
+    let hit = false;
+    for (let dy = -1; dy <= 1 && !hit; dy++) for (let dx = -1; dx <= 1 && !hit; dx++)
+      if (cell.has(((x >> 2) + dx) + ',' + ((y >> 2) + dy))) hit = true;
+    if (hit) covered++;
+  }
+  return { onInk: on / n, coverage: covered / total, n };
+}"""
+
+
+def story(rep: Report, browser, base: str) -> None:
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    ctx.add_init_script("try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}")
+    page = ctx.new_page()
+    page.goto(base + "/", wait_until="networkidle")
+    page.wait_for_function("window.__hero && window.__hero.fontsReady() && window.__hero.glyphs().length === 3",
+                           timeout=20000)
+    proof = page.eval_on_selector_all(".proof > a", """e => e.map(a => ({ href: a.getAttribute('href'),
+        num: a.querySelector('.num').textContent }))""")
+    values = {p["num"]: p["href"] for p in proof}
+    glyphs = page.evaluate("window.__hero.glyphs()")
+    chapters = page.eval_on_selector_all("[data-glyph]", """e => e.map(h => ({ text: h.textContent.trim(),
+        href: h.closest('.ch-card').querySelector('.ch-go').getAttribute('href') }))""")
+    texts = [g["text"] for g in glyphs]
+    rep.check("the particles draw 36h → 10m, then 95–97%, then 3",
+              texts == ["36h → 10m", "95–97%", "3"], f"{texts}")
+    rep.check("each particle number is exactly a proof strip value",
+              bool(texts) and all(t in values for t in texts), f"proof strip {list(values)}")
+    rep.check("each number's chapter links where the proof strip does",
+              all(values.get(c["text"]) == c["href"] for c in chapters), f"{chapters}")
+    for g in glyphs:
+        want = g["text"] if g["text"] in values else None
+        if want is None:
+            rep.check(f"particle shape of {g['text']!r}", False, "not a proof strip value")
+            continue
+        m = page.evaluate(SHAPE, {"text": want, "points": g["points"]})
+        rep.check(f"particles form {want!r}: points on its ink, ink covered by points",
+                  m["onInk"] >= 0.95 and m["coverage"] >= 0.8,
+                  f"on ink {m['onInk']:.3f}, coverage {m['coverage']:.3f}, {m['n']} points")
+    # Mutant: the same grading, on shapes paired with the wrong text, must fail.
+    if len(glyphs) == 3:
+        wrong = [page.evaluate(SHAPE, {"text": glyphs[(i + 1) % 3]["text"], "points": g["points"]})
+                 for i, g in enumerate(glyphs)]
+        rep.check("mutant: every shape graded against another number fails the gate",
+                  all(not (m["onInk"] >= 0.95 and m["coverage"] >= 0.8) for m in wrong),
+                  "; ".join(f"on {m['onInk']:.2f} cov {m['coverage']:.2f}" for m in wrong))
+
+    # Scrubbing: at each chapter's centre the scroll asks for that chapter's shape, and
+    # the particles settle on it. The caption has revealed.
+    rep.check("motion on: the stage is sticky, nothing is pinned",
+              page.evaluate("getComputedStyle(document.querySelector('.cine-stage')).position") == "sticky"
+              and page.evaluate("ScrollTrigger.getAll().every(t => !t.pin)"))
+    secs = page.eval_on_selector_all("#story .chapter", """e => e.map(c => [c.getBoundingClientRect().top + scrollY,
+        c.offsetHeight, c.dataset.stage])""")
+    for i, (top, hh, st) in enumerate(secs):
+        want = st.split()
+        for k, v in enumerate(want):
+            frac = 0.5 if len(want) == 1 else (k + 0.5) / len(want)
+            page.evaluate("y => window.scrollTo({ top: y, behavior: 'instant' })", top + hh * frac - 450)
+            page.wait_for_timeout(1400)
+            got = page.evaluate("[window.__story.stage, window.__hero.shown()]")
+            ok = abs(got[0] - float(v)) < 0.01 and abs(got[1] - float(v)) < 0.06
+            rep.check(f"chapter {i + 1}, stage {v}: scroll scrubs to it and the particles settle", ok,
+                      f"scroll {got[0]:.3f}, drawn {got[1]:.3f}")
+        vis = page.evaluate(f"""() => {{ const c = document.querySelectorAll('#story .ch-card')[{i}], s = getComputedStyle(c);
+            return s.visibility === 'visible' && +s.opacity === 1; }}""")
+        rep.check(f"chapter {i + 1}: its caption has revealed", vis)
+    page.evaluate("window.scrollTo({ top: document.body.scrollHeight, behavior: \'instant\' })")
+    page.wait_for_timeout(600)
+    rep.check("scrolling carries on past the story to the proof strip",
+              page.evaluate("document.getElementById('facts').getBoundingClientRect().bottom < innerHeight"))
+    ctx.close()
+
+    # Paused off screen, running on screen (phone, where the stage leaves the viewport).
+    ctx = browser.new_context(viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True)
+    ctx.add_init_script("try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}")
+    page = ctx.new_page()
+    page.goto(base + "/", wait_until="networkidle")
+    page.mouse.wheel(0, 10)   # a first sign of a person starts the scene on a phone
+    page.wait_for_function("window.__hero && window.__hero.running()", timeout=15000)
+    page.wait_for_timeout(900)  # let Lenis finish easing that wheel before jumping
+    rep.check("control: on screen, the scene renders", page.evaluate("window.__hero.running()"))
+    page.evaluate("window.scrollTo({ top: document.body.scrollHeight, behavior: \'instant\' })")
+    page.wait_for_timeout(700)
+    rep.check("off screen, the scene stops rendering", not page.evaluate("window.__hero.running()"))
+    page.evaluate("window.scrollTo({ top: 0, behavior: \'instant\' })")
+    page.wait_for_timeout(700)
+    rep.check("back on screen, it renders again", page.evaluate("window.__hero.running()"))
+    ctx.close()
+
+    # Reduced motion: no scrub, no Lenis, all five chapters' captions as normal content.
+    CAPTIONS = """() => [...document.querySelectorAll('#story .ch-card')].map(c => { const s = getComputedStyle(c);
+        return s.visibility === 'visible' && +s.opacity === 1 && c.getBoundingClientRect().height > 0; })"""
+    for motion in ("no-preference", "reduce"):
+        ctx = browser.new_context(reduced_motion=motion, viewport={"width": 1440, "height": 900})
+        ctx.add_init_script("try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}")
+        page = ctx.new_page()
+        page.goto(base + "/", wait_until="networkidle")
+        page.wait_for_timeout(400)
+        shown = page.evaluate(CAPTIONS)
+        if motion == "reduce":
+            state = page.evaluate("""() => ({ story: 'stage' in (window.__story || {}),
+                triggers: window.ScrollTrigger ? ScrollTrigger.getAll().length : 0,
+                lenis: document.documentElement.classList.contains('lenis'),
+                sticky: getComputedStyle(document.querySelector('.cine-stage')).position === 'sticky',
+                tall: [...document.querySelectorAll('#story .chapter')].some(c => c.offsetHeight > innerHeight * 0.6) })""")
+            rep.check("reduced motion: no scroll scrub, no Lenis, no sticky stage, no screen-tall chapters",
+                      not any(state.values()), f"{state}")
+            nums = page.eval_on_selector_all("[data-glyph]", """e => e.map(h => { const s = getComputedStyle(h);
+                return s.position !== 'absolute' && +s.opacity === 1; })""")
+            rep.check(f"reduced motion: all {len(shown)} chapter captions show as normal content, numbers included",
+                      len(shown) == 7 and all(shown) and len(nums) == 3 and all(nums), f"{shown} {nums}")
+        else:
+            rep.check("control, motion on: captions further down wait for their chapter",
+                      len(shown) == 7 and not all(shown), f"{shown}")
+        ctx.close()
+
+
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     rep = Report("Motion layer")
@@ -188,6 +333,7 @@ def main() -> int:
             browser = p.chromium.launch()
             quick(rep, browser, base)
             intro(rep, browser, base)
+            story(rep, browser, base)
             reduced(rep, browser, base)
             cdn_down(rep, browser, base)
             browser.close()
