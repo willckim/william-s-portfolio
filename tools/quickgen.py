@@ -82,7 +82,7 @@ def credentials() -> tuple[list[tuple[str, str]], list[tuple[str, str, str]]]:
 def contact() -> list[tuple[str, str, str]]:
     page = _read("contact.html")
     items = _one(r'<ul class="contact-list">(.*?)</ul>', page, "the contact list").group(1)
-    found = _all(r'<span class="k">(.*?)</span><span><a href="([^"]+)">(.*?)</a>', items, "contact rows", 5)
+    found = _all(r'<span class="k">(.*?)</span><span><a href="([^"]+)">(.*?)</a>', items, "contact rows", 4)
     return [(_text(k), href, _text(t)) for k, href, t in found]
 
 
