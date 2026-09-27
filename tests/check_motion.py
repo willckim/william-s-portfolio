@@ -10,6 +10,9 @@
    (graded against text drawn independently, with a mismatched pairing as the mutant),
    scroll scrubs each chapter, rendering pauses off screen, and reduced motion shows
    all five chapters' captions as a plain list.
+7. Work: hover and keyboard previews on desktop, drawn thumbnails on touch, none under
+   reduced motion. Case studies: diagrams draw in with every label readable throughout,
+   and leave no inline style behind. Titles reveal with their text intact.
 
 Every guard is run on a case where it must pass as well as where it must fail.
 
@@ -323,6 +326,107 @@ def story(rep: Report, browser, base: str) -> None:
         ctx.close()
 
 
+INKED = """sel => { const c = document.querySelector(sel); if (!c || !c.width) return 0;
+    const d = c.getContext('2d').getImageData(0, 0, c.width, c.height).data; let n = 0;
+    for (let i = 3; i < d.length; i += 4) if (d[i] > 0) n++; return n / (d.length / 4); }"""
+
+
+def work(rep: Report, browser, base: str) -> None:
+    slugs = ["concur", "royalty", "fast-close", "time-tracker", "consolidation"]
+    for motion in ("no-preference", "reduce"):
+        ctx = browser.new_context(reduced_motion=motion, viewport={"width": 1440, "height": 900})
+        page = ctx.new_page()
+        errors: list[str] = []
+        page.on("pageerror", lambda e: errors.append(str(e)))
+        page.goto(base + "/work", wait_until="networkidle")
+        if motion == "no-preference":
+            rows = page.eval_on_selector_all(".ix-row", """e => e.map(r => [r.dataset.preview,
+                r.querySelector('.ix-link').getAttribute('href')])""")
+            rep.check("/work: five Ortho names, each linking its case study, each with a preview",
+                      rows == [[s, f"/work/{s}"] for s in slugs]
+                      and page.evaluate("window.__previews.names").__len__() == 5, f"{rows}")
+            for s in slugs:
+                name = page.locator(f'.ix-row[data-preview="{s}"] .ix-name')
+                name.scroll_into_view_if_needed()
+                b = name.bounding_box()
+                page.mouse.move(b["x"] + 40, b["y"] + b["height"] / 2)
+                page.mouse.move(b["x"] + 90, b["y"] + b["height"] / 2)
+                page.wait_for_timeout(500)
+                on = page.evaluate("document.querySelector('.ix-preview.on') !== null")
+                ink = page.evaluate(INKED, ".ix-preview canvas")
+                rep.check(f"desktop hover on {s}: its live preview shows and draws", on and ink > 0.005
+                          and page.evaluate("window.__previews.active()") == s, f"ink {ink:.3f}")
+            page.mouse.move(5, 5)
+            page.wait_for_timeout(400)
+            rep.check("moving off the names hides the preview",
+                      page.evaluate("document.querySelector('.ix-preview.on') === null"))
+            page.focus('.ix-row[data-preview="royalty"] .ix-link')
+            page.keyboard.press("Shift+Tab")
+            page.keyboard.press("Tab")
+            page.wait_for_timeout(300)
+            rep.check("keyboard focus on a name shows its preview too",
+                      page.evaluate("window.__previews.active()") == "royalty")
+            rep.check("desktop: the inline thumbnails stay hidden",
+                      page.evaluate("[...document.querySelectorAll('.ix-thumb')].every(c => !c.offsetParent)"))
+        else:
+            name = page.locator('.ix-row[data-preview="concur"] .ix-name')
+            b = name.bounding_box()
+            page.mouse.move(b["x"] + 40, b["y"] + 20)
+            page.mouse.move(b["x"] + 90, b["y"] + 20)
+            page.wait_for_timeout(400)
+            rep.check("reduced motion: no preview follows the cursor",
+                      page.evaluate("document.querySelector('.ix-preview.on') === null"))
+        rep.check(f"/work ({motion}): no page errors", not errors, "; ".join(errors[:2]))
+        ctx.close()
+
+    ctx = browser.new_context(viewport={"width": 390, "height": 844}, is_mobile=True, has_touch=True)
+    page = ctx.new_page()
+    page.goto(base + "/work", wait_until="networkidle")
+    thumbs = []
+    for s in slugs:
+        page.locator(f'.ix-row[data-preview="{s}"] .ix-thumb').scroll_into_view_if_needed()
+        page.wait_for_timeout(350)
+        thumbs.append(page.evaluate(INKED, f'.ix-row[data-preview="{s}"] .ix-thumb'))
+    rep.check("touch: every row shows its preview inline as a drawn thumbnail",
+              all(t > 0.005 for t in thumbs), " ".join(f"{t:.3f}" for t in thumbs))
+    ctx.close()
+
+
+def case_studies(rep: Report, browser, base: str) -> None:
+    TEXT = """() => [...document.querySelectorAll('svg.diagram text')].every(t => +getComputedStyle(t).opacity === 1)"""
+    STYLED = """() => [...document.querySelectorAll('svg.diagram *')].filter(e => e.getAttribute('style')).length"""
+    for motion in ("no-preference", "reduce"):
+        ctx = browser.new_context(reduced_motion=motion, viewport={"width": 1280, "height": 800})
+        page = ctx.new_page()
+        page.goto(base + "/work/concur", wait_until="networkidle")
+        heads = page.eval_on_selector_all(".ledger > aside h2", "e => e.map(h => h.textContent)")
+        if motion == "reduce":
+            rep.check("reduced motion: the diagram is fully drawn from the start, nothing styled over it",
+                      page.evaluate(STYLED) == 0 and page.evaluate(TEXT))
+            ctx.close()
+            continue
+        before = page.evaluate("""() => { const b = document.querySelector('svg.diagram .dg-box');
+            return getComputedStyle(b).strokeDashoffset; }""")
+        page.evaluate("document.querySelector('svg.diagram').scrollIntoView({ block: 'center', behavior: 'instant' })")
+        page.wait_for_timeout(350)
+        mid_text = page.evaluate(TEXT)
+        mid = page.evaluate("""() => [...document.querySelectorAll('svg.diagram .dg-box, svg.diagram .dg-arrow')]
+            .some(e => parseFloat(getComputedStyle(e).strokeDashoffset) > 0)""")
+        rep.check("the diagram draws itself in as it arrives (strokes mid-trace)", mid and before != "0px",
+                  f"offset before arriving {before}")
+        rep.check("mid-draw, every label in the diagram is fully readable", mid_text)
+        page.wait_for_timeout(2500)
+        rep.check("once drawn, the diagram is back to its stylesheet: no leftover inline styles",
+                  page.evaluate(STYLED) == 0)
+        page.evaluate("window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' })")
+        page.wait_for_timeout(1500)
+        after = page.eval_on_selector_all(".ledger > aside h2", """e => e.map(h => [h.textContent,
+            getComputedStyle(h).visibility === 'visible', h.querySelectorAll('.t-line').length])""")
+        rep.check("section titles revealed, with their text intact and the split undone",
+                  [a[0] for a in after] == heads and all(a[1] and a[2] == 0 for a in after), f"{after}")
+        ctx.close()
+
+
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     rep = Report("Motion layer")
@@ -334,6 +438,8 @@ def main() -> int:
             quick(rep, browser, base)
             intro(rep, browser, base)
             story(rep, browser, base)
+            work(rep, browser, base)
+            case_studies(rep, browser, base)
             reduced(rep, browser, base)
             cdn_down(rep, browser, base)
             browser.close()

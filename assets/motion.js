@@ -29,6 +29,8 @@
 
     heroReveal();
     story();
+    titles();
+    diagrams();
 
     return function () {
       M.on = false;
@@ -126,6 +128,61 @@
         tl.eventCallback("onComplete", function () { split.revert(); });   // lines re-flow freely after
       }
       tl.from(parts, { autoAlpha: 0, y: 16, duration: 0.6, ease: "power3.out", stagger: 0.06 }, 0.15);
+    });
+  }
+
+  // Is the element already on screen at load? Then it is left alone: a reveal only
+  // plays on something arriving, never on words a person may already be reading.
+  function inView(el) {
+    var r = el.getBoundingClientRect();
+    return r.top < window.innerHeight && r.bottom > 0;
+  }
+
+  // Section titles: split into lines and raised from under a mask as they arrive.
+  function titles() {
+    var TITLES = {
+      case: ".ledger > aside h2"
+    };
+    if (!window.SplitText) return;
+    var page = document.body.getAttribute("data-page") || "";
+    var sel = TITLES[page.indexOf("case-") === 0 ? "case" : page];
+    if (!sel) return;
+    document.querySelectorAll(sel).forEach(function (h) {
+      if (inView(h)) return;
+      var split = SplitText.create(h, { type: "lines", mask: "lines", linesClass: "t-line" });
+      gsap.from(split.lines, {
+        yPercent: 110, duration: 0.8, ease: "expo.out", stagger: 0.08,
+        scrollTrigger: { trigger: h, start: "top 88%", once: true },
+        onComplete: function () { split.revert(); }
+      });
+    });
+  }
+
+  // Case study diagrams draw themselves: outlines and arrows trace in, the colour bars
+  // grow, the arrowheads land, stage by stage. The words are never faded or moved,
+  // so the diagram reads at every moment, and afterwards every style is cleared back
+  // to the stylesheet's.
+  function diagrams() {
+    document.querySelectorAll("svg.diagram").forEach(function (svg) {
+      var strokes = Array.prototype.slice.call(svg.querySelectorAll(".dg-box, .dg-arrow"));
+      var bars = svg.querySelectorAll(".dg-bar"), heads = svg.querySelectorAll(".dg-head, .dg-group");
+      var tl = gsap.timeline({
+        scrollTrigger: { trigger: svg, start: "top 82%", once: true },
+        onComplete: function () {
+          strokes.concat([].slice.call(bars), [].slice.call(heads)).forEach(function (el) {
+            gsap.killTweensOf(el);
+            el.removeAttribute("style");   // clearProps leaves an SVG transform-origin behind
+          });
+        }
+      });
+      strokes.forEach(function (el, i) {
+        var len = el.getTotalLength ? Math.ceil(el.getTotalLength()) : 0;
+        if (!len) return;
+        tl.fromTo(el, { strokeDasharray: len, strokeDashoffset: len },
+                  { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, i * 0.12);
+      });
+      tl.from(bars, { scaleY: 0, transformOrigin: "50% 0%", duration: 0.4, ease: "power2.out", stagger: 0.14 }, 0.1);
+      tl.from(heads, { opacity: 0, duration: 0.3, stagger: 0.14 }, 0.3);
     });
   }
 })();

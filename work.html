@@ -53,41 +53,73 @@
       <!-- ===================== AT ORTHO ===================== -->
       <section class="panel" id="ortho" role="tabpanel" aria-labelledby="tab-ortho" data-accent="ledger">
         <p class="small" style="margin:14px 0 0">Ortho Molecular Products, Barrington, IL. Staff Accountant working across technical solutions and financial systems, March 2026 to present. The three production systems below keep accountant review and posting authority, write audit logs, and ship with written procedures. The Fast Close item is a fix to an existing report, and the consolidation is specification work. Each name opens its case study. The automations run as Azure Functions written in C#/.NET.</p>
-        <table class="book">
-          <thead><tr><th>System</th><th>What it does</th><th>Stack</th><th>Outcome</th></tr></thead>
-          <tbody>
-            <tr>
-              <td class="name"><a href="/work/concur">Concur Automation</a><span class="kind">Production · LLM system</span></td>
-              <td>Classifies corporate card transactions, about 1,900 per cycle, built in C#/.NET on Azure Functions, calling the OpenAI API inside deterministic rule guardrails. Benchmarked against the human reviewers. Humans still post.</td>
-              <td class="stack">C#/.NET · Azure Functions · OpenAI API · SAP Concur · rule engine</td>
-              <td class="outcome"><span class="num">36 h → 10 min</span> per month. 95 to 97% exact match to human reviewers, zero misclassifications.</td>
-            </tr>
-            <tr>
-              <td class="name"><a href="/work/royalty">Royalty Calculation Pipeline</a><span class="kind">Production</span></td>
-              <td>Rule-based C#/.NET pipeline running as an Azure Function that applies per-family rate logic to monthly activity data with automated validation checks, replacing a manual Excel and pivot-table workflow for a critical month-end report.</td>
-              <td class="stack">C#/.NET · Azure Functions · validation checks</td>
-              <td class="outcome">Monthly royalty check cut from about <span class="num">30 to 10 min</span>.</td>
-            </tr>
-            <tr>
-              <td class="name"><a href="/work/fast-close">Fast Close Report Fix</a><span class="kind">Financial systems</span></td>
-              <td>The SQL-based Fast Close report had produced wrong data for months. I wrote the SQL myself to isolate the defect, gave BI the exact fix, and followed through until it held.</td>
-              <td class="stack">T-SQL · BI partnership</td>
-              <td class="outcome">The August close ran clean, after four months of follow-through.</td>
-            </tr>
-            <tr>
-              <td class="name"><a href="/work/time-tracker">Accounting Time Tracker</a><span class="kind">Production</span></td>
-              <td>Timekeeping tool for the accounting building, built as an Azure Function: hours captured across roles and activities, approval workflow, full audit trail. Piloted, rebuilt after IT review, now in production.</td>
-              <td class="stack">Azure Functions · C#/.NET · approval workflow</td>
-              <td class="outcome">In production, after a pilot and a rebuild for IT review.</td>
-            </tr>
-            <tr>
-              <td class="name"><a href="/work/consolidation">Practitioner Website Consolidation</a><span class="kind">Cross-functional · in progress, launch Dec 31, 2026</span></td>
-              <td>Selected as the cross-functional bridge between IT, Accounting, and Marketing for consolidating three practitioner platforms into one. I author the specification layer: a workflows document, a decisions sheet, and a clickable HTML prototype.</td>
-              <td class="stack">Specification · HTML prototype · ERP field design</td>
-              <td class="outcome">Surfaced a tax compliance requirement missing from all project documentation (W-9/TIN and verified banking before proceeds accrue) and drove it into the ERP design.</td>
-            </tr>
-          </tbody>
-        </table>
+        <ol class="ix" aria-label="Ortho projects, each opening its case study">
+          <li class="ix-row" data-preview="concur">
+            <a class="ix-link" href="/work/concur" data-cursor="View">
+              <span class="ix-n num" aria-hidden="true">01</span>
+              <span class="ix-name">Concur Automation</span>
+              <span class="ix-kind">Production · LLM system</span>
+            </a>
+            <canvas class="ix-thumb" aria-hidden="true"></canvas>
+            <div class="ix-body">
+              <p class="ix-what">Classifies corporate card transactions, about 1,900 per cycle, built in C#/.NET on Azure Functions, calling the OpenAI API inside deterministic rule guardrails. Benchmarked against the human reviewers. Humans still post.</p>
+              <p class="ix-stack"><span class="ix-k">Stack</span> C#/.NET · Azure Functions · OpenAI API · SAP Concur · rule engine</p>
+              <p class="ix-outcome"><span class="ix-k">Outcome</span> <span class="num">36 h → 10 min</span> per month. 95 to 97% exact match to human reviewers, zero misclassifications.</p>
+            </div>
+          </li>
+          <li class="ix-row" data-preview="royalty">
+            <a class="ix-link" href="/work/royalty" data-cursor="View">
+              <span class="ix-n num" aria-hidden="true">02</span>
+              <span class="ix-name">Royalty Calculation Pipeline</span>
+              <span class="ix-kind">Production</span>
+            </a>
+            <canvas class="ix-thumb" aria-hidden="true"></canvas>
+            <div class="ix-body">
+              <p class="ix-what">Rule-based C#/.NET pipeline running as an Azure Function that applies per-family rate logic to monthly activity data with automated validation checks, replacing a manual Excel and pivot-table workflow for a critical month-end report.</p>
+              <p class="ix-stack"><span class="ix-k">Stack</span> C#/.NET · Azure Functions · validation checks</p>
+              <p class="ix-outcome"><span class="ix-k">Outcome</span> Monthly royalty check cut from about <span class="num">30 to 10 min</span>.</p>
+            </div>
+          </li>
+          <li class="ix-row" data-preview="fast-close">
+            <a class="ix-link" href="/work/fast-close" data-cursor="View">
+              <span class="ix-n num" aria-hidden="true">03</span>
+              <span class="ix-name">Fast Close Report Fix</span>
+              <span class="ix-kind">Financial systems</span>
+            </a>
+            <canvas class="ix-thumb" aria-hidden="true"></canvas>
+            <div class="ix-body">
+              <p class="ix-what">The SQL-based Fast Close report had produced wrong data for months. I wrote the SQL myself to isolate the defect, gave BI the exact fix, and followed through until it held.</p>
+              <p class="ix-stack"><span class="ix-k">Stack</span> T-SQL · BI partnership</p>
+              <p class="ix-outcome"><span class="ix-k">Outcome</span> The August close ran clean, after four months of follow-through.</p>
+            </div>
+          </li>
+          <li class="ix-row" data-preview="time-tracker">
+            <a class="ix-link" href="/work/time-tracker" data-cursor="View">
+              <span class="ix-n num" aria-hidden="true">04</span>
+              <span class="ix-name">Accounting Time Tracker</span>
+              <span class="ix-kind">Production</span>
+            </a>
+            <canvas class="ix-thumb" aria-hidden="true"></canvas>
+            <div class="ix-body">
+              <p class="ix-what">Timekeeping tool for the accounting building, built as an Azure Function: hours captured across roles and activities, approval workflow, full audit trail. Piloted, rebuilt after IT review, now in production.</p>
+              <p class="ix-stack"><span class="ix-k">Stack</span> Azure Functions · C#/.NET · approval workflow</p>
+              <p class="ix-outcome"><span class="ix-k">Outcome</span> In production, after a pilot and a rebuild for IT review.</p>
+            </div>
+          </li>
+          <li class="ix-row" data-preview="consolidation">
+            <a class="ix-link" href="/work/consolidation" data-cursor="View">
+              <span class="ix-n num" aria-hidden="true">05</span>
+              <span class="ix-name">Practitioner Website Consolidation</span>
+              <span class="ix-kind">Cross-functional · in progress, launch Dec 31, 2026</span>
+            </a>
+            <canvas class="ix-thumb" aria-hidden="true"></canvas>
+            <div class="ix-body">
+              <p class="ix-what">Selected as the cross-functional bridge between IT, Accounting, and Marketing for consolidating three practitioner platforms into one. I author the specification layer: a workflows document, a decisions sheet, and a clickable HTML prototype.</p>
+              <p class="ix-stack"><span class="ix-k">Stack</span> Specification · HTML prototype · ERP field design</p>
+              <p class="ix-outcome"><span class="ix-k">Outcome</span> Surfaced a tax compliance requirement missing from all project documentation (W-9/TIN and verified banking before proceeds accrue) and drove it into the ERP design.</p>
+            </div>
+          </li>
+        </ol>
       </section>
 
       <!-- ===================== PRODUCTS ===================== -->
@@ -164,6 +196,7 @@
     </div>
   </footer>
 
+  <script src="/assets/work-previews.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" integrity="sha384-XmJ9SoHtVOHoQUcKvFAzVXwdkKo1Ie3bhmSoIAkcdsHGaIrVJIkmozyq0FJeb/Ly" crossorigin="anonymous" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js" integrity="sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF" crossorigin="anonymous" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/SplitText.min.js" integrity="sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr" crossorigin="anonymous" defer></script>
