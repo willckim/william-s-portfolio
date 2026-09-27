@@ -14,6 +14,7 @@ names. "What I'd do next" is a proposal, phrased as one.
 
 from __future__ import annotations
 
+import json
 import re
 import sys
 from dataclasses import dataclass
@@ -23,6 +24,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from diagram import Diagram, Group, Stage, render  # noqa: E402
 import labgen  # noqa: E402
+import quickgen  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -51,14 +53,15 @@ def header(current: str) -> str:
         for key, href, accent, label in NAV)
     return f'''<header class="site-header">
     <div class="wrap">
-      <a class="brand" href="/"><span class="mark">WK</span>William Kim<span class="sub">Finance × Engineering</span></a>
-      <button class="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button>
+      <a class="brand" href="/"><span class="mark" aria-hidden="true">WK</span><span class="brand-name">William Kim</span><span class="sub">Finance × Engineering</span></a>
+      <button class="menu-btn" aria-expanded="false" aria-controls="nav">{BARS}<span class="menu-label">Menu</span></button>
       <nav aria-label="Primary">
         <ul class="tabs" id="nav">
 {items}
         </ul>
       </nav>
       <div class="tools">
+        <a class="quick-link" href="/quick">Quick view</a>
         <button class="search-btn" type="button" data-palette-open aria-keyshortcuts="Control+K Meta+K">{GLASS}<span class="search-label">Search</span><kbd>Ctrl K</kbd></button>
         <button class="theme-btn" type="button" data-theme-toggle aria-pressed="false"><span class="sr-only">Dark theme</span>{SUN}{MOON}</button>
       </div>
@@ -82,8 +85,64 @@ SUN = ('<svg class="sun" viewBox="0 0 24 24" aria-hidden="true" fill="none" stro
        '17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>')
 GLASS = ('<svg class="search-ico" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" '
          'stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>')
+BARS = ('<svg class="bars" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" '
+        'stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>')
 MOON = ('<svg class="moon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" '
         'stroke-width="2" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>')
+
+# Motion: GSAP with ScrollTrigger and SplitText, and Lenis, pinned and integrity-checked
+# from jsDelivr. Deferred, so they never block the first paint, and motion.js does
+# nothing with them under prefers-reduced-motion. Every page reads in full without them.
+CDN = "https://cdn.jsdelivr.net/npm/"
+MOTION_LIBS = (
+    ("gsap@3.15.0/dist/gsap.min.js",
+     "sha384-XmJ9SoHtVOHoQUcKvFAzVXwdkKo1Ie3bhmSoIAkcdsHGaIrVJIkmozyq0FJeb/Ly"),
+    ("gsap@3.15.0/dist/ScrollTrigger.min.js",
+     "sha384-wl5TeDVvOWt30Pbf8aSo2ZrzsOjddu3avOBvHe+p+OhJt9gP6w9YXmDkN5DK2/dF"),
+    ("gsap@3.15.0/dist/SplitText.min.js",
+     "sha384-SWJ0lLVRoipvHh59xj0pL7uC7Ih51F+5smaFtrG+2nr+TlDZU5SYJHmxfolbeNTr"),
+    ("lenis@1.3.26/dist/lenis.min.js",
+     "sha384-jqpi9VmOdhyLoLURgjCn7EpnG9BbnHW57ibIZoeaIU+erWDH3k8fQQg0xH2ySjnw"),
+)
+PRECONNECT = '<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>'
+MOTION_SCRIPTS = "\n  ".join(
+    [f'<script src="{CDN}{path}" integrity="{sri}" crossorigin="anonymous" defer></script>'
+     for path, sri in MOTION_LIBS] + ['<script src="/assets/motion.js" defer></script>'])
+SITE_JS = '<script src="/assets/site.js" defer></script>'
+
+# three.js for the Home hero, as ES modules through an import map. three.module.min.js
+# imports the unminified ./three.core.js, so that URL is remapped to the minified core.
+# Every file the hero can load carries its hash under "integrity".
+THREE_BASE = CDN + "three@0.186.1/"
+THREE_FILES = (
+    ("build/three.module.min.js", "sha384-EU5UWigB3OuXjAXooUegndJSqYber3YSJHDoMZs6rV96yY/ol/B4W8logw4CKWkA"),
+    ("build/three.core.min.js", "sha384-ktZslgpl0L71WZcQ5wKV96Z04i9QSjtmiU/kYpjDQSfJ5NJ8B79qDF63oNTbQySl"),
+    ("examples/jsm/postprocessing/EffectComposer.js",
+     "sha384-9Rdp95mYHRj8gGxPz4TqkDaCUh8rd67b7V5slkjz7GA9uNXtykhptQdEPPOocbUn"),
+    ("examples/jsm/postprocessing/RenderPass.js",
+     "sha384-uXlYrFHzQTAiW5xsJFs0kB/Pym7jA0qunZ+aS1V25CJ1MjaKbgNQv5SjoEzNoa4F"),
+    ("examples/jsm/postprocessing/UnrealBloomPass.js",
+     "sha384-J699EvlO1FVuoaUhw+StnAgeSEEK6d2YjxWcmFt5WIQznsMXDgyfAY5Q4F7fhSgn"),
+    ("examples/jsm/postprocessing/OutputPass.js",
+     "sha384-3IFYrRLOw90S3gt5Xi3JVTJrETpklthjLSmnmeyqxQmh1knUIaGPwbRsk35kgNoW"),
+    ("examples/jsm/postprocessing/Pass.js", "sha384-927X5fcqlqKPsXZV1w3tv5BZx797OXX3D/TDJk0FHwJd12z58B5aqS77g5LZoprI"),
+    ("examples/jsm/postprocessing/MaskPass.js",
+     "sha384-5MFlCMNYgjI2KQDXH12DjwyKtWiXRsrFMMGKIP3pCQemWtt1INLwPKwZDF0TEKG9"),
+    ("examples/jsm/postprocessing/ShaderPass.js",
+     "sha384-0DjIyth2/18aCmCo4x7GEOqSJTu3uNx5ptRg+rlkZ7zs9MlNfUXVEhbUuzVzglaG"),
+    ("examples/jsm/shaders/CopyShader.js", "sha384-Hxod3deUgRexb42wOr+7J8ySu/QNr1oXlCfY9bivrSKBseng+R34eirHq/Rvvxee"),
+    ("examples/jsm/shaders/LuminosityHighPassShader.js",
+     "sha384-pJrfb1+CmauCtIjocA5YIJaosvBlTpTYBJLn6km9pktlMGoyTXhviuXjgzV2jcns"),
+    ("examples/jsm/shaders/OutputShader.js", "sha384-7B5u2okAR4bArb4emcYnTiZPFpV3wPNvV3ZY9xre0xp3cNKs2TeaYiOyMDa/bDAi"),
+)
+IMPORT_MAP = ('<script type="importmap">' + json.dumps({
+    "imports": {
+        "three": THREE_BASE + "build/three.module.min.js",
+        "three/addons/": THREE_BASE + "examples/jsm/",
+        THREE_BASE + "build/three.core.js": THREE_BASE + "build/three.core.min.js",
+    },
+    "integrity": {THREE_BASE + path: sri for path, sri in THREE_FILES},
+}, separators=(",", ":")) + "</script>")
 
 HEADER_RX = re.compile(r'<header class="site-header">.*?</header>', re.S)
 QUANTUM_RX = re.compile(r"<!-- gen:quantum -->.*?<!-- /gen:quantum -->", re.S)
@@ -366,6 +425,7 @@ def case_page(i: int) -> str:
   {VIEWPORT}
   {THEME_SCRIPT}
   {PRELOAD}
+  {PRECONNECT}
   <title>{escape(c.name)} · Case study · William Kim</title>
   <meta name="description" content="{escape(c.description)}">
   <link rel="canonical" href="https://www.williamckim.com/work/{c.slug}">
@@ -444,7 +504,8 @@ def case_page(i: int) -> str:
     </div>
   </footer>
 
-  <script src="/assets/site.js" defer></script>
+  {MOTION_SCRIPTS}
+  {SITE_JS}
 </body>
 </html>
 '''
@@ -466,13 +527,23 @@ def expected() -> dict[Path, str]:
         if PRELOAD not in text:
             text = text.replace(THEME_SCRIPT, THEME_SCRIPT + "\n  " + PRELOAD)
         text = SCRIPT_RX.sub(r'<script src="\1" defer></script>', text)
+        if PRECONNECT not in text:
+            text = text.replace(PRELOAD, PRELOAD + "\n  " + PRECONNECT)
+        if name == "index.html" and IMPORT_MAP not in text:
+            text = re.sub(r'<script type="importmap">.*?</script>\n  ', "", text, flags=re.S)
+            text = text.replace(PRECONNECT, PRECONNECT + "\n  " + IMPORT_MAP)
+        if MOTION_SCRIPTS not in text:
+            if text.count(SITE_JS) != 1:
+                raise SystemExit(f"{name}: expected one site.js tag to anchor the motion scripts")
+            text = text.replace(SITE_JS, MOTION_SCRIPTS + "\n  " + SITE_JS)
         if name == "lab.html":
             if len(QUANTUM_RX.findall(text)) != 1:
                 raise SystemExit("lab.html: expected exactly one gen:quantum region")
             text = QUANTUM_RX.sub(lambda m: labgen.quantum_region(), text)
         out[path] = text
     out[ROOT / "assets" / "lab" / "pqc-data.js"] = labgen.pqc_js()
-    urls = [href for _, href, _, _ in NAV] + [f"/work/{c.slug}" for c in CASES] + ["/copilot"]
+    out[ROOT / "quick.html"] = quickgen.page(CASES, FAVICON)
+    urls = [href for _, href, _, _ in NAV] + [f"/work/{c.slug}" for c in CASES] + ["/copilot", "/quick"]
     out[ROOT / "sitemap.xml"] = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

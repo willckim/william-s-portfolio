@@ -151,8 +151,12 @@ def main() -> int:
             browser.close()
 
         # Before first paint: the theme script sits in <head> ahead of the stylesheet.
+        # /quick carries no script at all, by design, so it follows the system setting
+        # only. It is graded for that instead: no script, and axe above in both themes.
+        quick = (ROOT / "quick.html").read_text(encoding="utf-8")
+        rep.check("/quick has no script, so it follows the system theme only", "<script" not in quick)
         order_ok = []
-        for path in pages:
+        for path in [p for p in pages if p != "/quick"]:
             f = ROOT / ("index.html" if path == "/" else path.lstrip("/") + ".html")
             html = f.read_text(encoding="utf-8")
             s, c = html.find("data-theme-resolved"), html.find('rel="stylesheet"')

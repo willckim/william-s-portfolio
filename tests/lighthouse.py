@@ -1,6 +1,9 @@
-"""Lighthouse, mobile preset, on the pages the brief gates: 95+ in all four categories.
+"""Lighthouse, mobile preset, with a gate per page.
 
-    py tests/lighthouse.py [/path ...]      default: /, /work, /work/concur, /lab
+    py tests/lighthouse.py [/path ...]      default: every page in GATES
+
+Gates: /quick 100 in all four. Home 90+ Performance and 100 in the other three.
+About, Contact, Lab and a case study 95+ in all four. Work is reported at 95+ too.
 
 Runs the Lighthouse CLI from tests/node_modules against the local clean-URL server
 (gzip on, as Vercel serves), with the installed Chrome. Each page runs three times
@@ -28,12 +31,27 @@ LH = HERE / "node_modules" / "lighthouse" / "cli" / "index.js"
 CHROME = os.environ.get("CHROME_PATH", r"C:\Program Files\Google\Chrome\Application\chrome.exe")
 CATS = ("performance", "accessibility", "best-practices", "seo")
 RUNS = 3
+GATES = {   # path -> minimum per category (performance, accessibility, best-practices, seo)
+    "/quick": (100, 100, 100, 100),
+    "/": (90, 100, 100, 100),
+    "/about": (95, 95, 95, 95),
+    "/contact": (95, 95, 95, 95),
+    "/lab": (95, 95, 95, 95),
+    "/work/concur": (95, 95, 95, 95),
+    "/work": (95, 95, 95, 95),
+}
 
 
 def run(url: str, out: Path) -> dict:
-    subprocess.run(["node", str(LH), url, "--quiet", "--output=json", f"--output-path={out}",
-                    f"--only-categories={','.join(CATS)}", "--chrome-flags=--headless=new"],
-                   check=True, env={**os.environ, "CHROME_PATH": CHROME})
+    # On Windows the CLI can exit 1 after writing its report, when Chrome still holds
+    # the temporary profile it then fails to delete (EPERM). The report is what counts,
+    # so a run passes on a freshly written report and fails without one.
+    out.unlink(missing_ok=True)
+    res = subprocess.run(["node", str(LH), url, "--quiet", "--output=json", f"--output-path={out}",
+                          f"--only-categories={','.join(CATS)}", "--chrome-flags=--headless=new"],
+                         capture_output=True, text=True, env={**os.environ, "CHROME_PATH": CHROME})
+    if not out.exists():
+        raise RuntimeError(f"Lighthouse wrote no report for {url} (exit {res.returncode}): {res.stderr[-800:]}")
     r = json.loads(out.read_text(encoding="utf-8"))
     scores = {c: round(r["categories"][c]["score"] * 100) for c in CATS}
     scores["_lcp"] = r["audits"]["largest-contentful-paint"]["displayValue"]
@@ -50,7 +68,7 @@ def main() -> int:
     if not LH.exists():
         rep.not_run("Lighthouse", "run: npm --prefix tests install")
         return rep.finish()
-    paths = [a for a in sys.argv[1:] if a.startswith("/")] or ["/", "/work", "/work/concur", "/lab"]
+    paths = [a for a in sys.argv[1:] if a.startswith("/")] or list(GATES)
     (HERE / "shots").mkdir(exist_ok=True)
     base, server = serve()
     try:
@@ -63,7 +81,9 @@ def main() -> int:
                 f" | LCP {s['_lcp']} TBT {s['_tbt']} | perf runs {[r['performance'] for r in runs]}"
             if s["_fails"]:
                 detail += f" | failing: {s['_fails']}"
-            rep.check(f"{path}: 95+ in all four", all(s[c] >= 95 for c in CATS), detail)
+            gate = GATES.get(path, (95, 95, 95, 95))
+            rep.check(f"{path}: at least {'/'.join(map(str, gate))}",
+                      all(s[c] >= g for c, g in zip(CATS, gate)), detail)
     finally:
         server.shutdown()
     return rep.finish()
