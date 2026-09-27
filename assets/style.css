@@ -508,7 +508,7 @@ svg.diagram { display: block; width: 100%; max-width: 520px; height: auto; font-
 
 /* ---------- Lab ---------- */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
-.page-head.display h1 { font-size: var(--t-display); letter-spacing: -0.035em; line-height: 0.95; }
+.page-head.display h1 { font-size: var(--t-display); letter-spacing: -0.04em; line-height: 0.95; font-weight: 680; }
 .jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
 .jump a { font-size: 14px; font-weight: 500; text-decoration: none; padding: 7px 12px; border: 1px solid var(--rule); border-radius: 999px; }
 .jump a:hover { border-color: var(--accent); color: var(--accent); }
@@ -621,14 +621,42 @@ details summary { cursor: pointer; font-size: 14px; font-weight: 500; color: var
 .site-footer { border-top: 1px solid var(--rule); }
 .site-footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 20px; padding-bottom: 28px; font-size: 14px; color: var(--ink-3); }
 
-/* Page transitions: a short cross-fade between pages where the browser supports
-   cross-document View Transitions. Progressive enhancement only, and none at all
-   under reduced motion. The header is named so it holds still while pages change. */
+/* Page transitions: a horizontal ledger-line wipe, where the browser supports
+   cross-document View Transitions. The new page is revealed left to right, the old
+   one is cut away 3px ahead of it, and the transition's own background, ledger green,
+   shows through that 3px gap as a line sweeping across. Same easing on both, so the
+   gap holds steady. The header is named so it holds still. None under reduced motion.
+   Browsers without it get the same wipe from motion.js (.page-wipe). */
 @media (prefers-reduced-motion: no-preference) {
   @view-transition { navigation: auto; }
-  ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 180ms; }
+  ::view-transition { background: var(--ledger); }
+  ::view-transition-old(root) { animation: vt-out .5s cubic-bezier(.7, 0, .25, 1) both; mix-blend-mode: normal; }
+  ::view-transition-new(root) { animation: vt-in .5s cubic-bezier(.7, 0, .25, 1) both; mix-blend-mode: normal; }
   .site-header { view-transition-name: site-header; }
 }
+@keyframes vt-in { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes vt-out { from { clip-path: inset(0 0 0 3px); } to { clip-path: inset(0 0 0 calc(100% + 3px)); } }
+.page-wipe { position: fixed; inset: 0; z-index: 2147483646; background: var(--bone); pointer-events: none; visibility: hidden; }
+.page-wipe-line { position: absolute; top: 0; bottom: 0; left: -3px; width: 3px; background: var(--ledger); }
+
+/* Custom cursor (mouse only, added by motion.js). The system cursor comes back over
+   form controls, dialogs and the tour, where the dot steps aside. */
+html.has-cursor, html.has-cursor * { cursor: none; }
+html.has-cursor :is(input, select, textarea, dialog, dialog *, [data-tour-ui], [data-tour-ui] *) { cursor: auto; }
+html.has-cursor input[type="range"] { cursor: pointer; }
+.cursor { position: fixed; left: 0; top: 0; z-index: 2147483647; pointer-events: none; transition: opacity .15s; }
+.cursor::before {
+  content: ""; position: absolute; left: -5px; top: -5px; width: 10px; height: 10px; border-radius: 50%;
+  background: var(--ink); transition: transform .25s cubic-bezier(.2, .7, .2, 1), background .2s;
+}
+.cursor.is-link::before { transform: scale(3.4); background: color-mix(in srgb, var(--ledger) 28%, transparent); }
+.cursor.is-label::before { transform: scale(7.2); background: var(--ledger); }
+.cursor-label {
+  position: absolute; transform: translate(-50%, -50%); font-size: 12px; font-weight: 600; white-space: nowrap;
+  color: var(--on-accent); opacity: 0; transition: opacity .15s;
+}
+.cursor.is-label .cursor-label { opacity: 1; }
+.cursor.is-hidden { opacity: 0; transition: none; }   /* gone at once on a key press, fades back for the mouse */
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -709,7 +737,7 @@ button.btn { font: inherit; cursor: pointer; }
 .quick-link:hover { background: var(--ledger-2); border-color: var(--ledger); }
 .search-ico { width: 16px; height: 16px; flex: none; }
 .search-btn kbd, .palette kbd {
-  font-family: var(--mono); font-size: 12px; padding: 1px 6px; border-radius: 4px;
+  font-family: var(--sans); font-size: 12px; font-weight: 500; padding: 1px 6px; border-radius: 4px;
   border: 1px solid var(--rule); background: var(--bone); color: var(--ink-2);
 }
 @media (max-width: 720px) {
@@ -749,11 +777,15 @@ button.btn { font: inherit; cursor: pointer; }
 .palette li[aria-selected="true"] .pal-group { color: var(--ink-2); }   /* ink-3 is under 4.5:1 on a tint */
 .pal-empty { padding: 16px; margin: 0; color: var(--ink-2); }
 
-/* Lenis (lenis.css 1.3), plus the native smooth scroll turned off while it drives. */
+/* Lenis (lenis.css 1.3). The page's own smooth scroll is off whenever Lenis is on:
+   motion.js glides in-page links through Lenis instead. */
 html.lenis, html.lenis body { height: auto; }
 .lenis:not(.lenis-autoToggle).lenis-stopped { overflow: clip; }
 .lenis [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis { scroll-behavior: auto !important; }
+/* An in-page link's target takes focus so the next Tab starts there. It is a landing
+   point, not a control, so it draws no ring of its own. */
+[data-anchor-target]:focus { outline: none; }
 .lenis.lenis-smooth iframe { pointer-events: none; }
 
 /* Anchored panels clear the sticky header when jumped to. */

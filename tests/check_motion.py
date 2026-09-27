@@ -13,6 +13,12 @@
 7. Work: hover and keyboard previews on desktop, drawn thumbnails on touch, none under
    reduced motion. Case studies: diagrams draw in with every label readable throughout,
    and leave no inline style behind. Titles reveal with their text intact.
+8. Keyboard: every story link reachable in order, focus rings everywhere, the cursor
+   hidden while tabbing (with a control that it shows for the mouse).
+9. Polish: the view transition runs (none under reduced motion), the fallback overlay
+   wipes and never leaves a page covered, magnetic buttons, About and Lab reveals.
+10. Teardown: reduced motion switched on mid-session reverts everything cleanly, and a
+   touch on a hybrid laptop hides the custom cursor.
 
 Every guard is run on a case where it must pass as well as where it must fail.
 
@@ -173,6 +179,26 @@ def intro(rep: Report, browser, base: str) -> None:
     rep.check("Skip ends it at once", s["done"] and not s["shown"] and s["t"]["skipped"], f"{s}")
     visible = page.evaluate("getComputedStyle(document.querySelector('.hero h1')).visibility === 'visible'")
     rep.check("after Skip the headline is there", visible)
+    ctx.close()
+
+    # Skip, then straight to the keyboard: the first stop in the hero must be fully shown,
+    # not focused while its reveal is still at opacity 0.
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    page = ctx.new_page()
+    page.goto(base + "/", wait_until="commit")
+    page.wait_for_selector("#intro-skip", state="visible", timeout=3000)
+    page.wait_for_function("window.gsap && window.__motion && window.__motion.on", timeout=10000)
+    page.focus("#intro-skip")
+    page.keyboard.press("Enter")
+    for _ in range(25):
+        page.keyboard.press("Tab")
+        if page.evaluate("!!document.activeElement.closest('.hero .btn-row')"):
+            break
+    shown = page.evaluate("""() => { let o = 1; for (let n = document.activeElement; n && n.nodeType === 1; n = n.parentElement)
+        o *= +getComputedStyle(n).opacity; return [document.activeElement.textContent.trim(),
+        !!document.activeElement.closest('.hero .btn-row'), o]; }""")
+    rep.check("Skip then Tab: the first hero button to take focus is fully shown at once",
+              shown[1] and shown[2] == 1, f"{shown}")
     ctx.close()
 
     # Reduced motion: never.
@@ -427,6 +453,194 @@ def case_studies(rep: Report, browser, base: str) -> None:
         ctx.close()
 
 
+FOCUS = """() => { const e = document.activeElement, s = getComputedStyle(e);
+    let o = 1; for (let n = e; n && n.nodeType === 1; n = n.parentElement) o *= +getComputedStyle(n).opacity;
+    return { href: e.getAttribute('href'), text: (e.textContent || '').trim().slice(0, 40), opacity: o,
+             inStory: !!e.closest('#story'), inProof: !!e.closest('.proof'),
+             ring: s.outlineStyle !== 'none' && parseFloat(s.outlineWidth) >= 2 }; }"""
+CURSOR = """() => { const c = document.querySelector('.cursor'); return c ? +getComputedStyle(c).opacity : null; }"""
+
+
+def keyboard(rep: Report, browser, base: str) -> None:
+    """Tab through Home from the top: every link in the story is reachable, in order,
+    each stop shows a focus ring, and the custom cursor gets out of the way."""
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    ctx.add_init_script("try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}")
+    page = ctx.new_page()
+    page.goto(base + "/", wait_until="networkidle")
+    page.mouse.move(700, 450)          # a mouse user, who then reaches for the keyboard
+    page.mouse.move(720, 460)
+    page.wait_for_timeout(400)
+    before = page.evaluate(CURSOR)
+    seen, cursor = [], []
+    for _ in range(40):
+        page.keyboard.press("Tab")
+        page.wait_for_timeout(120)
+        f = page.evaluate(FOCUS)
+        seen.append(f)
+        cursor.append(page.evaluate(CURSOR))
+        if f["inProof"]:
+            break
+    story = [f["href"] for f in seen if f["inStory"]]
+    want = ["/work/concur", "/work/concur#results-h", "/work#ortho", "/lab", "/work", "/resume.pdf", "/contact"]
+    rep.check("keyboard: Tab reaches every story link, in order, before the proof strip",
+              story == want and seen[-1]["inProof"], f"{story}")
+    faint = [f["text"] or f["href"] for f in seen if f["opacity"] < 1]
+    rep.check("keyboard: whatever takes focus is fully shown, not left mid-reveal", bool(seen) and not faint,
+              f"faint: {faint[:4]}")
+    # Focus that lands before its card has scrolled into view (no scroll at all): the
+    # card must still finish revealing, not freeze at the opacity it started from.
+    page.goto(base + "/", wait_until="networkidle")          # fresh: no card revealed yet
+    fresh = page.evaluate("+getComputedStyle(document.querySelector('.ch-end .ch-card')).opacity")
+    page.evaluate("document.querySelector('.ch-end .btn').focus({ preventScroll: true })")
+    page.wait_for_timeout(300)
+    card = page.evaluate("+getComputedStyle(document.querySelector('.ch-end .ch-card')).opacity")
+    rep.check("focus reaching a card before its reveal finishes the reveal", fresh < 1 and card == 1,
+              f"opacity {fresh} before focus, {card} after")
+    no_ring = [f["text"] or f["href"] for f in seen if not f["ring"]]
+    rep.check(f"keyboard: all {len(seen)} stops show a 2px focus ring", bool(seen) and not no_ring,
+              f"without: {no_ring[:4]}")
+    rep.check("control: the custom cursor shows for the mouse", before is not None and before > 0,
+              f"opacity {before}")
+    rep.check("keyboard: the custom cursor hides while tabbing, so it never covers focus",
+              before is not None and all(c == 0 for c in cursor), f"opacities {sorted(set(map(str, cursor)))}")
+    ctx.close()
+
+
+INLINE = """() => [...document.querySelectorAll('.hero .copy, .hero .copy *, #story, #story *')]
+    .map((e, i) => [i, e.getAttribute('style') || '']).filter(r => /opacity|transform|visibility/.test(r[1]))"""
+
+
+def teardown(rep: Report, browser, base: str) -> None:
+    """Reduced motion switched on mid-session tears the motion layer down completely:
+    focus arriving afterwards must not replay a reveal the switch has already undone.
+    And a touch on a hybrid laptop (fine pointer present) hides the custom cursor.
+
+    Seen failing against the code before its fix (2026-09-27): the story's scrub tween
+    threw mid-revert, which aborted the teardown and left Lenis, the cursor and the
+    hero copy at opacity 0. The focus listeners that outlived the teardown showed no
+    visible effect on their own, so this grades the revert, not the listener cleanup."""
+    ctx = browser.new_context(viewport={"width": 1440, "height": 900})
+    ctx.add_init_script("try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}")
+    page = ctx.new_page()
+    errors: list[str] = []
+    page.on("pageerror", lambda e: errors.append(str(e)))
+    page.goto(base + "/", wait_until="networkidle")
+    page.mouse.move(700, 450)
+    page.mouse.move(720, 460)
+    page.wait_for_timeout(300)
+    shown = page.evaluate(CURSOR)
+    page.evaluate("""window.dispatchEvent(new PointerEvent('pointerdown',
+        { pointerType: 'touch', clientX: 300, clientY: 300, bubbles: true }))""")
+    page.wait_for_timeout(100)
+    touched = page.evaluate(CURSOR)
+    rep.check("hybrid laptop: a touch hides the custom cursor (shown for the mouse first)",
+              shown is not None and shown > 0 and touched == 0, f"opacity {shown} then {touched}")
+
+    page.goto(base + "/", wait_until="networkidle")          # fresh: cards still waiting to reveal
+    page.emulate_media(reduced_motion="reduce")
+    page.wait_for_timeout(400)
+    off = page.evaluate("!window.__motion.on && !document.querySelector('.cursor')")
+    before = page.evaluate(INLINE)
+    for sel in (".hero .btn-row .btn", ".ch-end .btn"):
+        page.evaluate(f"document.querySelector('{sel}').focus({{ preventScroll: true }})")
+        page.wait_for_timeout(250)
+    after = page.evaluate(INLINE)
+    rep.check("reduced motion switched on mid-session: the motion layer and cursor are gone", off)
+    rep.check("after that switch, focus replays no reveal (no inline motion styles come back)",
+              off and after == before and not errors, f"{len(before)} styled before focus, {len(after)} after, errors {errors[:2]}")
+    ctx.close()
+
+
+def polish(rep: Report, browser, base: str) -> None:
+    # Page transitions: a native view transition where supported, none under reduced motion.
+    for motion in ("no-preference", "reduce"):
+        ctx = browser.new_context(reduced_motion=motion, viewport={"width": 1280, "height": 800})
+        ctx.add_init_script("""addEventListener('pagereveal', e => { window.__vt = !!e.viewTransition; });
+            try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}""")
+        page = ctx.new_page()
+        page.goto(base + "/about", wait_until="networkidle")
+        with page.expect_navigation():
+            page.click('#nav a[href="/work"]')
+        page.wait_for_load_state("networkidle")
+        vt = page.evaluate("window.__vt")
+        if motion == "reduce":
+            rep.check("reduced motion: pages change with no transition", vt is False and page.url.endswith("/work"))
+        else:
+            rep.check("page change runs the ledger-line view transition", vt is True and page.url.endswith("/work"),
+                      f"viewTransition {vt}")
+        ctx.close()
+
+    # The fallback overlay, for browsers without cross-document view transitions.
+    ctx = browser.new_context(viewport={"width": 1280, "height": 800})
+    ctx.add_init_script("window.__noViewTransitions = true; try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}")
+    page = ctx.new_page()
+    page.goto(base + "/about", wait_until="networkidle")
+    # Every clip the overlay passes through is kept in session storage, which outlives the page.
+    page.evaluate("""() => { const w = document.querySelector('.page-wipe');
+        new MutationObserver(() => { const k = JSON.parse(sessionStorage.getItem('wipe') || '[]');
+            k.push(w.style.clipPath); sessionStorage.setItem('wipe', JSON.stringify(k)); }).observe(w, { attributes: true }); }""")
+    with page.expect_navigation():
+        page.click('#nav a[href="/lab"]')
+    page.wait_for_load_state("load")
+    clips = page.evaluate("JSON.parse(sessionStorage.getItem('wipe') || '[]')")
+    covered = [float(c.split()[1].rstrip("%")) for c in clips if c.startswith("inset(")]
+    rep.check("fallback: the overlay wipes across, left to right, before the next page loads",
+              page.url.endswith("/lab") and len(covered) > 3 and covered == sorted(covered, reverse=True)
+              and covered[-1] < 1, f"{len(covered)} frames, right inset {covered[:1]} to {covered[-1:]}")
+    page.go_back()
+    page.wait_for_load_state("load")
+    left = page.evaluate("(() => { const w = document.querySelector('.page-wipe'); return w ? getComputedStyle(w).visibility : 'none'; })()")
+    rep.check("fallback: back to a page, it is not left covered", left in ("hidden", "none"), left)
+    ctx.close()
+
+    # In-page links glide there and take keyboard focus with them, as a native jump would.
+    ctx = browser.new_context(viewport={"width": 1280, "height": 800})
+    page = ctx.new_page()
+    page.goto(base + "/lab", wait_until="networkidle")
+    page.focus('.jump a[href="#pqc"]')
+    page.keyboard.press("Enter")
+    page.wait_for_timeout(1800)
+    state = page.evaluate("""() => ({ top: Math.round(document.getElementById('pqc').getBoundingClientRect().top),
+        hash: location.hash, inside: document.getElementById('pqc').contains(document.activeElement),
+        shown: +getComputedStyle(document.getElementById('pqc')).opacity })""")
+    page.keyboard.press("Tab")
+    next_in = page.evaluate("document.getElementById('pqc').contains(document.activeElement)")
+    rep.check("an in-page link scrolls to its target and the next Tab continues from there",
+              0 <= state["top"] <= 100 and state["hash"] == "#pqc" and state["shown"] == 1 and next_in,
+              f"{state}, next Tab inside {next_in}")
+    ctx.close()
+
+    # Magnetic primary buttons, and the reveals on About and Lab.
+    ctx = browser.new_context(viewport={"width": 1280, "height": 800})
+    ctx.add_init_script("try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}")
+    page = ctx.new_page()
+    page.goto(base + "/", wait_until="networkidle")
+    b = page.locator(".hero .btn.primary").bounding_box()
+    page.mouse.move(b["x"] + b["width"] - 4, b["y"] + b["height"] - 4)
+    page.mouse.move(b["x"] + b["width"] - 2, b["y"] + b["height"] - 2)
+    page.wait_for_timeout(500)
+    pulled = page.evaluate("gsap.getProperty(document.querySelector('.hero .btn.primary'), 'x')")
+    page.mouse.move(5, 5)
+    page.wait_for_timeout(1200)
+    back = page.evaluate("gsap.getProperty(document.querySelector('.hero .btn.primary'), 'x')")
+    rep.check("the primary button leans toward the pointer and springs back", pulled > 3 and abs(back) < 0.5,
+              f"x {pulled:.1f} then {back:.1f}")
+    for path, sel in (("/about", "main .ledger"), ("/lab", "main .lab-panel")):
+        page.goto(base + path, wait_until="networkidle")
+        waiting = page.evaluate(f"[...document.querySelectorAll('{sel}')].filter(s => +getComputedStyle(s).opacity < 1).length")
+        focusable = page.evaluate(f"""[...document.querySelectorAll('{sel}')].every(s => getComputedStyle(s).visibility === 'visible')""")
+        page.evaluate("window.scrollTo({ top: document.body.scrollHeight, behavior: 'instant' })")
+        page.wait_for_timeout(1400)
+        page.evaluate("window.scrollTo({ top: 0, behavior: 'instant' })")
+        page.wait_for_timeout(300)
+        settled = page.evaluate(f"""[...document.querySelectorAll('{sel}')].every(s => +getComputedStyle(s).opacity === 1
+            && !s.style.transform && !s.style.filter)""")
+        rep.check(f"{path}: sections fade in as they arrive, stay focusable meanwhile, and settle clean",
+                  waiting > 0 and focusable and settled, f"{waiting} waiting at load")
+    ctx.close()
+
+
 def main() -> int:
     sys.stdout.reconfigure(encoding="utf-8")
     rep = Report("Motion layer")
@@ -440,6 +654,9 @@ def main() -> int:
             story(rep, browser, base)
             work(rep, browser, base)
             case_studies(rep, browser, base)
+            keyboard(rep, browser, base)
+            polish(rep, browser, base)
+            teardown(rep, browser, base)
             reduced(rep, browser, base)
             cdn_down(rep, browser, base)
             browser.close()

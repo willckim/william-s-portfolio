@@ -13,7 +13,8 @@ number. Reports are written to tests/shots/lh-*.json.
 What the Performance score covers: the Home hero loads three.js on the first
 interaction or 2.5 s after load. Lighthouse does not interact and stops measuring
 shortly after load, so Home's score does not include the hero's WebGL cost. With
-three.js forced in during the run, Home measured 89 to 92 on this machine.
+three.js forced in during the run, Home measured 98 to 99 on this machine
+(2026-09-27, TBT 118 to 148 ms, LCP 1.7 to 1.8 s).
 """
 
 from __future__ import annotations

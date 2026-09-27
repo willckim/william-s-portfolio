@@ -57,8 +57,9 @@ hatch: text only, no script. Push only after all five phases pass the gates.
 - [x] 2. Preloader and hero (intro once per session, 1.5 s cap, particle hero with bloom, split headline)
 - [x] 3. Scroll story (sticky stage, 7 chapter sections, particle numbers graded against the proof strip)
 - [x] 4. Work index previews (large-type list, 5 canvas loops, thumbnails on touch, diagrams draw in)
-- [ ] 5. Polish
-- Checks added: check_motion (quick, header link, reduced motion, CDN down). Lighthouse
+- [x] 5. Polish (ledger-line view transition with overlay fallback, cursor, magnetic buttons, display type, Lab and About reveals)
+- Checks added: check_motion (quick, header link, reduced motion, CDN down, keyboard,
+  transitions, mid-session reduced-motion teardown, hybrid touch cursor). Lighthouse
   gates are per page now (tests/lighthouse.py GATES).
 
 ## Open
