@@ -38,6 +38,9 @@ def external_links() -> dict[str, list[str]]:
         # (canonical, preconnect) name origins and future URLs, not links.
         for href in re.findall(r'<(?:a|script)\b[^>]*?(?:href|src)="(https?://[^"]+)"', html):
             found.setdefault(href.replace("&amp;", "&"), []).append(url)
+        for m in re.findall(r'<script type="importmap">(.*?)</script>', html, re.S):
+            for href in re.findall(r'"(https://[^"]+\.js)"', m):
+                found.setdefault(href, []).append(url + " (import map)")
     for js in ("assets/hero3d.js",):           # a script-loaded URL is a link too
         for href in re.findall(r'"(https://[^"]+\.js)"', (ROOT / js).read_text(encoding="utf-8")):
             found.setdefault(href, []).append(js)

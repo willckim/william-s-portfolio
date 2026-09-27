@@ -13,6 +13,7 @@
     ["Pages", "Lab", "/lab", "tools interactive experiments"],
     ["Pages", "About", "/about", "profile timeline skills certifications how i work principles"],
     ["Pages", "Contact", "/contact", "email linkedin github hire open to roles"],
+    ["Pages", "Quick view", "/quick", "summary one page text only recruiter facts fast"],
     ["Case studies", "Concur Automation", "/work/concur", "llm openai classifier guardrails expense card transactions"],
     ["Case studies", "Royalty Calculation Pipeline", "/work/royalty", "rate logic validation excel pivot"],
     ["Case studies", "Fast Close Report Fix", "/work/fast-close", "sql bi report defect close"],
@@ -32,6 +33,7 @@
   function build() {
     dlg = document.createElement("dialog");
     dlg.className = "palette";
+    dlg.setAttribute("data-lenis-prevent", "");   // its list scrolls natively, not the page
     dlg.setAttribute("aria-label", "Search the site");
     dlg.innerHTML =
       '<div class="pal-field"><label class="sr-only" for="pal-q">Search pages, case studies and Lab tools</label>' +

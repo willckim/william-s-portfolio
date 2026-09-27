@@ -49,5 +49,17 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
 - Mosca inputs come from a clean checkout of the pushed toolkit (5345b40). Set
   PQC_DIR to it for tools/extract_pqc.py and tests/check_mosca.py.
 
+## Cinematic upgrade (started 2026-09-27)
+Motion is enhancement only: every page reads in full without JavaScript, and under
+prefers-reduced-motion it behaves like the calm version. /quick is the recruiter escape
+hatch: text only, no script. Push only after all five phases pass the gates.
+- [x] 1. Foundation and quick view (GSAP 3.15.0, Lenis 1.3.26, three 0.186.1 import map, /quick)
+- [ ] 2. Preloader and hero
+- [ ] 3. Scroll story
+- [ ] 4. Work index previews
+- [ ] 5. Polish
+- Checks added: check_motion (quick, header link, reduced motion, CDN down). Lighthouse
+  gates are per page now (tests/lighthouse.py GATES).
+
 ## Open
 - The résumé PDF still says "145 of 145". It is a PDF, so it needs updating at source.
