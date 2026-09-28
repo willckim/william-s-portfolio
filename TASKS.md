@@ -52,6 +52,19 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
 - Mosca inputs come from a clean checkout of the pushed toolkit (5345b40). Set
   PQC_DIR to it for tools/extract_pqc.py and tests/check_mosca.py.
 
+## Flaky checks, investigated (2026-09-28)
+Both were test problems, not site bugs. After the fixes: 30 of 30 each.
+- check_motion view transition (11 of 30 failed): Playwright's bundled Chromium 145
+  drops a cross-document view transition when the new page reveals within about 80 ms.
+  Chrome 153 dropped 0 of 70, headed and headless, and bare two-page HTML never dropped
+  it in 145. The row is now graded in installed Chrome, as check_tour already was.
+- check_tour spotlight alignment (9 of 30 failed, 105 to 908 px): the browser at times
+  delivers no frames for 150 to 450 ms while the page's threads sit idle. The spotlight's
+  0.2 s glide and Lenis only advance on frames, so nothing moved, and two samples 100 ms
+  apart passed for settled. Once frames resumed the spotlight landed exactly. The check
+  now waits for Lenis idle, the glide finished and two rendered frames. Mutants caught:
+  a spotlight that never follows a scroll (260 px) and one drawn 20 px off.
+
 ## Cinematic upgrade (started 2026-09-27)
 Motion is enhancement only: every page reads in full without JavaScript, and under
 prefers-reduced-motion it behaves like the calm version. /quick is the recruiter escape

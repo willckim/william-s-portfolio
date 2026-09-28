@@ -552,10 +552,20 @@ def teardown(rep: Report, browser, base: str) -> None:
     ctx.close()
 
 
-def polish(rep: Report, browser, base: str) -> None:
-    # Page transitions: a native view transition where supported, none under reduced motion.
+def view_transitions(rep: Report, chrome, base: str) -> None:
+    """Page transitions: a native view transition where supported, none under reduced motion.
+
+    Graded in installed Chrome, the browser visitors run, as check_tour is. Playwright's
+    bundled Chromium 145 dropped this transition on 11 of 30 runs (the new page revealed
+    within about 80 ms of the swap and arrived with no viewTransition), where Chrome 153
+    dropped 0 of 70, headed and headless. Bare two-page HTML never dropped it in 145, so
+    it is a race in that build, not something the site does wrong."""
+    if chrome is None:
+        rep.not_run("page change runs the ledger-line view transition", "Chrome is not installed")
+        rep.not_run("reduced motion: pages change with no transition", "Chrome is not installed")
+        return
     for motion in ("no-preference", "reduce"):
-        ctx = browser.new_context(reduced_motion=motion, viewport={"width": 1280, "height": 800})
+        ctx = chrome.new_context(reduced_motion=motion, viewport={"width": 1280, "height": 800})
         ctx.add_init_script("""addEventListener('pagereveal', e => { window.__vt = !!e.viewTransition; });
             try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}""")
         page = ctx.new_page()
@@ -568,9 +578,11 @@ def polish(rep: Report, browser, base: str) -> None:
             rep.check("reduced motion: pages change with no transition", vt is False and page.url.endswith("/work"))
         else:
             rep.check("page change runs the ledger-line view transition", vt is True and page.url.endswith("/work"),
-                      f"viewTransition {vt}")
+                      f"viewTransition {vt}, Chrome {chrome.version}")
         ctx.close()
 
+
+def polish(rep: Report, browser, base: str) -> None:
     # The fallback overlay, for browsers without cross-document view transitions.
     ctx = browser.new_context(viewport={"width": 1280, "height": 800})
     ctx.add_init_script("window.__noViewTransitions = true; try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}")
@@ -655,6 +667,13 @@ def main() -> int:
             work(rep, browser, base)
             case_studies(rep, browser, base)
             keyboard(rep, browser, base)
+            try:
+                chrome = p.chromium.launch(channel="chrome")
+            except Exception:  # noqa: BLE001 - reported as NOT RUN
+                chrome = None
+            view_transitions(rep, chrome, base)
+            if chrome:
+                chrome.close()
             polish(rep, browser, base)
             teardown(rep, browser, base)
             reduced(rep, browser, base)
