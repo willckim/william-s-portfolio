@@ -3,12 +3,12 @@
 | | |
 |---|---|
 | Source | github.com/willckim/tour-engine (private repo) |
-| Commit | `de22e299057a22b2d330c116bff0826b507b46ac` |
-| Commit date | 2026-09-19 15:00:46 -0500 |
-| Vendored | 2026-09-23 |
-| `tour.js` blob | `e8f133549b17bd24e9148f48a34e46d7294d227d` |
-| Source sha256 | `1b3cb02ede2cc74d41f54d9f0b7b6e37d03a83fbee6e5f5fe563743ceea25af8` |
-| Deployed sha256 | `349b258b1ad50d6e41241e320b146e5be15435f1a66c6259924d26806098d246` |
+| Commit | `7eefca5fd417a6dfd1de212579028e627c1f1916` |
+| Commit date | 2026-09-27 19:58:05 -0500 |
+| Vendored | 2026-09-27 |
+| `tour.js` blob | `37aad171f43ce0cc07fa0c55987c83dc037b18f9` |
+| Source sha256 | `c164abfff4e9b134a7861ab48a5888541a9c27cc2d73b4ad2d9341ed7333a629` |
+| Deployed sha256 | `7e2e8402cd42f2e63e150beab4112558f72d4cd068be86b6701292f3dca040c7` |
 
 The deployed `assets/tour/tour.js` is the source plus four patches that disable
 record mode (listed in `tools/vendor_tour.py`), and a two-line header. The styles

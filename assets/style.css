@@ -641,7 +641,13 @@ details summary { cursor: pointer; font-size: 14px; font-weight: 500; color: var
 
 /* Custom cursor (mouse only, added by motion.js). The system cursor comes back over
    form controls, dialogs and the tour, where the dot steps aside. */
-html.has-cursor, html.has-cursor * { cursor: none; }
+html.has-cursor:not(.tour-running), html.has-cursor:not(.tour-running) * { cursor: none; }
+/* A running site tour has its own ghost cursor: the dot steps aside for it and the
+   system cursor comes back (assets/tour/tour-host.js sets the class). */
+html.tour-running .cursor { display: none; }
+/* A tour step that clicked through to another page: nothing of the tour is drawn on
+   the page that is leaving. */
+html.tour-leaving [data-tour-ui] { visibility: hidden !important; }
 html.has-cursor :is(input, select, textarea, dialog, dialog *, [data-tour-ui], [data-tour-ui] *) { cursor: auto; }
 html.has-cursor input[type="range"] { cursor: pointer; }
 .cursor { position: fixed; left: 0; top: 0; z-index: 2147483647; pointer-events: none; transition: opacity .15s; }

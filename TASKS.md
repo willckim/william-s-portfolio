@@ -10,7 +10,7 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
   (`tools/extract_qf.py` runs the seeded scripts and parses their output)
 - `quantum-finance/04_security/pqc_readiness` at 5345b40: Mosca inputs
   (`tools/extract_pqc.py`) and published results (graded by `tests/check_mosca.py`)
-- `willckim/tour-engine` at de22e29: vendored with the recorder disabled
+- `willckim/tour-engine` at 7eefca5: vendored with the recorder disabled
 
 ## Regenerate
 - `py tools/sitegen.py` rewrites the header on every page, the five case studies,
@@ -43,8 +43,9 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
 ## Decided (2026-09-23)
 - Tour Engine repo stays private: no links, "Source is private for now" line instead.
 - LinkedIn is checked by hand, not by the automated link check.
-- Mutation figure is the engine's own suites only: 109 of 109 across 140 checks
-  (record 38/28, CSP 11/42, host 60/70), run against de22e29 on 2026-09-23.
+- Mutation figure is the engine's own suites only: 111 of 111 across 143 checks
+  (record 38/28, CSP 11/42, host 62/73), run against 7eefca5 on 2026-09-27.
+  Was 109 of 109 across 140 at de22e29 until the click-step resume fix.
 - Three production systems (Concur, Royalty, Time Tracker). Fast Close is a fix.
 - Mosca inputs come from a clean checkout of the pushed toolkit (5345b40). Set
   PQC_DIR to it for tools/extract_pqc.py and tests/check_mosca.py.
