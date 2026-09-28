@@ -36,6 +36,8 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
 - [x] check_palette: opens, filters, navigates, traps focus, covers every page
 - [x] check_themes: axe WCAG 2.1 AA on every page in both themes, token contrast, toggle
 - [x] check_pages: zero console errors on every page
+- [x] check_layers: at the bottom of every page, both themes, phone and desktop, no fixed or
+      sticky layer but the header covers content (controls: an injected band, the old stage)
 - [x] lighthouse: 95+ in all four categories, mobile, on Home, Work, a case study, Lab
 - [x] check_pages links: tour-engine link removed (repo stays private). linkedin.com
       excluded, as it answers 999 to every signed-out request.
