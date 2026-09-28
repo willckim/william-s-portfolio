@@ -121,18 +121,41 @@ def state(page) -> dict | None:
         return None
 
 
+# Settled means nothing is left to move: Lenis has stopped, the spotlight has no
+# transition running, and two frames have rendered since, so what is measured is what
+# is painted. The spotlight's 0.2 s glide and Lenis both advance only on rendered
+# frames. Two samples 100 ms apart used to count as settled, and while the browser
+# delivered no frames (stalls of 150 to 450 ms, with the page's own threads idle)
+# nothing moved, so a spotlight that had not yet started its glide was graded as
+# landed, up to 908 px from its target. Once frames resumed it landed exactly.
+SETTLE = """() => new Promise(done => {
+  const until = performance.now() + 6000;
+  const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  (async () => {
+    while (performance.now() < until) {
+      await frames();
+      const lenis = (window.__motion || {}).lenis;
+      if (lenis && lenis.isScrolling) continue;
+      const sp = document.querySelector('[data-tour-ui="spotlight"]');
+      const gliding = sp ? sp.getAnimations() : [];
+      if (!gliding.length) return done(true);
+      await Promise.all(gliding.map(a => a.finished.catch(() => null)));
+    }
+    done(false);
+  })();
+})"""
+
+
 def settled(page) -> dict | None:
-    """State once the spotlight has stopped gliding: the engine animates it from one
-    target to the next, and Lenis eases a scroll out for a while after the wheel."""
-    prev = state(page)
-    for _ in range(25):
-        page.wait_for_timeout(100)
-        s = state(page)
-        if s and prev and s["align"] is not None and prev["align"] is not None \
-                and abs(s["align"] - prev["align"]) < 0.1 and abs(s["y"] - prev["y"]) < 0.5:
-            return s
-        prev = s
-    return prev
+    """State once nothing is left to move (see SETTLE), marked if it never got there."""
+    try:
+        ok = page.evaluate(SETTLE)
+    except Exception:  # noqa: BLE001 - mid-navigation, the page went away; state() asks again
+        ok = None
+    s = state(page)
+    if s is not None:
+        s["settled"] = ok is not False
+    return s
 
 
 def wait_card(page, last: tuple | None, ms: int = 15000) -> dict | None:
@@ -191,7 +214,7 @@ def drive(rep: Report, browser, base: str, label: str, start: str = "/", **kw) -
             seen_pages.append(s["page"])
             arrivals.append(s)
         if s["align"] is not None:
-            aligns.append((s["title"], round(s["align"], 2)))
+            aligns.append((s["title"], round(s["align"], 2) if s.get("settled", True) else "still moving after 6 s"))
         dots.append(s["dot"])
         if (s["page"], s["title"]) in EXPECTED:
             authored.append((s["page"], s["title"]))
@@ -202,9 +225,12 @@ def drive(rep: Report, browser, base: str, label: str, start: str = "/", **kw) -
             numbers = {**story, "stage": s["stage"], "y": round(s["y"])}
             page.mouse.move(640, 450)
             page.mouse.wheel(0, 260)                 # the page moves under the spotlight
-            page.wait_for_timeout(300)
+            try:                                     # it has started to, before settling is asked
+                page.wait_for_function("y0 => Math.abs(scrollY - y0) > 50", arg=s["y"], timeout=5000)
+            except Exception:  # noqa: BLE001 - it never moved: graded by 'moved' below
+                pass
             after = settled(page)
-            scrolled = {"moved": round(after["y"] - s["y"]), "align": after["align"]}
+            scrolled = {"moved": round(after["y"] - s["y"]), "align": after["align"], "settled": after.get("settled")}
         if s["next"]:
             page.click('[data-tour-ui="tooltip"] .tour-btn-next')
         else:
@@ -218,9 +244,9 @@ def drive(rep: Report, browser, base: str, label: str, start: str = "/", **kw) -
     rep.check(f"{label}: Done ends the tour on the Lab, no step left",
               bool(final) and not final["active"] and final["page"] == "lab")
     rep.check(f"{label}: no step fell back to 'could not find'", timeouts == 0, f"{timeouts}")
-    bad = [a for a in aligns if a[1] > ALIGN_PX]
+    bad = [a for a in aligns if isinstance(a[1], str) or a[1] > ALIGN_PX]
     rep.check(f"{label}: the spotlight sits on its target on every card", len(aligns) >= 7 and not bad,
-              f"{len(aligns)} cards, worst {max((a[1] for a in aligns), default=None)}px {bad[:2]}")
+              f"{len(aligns)} cards, worst {max((a[1] for a in aligns if not isinstance(a[1], str)), default=None)}px {bad[:2]}")
     if numbers is None:
         rep.check(f"{label}: the numbers step was reached", False)
     elif with_motion:
@@ -233,7 +259,8 @@ def drive(rep: Report, browser, base: str, label: str, start: str = "/", **kw) -
                   numbers["shown"] == 1 and not (final or {}).get("lenis"), f"{numbers}")
     if scrolled is not None:
         rep.check(f"{label}: scrolling under the numbers step, the spotlight stays on the card",
-                  abs(scrolled["moved"]) > 50 and scrolled["align"] is not None and scrolled["align"] <= ALIGN_PX,
+                  abs(scrolled["moved"]) > 50 and scrolled["settled"] and scrolled["align"] is not None
+                  and scrolled["align"] <= ALIGN_PX,
                   f"{scrolled}")
     changes = arrivals[1:]                           # every page after the first
     if browser.browser_type.name == "chromium" and with_motion:
