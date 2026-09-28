@@ -130,17 +130,21 @@
     if (!story || !cine) return;
     var S = window.__story = { stage: 0 };
     var anchors = [[0, 0]];
-    function measure() {
-      var vh = window.innerHeight, list = [[0, 0]];
-      story.querySelectorAll(".chapter").forEach(function (ch) {
-        var st = ch.getAttribute("data-stage").split(" ").map(Number);
-        var top = ch.getBoundingClientRect().top + window.scrollY, h = ch.offsetHeight;
-        st.forEach(function (v, k) {
-          list.push([top + h * (st.length === 1 ? 0.5 : (k + 0.5) / st.length) - vh / 2, v]);
-        });
+    // [scroll position, stage] for each shape a chapter shows, centred on screen.
+    function centres(ch) {
+      var st = ch.getAttribute("data-stage").split(" ").map(Number);
+      var top = ch.getBoundingClientRect().top + window.scrollY, h = ch.offsetHeight, vh = window.innerHeight;
+      return st.map(function (v, k) {
+        return [top + h * (st.length === 1 ? 0.5 : (k + 0.5) / st.length) - vh / 2, v];
       });
+    }
+    function measure() {
+      var list = [[0, 0]];
+      story.querySelectorAll(".chapter").forEach(function (ch) { list = list.concat(centres(ch)); });
       anchors = list;
     }
+    // Where a chapter's first shape is fully formed. The site tour lands here.
+    S.anchorOf = function (ch) { return Math.max(0, centres(ch)[0][0]); };
     function stageAt(y) {
       for (var i = 1; i < anchors.length; i++) {
         var a = anchors[i - 1], b = anchors[i];

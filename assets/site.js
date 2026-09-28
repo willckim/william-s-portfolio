@@ -70,10 +70,16 @@
       wasActive = on;
     }, 400);
   }
+  // A tour asked for while the preloader is still up starts when it has finished or
+  // been skipped. The engine would refuse it until then and say nothing on screen.
+  function afterIntro(f) {
+    if (document.documentElement.classList.contains("intro-on")) document.addEventListener("intro:done", f, { once: true });
+    else f();
+  }
   document.querySelectorAll("[data-tour-start]").forEach(function (b) {
     b.addEventListener("click", function () {
       launcher = b;
-      loadTour(function () { Tour.start(); });
+      loadTour(function () { afterIntro(function () { Tour.start(); }); });
     });
   });
   try { if (sessionStorage.getItem("tour.resume")) loadTour(); } catch (e) { /* storage blocked: no resume */ }

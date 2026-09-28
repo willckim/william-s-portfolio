@@ -1,4 +1,4 @@
-/* Tour Engine, vendored from the private tour-engine repo at de22e29.
+/* Tour Engine, vendored from the private tour-engine repo at 7eefca5.
  * Recorder disabled: see tools/vendor_tour.py and TOUR_ENGINE.md. */
 /* ── Guided tour engine, v1 ───────────────────────────────────────────────────
  * Walks a person through a task on the real page: a spotlight on the element
@@ -1621,6 +1621,14 @@
         // Inside the element this step resolved to, however it was found.
         if (e.target !== desc.el && !desc.el.contains(e.target)) return;
         const expected = current;
+        /* SAVED NOW, before the page can go. The next step saves its own place
+           once it finds its target, and when this click is a link that loads
+           another page, that target is on the next page: a link with nothing to
+           delay it unloaded this one first, and the tour resumed on the step it
+           had just done. A click on the last step ends the tour, so nothing is
+           left to resume. */
+        if (expected + 1 < steps.length) saveResume(expected + 1);
+        else clearResume();
         // After the app's own handlers, so the next step sees what the click did.
         setTimeout(function () { next(expected); }, 0);
     }
