@@ -21,7 +21,7 @@ The recorder check is graded twice: against the deployed engine (must NOT record
 and against the unpatched engine from a tour-engine checkout (MUST record), so a
 check that could not see the recorder at all would fail the second half.
 
-    py tests/check_tour.py            TOUR_ENGINE_SRC=<checkout> for the second half
+    py tests/check_tour.py            TOUR_ENGINE_SRC overrides the tour-engine checkout
 """
 
 from __future__ import annotations
@@ -46,7 +46,8 @@ EXPECTED = [  # (page, card title) for the seven authored steps, in order
     ("lab", "The Mosca calculator"),
 ]
 PAGE_OF = {"home": "/", "work": "/work", "case-concur": "/work/concur", "lab": "/lab"}
-SRC = os.environ.get("TOUR_ENGINE_SRC")
+# A clone of willckim/tour-engine beside this repo in OneDrive, as PQC_DIR is for Mosca.
+SRC = os.environ.get("TOUR_ENGINE_SRC") or str(Path.home() / "OneDrive" / "tour-engine")
 NO_INTRO = "try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}"
 ALIGN_PX = 1.5   # spotlight edge to target edge, net of the engine's 6px padding
 
@@ -479,7 +480,7 @@ def main() -> int:
                     rep.check("control: the unpatched engine DOES record under the same check",
                               u["on"] and u["bar"], f"{u}")
                 else:
-                    rep.not_run("control: the unpatched engine records", "set TOUR_ENGINE_SRC to a checkout")
+                    rep.not_run("control: the unpatched engine records", f"no tour.js in {SRC}: clone tour-engine there or set TOUR_ENGINE_SRC")
             chrome.close()
     finally:
         server.shutdown()

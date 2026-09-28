@@ -11,6 +11,7 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
 - `quantum-finance/04_security/pqc_readiness` at 5345b40: Mosca inputs
   (`tools/extract_pqc.py`) and published results (graded by `tests/check_mosca.py`)
 - `willckim/tour-engine` at 7eefca5: vendored with the recorder disabled
+  (cloned at ~/OneDrive/tour-engine for check_tour's recorder control; TOUR_ENGINE_SRC overrides)
 
 ## Regenerate
 - `py tools/sitegen.py` rewrites the header on every page, the five case studies,
