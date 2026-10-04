@@ -50,9 +50,11 @@ def external_links() -> dict[str, list[str]]:
 
 # FRED closes the connection on a browser user agent that carries no cookies, so a
 # real series page times out here while opening fine in a browser. Identifying as a
-# script gets an honest 200 or 404 from it, so its links are still checked.
+# script gets an honest 200 or 404 from it, so its links are still checked. The
+# token is generic: no name, email, handle or personal domain goes to any service.
 SCRIPT_UA_HOSTS = ("fred.stlouisfed.org",)
-SCRIPT_UA = "williamckim.com link check (python urllib)"
+SCRIPT_UA = "static-site-link-check/1.0"
+PERSONAL = re.compile(r"william|willckim|williamckim|wkim|kim\b|@|\.com|github|https?:", re.I)
 
 
 def fetch(url: str) -> tuple[int | str, str]:
@@ -99,6 +101,9 @@ def main() -> int:
     finally:
         server.shutdown()
 
+    rep.check("the link check's script user agent carries no personal information",
+              bool(re.fullmatch(r"[a-z]+(-[a-z]+)*/\d+(\.\d+)*", SCRIPT_UA)) and not PERSONAL.search(SCRIPT_UA),
+              SCRIPT_UA)
     if "--no-links" in sys.argv:
         rep.not_run("external links", "skipped with --no-links")
         return rep.finish()
