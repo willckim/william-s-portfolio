@@ -59,6 +59,9 @@ RULES = [
     ("no retired 2041 scenario", re.compile(r"\b2041\b")),
     ("no retired mutation figures", re.compile(r"145 of 145|\b251\b")),
     ("no retired system count", re.compile(r"four production systems|\b4\b Production systems", re.I)),
+    # The contractor in the Construction Forecast is made up. Its name never
+    # appears without the label right after it.
+    ("contractor labeled fictional", re.compile(r"Prairie Ridge Builders(?! \(fictional\))")),
 ]
 
 
@@ -107,6 +110,14 @@ def rendered(rep: Report) -> None:
                         texts.append(page.inner_text("#m-x-note"))
                     page.click("[data-g=oracle]")
                     texts.append(page.inner_text("#grover"))
+                    for key in page.eval_on_selector_all("#cf-presets .preset", "bs => bs.map(b => b.dataset.preset)"):
+                        page.click(f'button[data-preset="{key}"]')     # each preset's summary and chart text
+                        texts.append(page.inner_text("#construction"))
+                        texts += page.eval_on_selector_all("#construction desc", "ds => ds.map(d => d.textContent)")
+                    page.check('input[name="cf-view"][value="24"]')
+                    page.check('input[name="cf-metric"][value="revenue"]')
+                    texts.append(page.inner_text("#construction"))
+                    texts += page.eval_on_selector_all("#construction desc", "ds => ds.map(d => d.textContent)")
                     page.keyboard.press("Control+k")
                     page.wait_for_selector("dialog.palette[open]")
                     texts.append(page.inner_text("dialog.palette"))

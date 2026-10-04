@@ -1,0 +1,7116 @@
+{
+ "_generated_by": "tools/extract_construction.py",
+ "extracted_at": "2026-10-04T17:47:08",
+ "provenance": {
+  "engine": "forecasting-engine (private)",
+  "commit": "e4a0712",
+  "commit_date": "2026-10-04",
+  "uncommitted_changes": false,
+  "files": {
+   "macro.json": "0ec734df0852d236",
+   "contractor.json": "ac4264db86989247",
+   "prairie_ridge_model.xlsx": "e42b150f16086d24"
+  }
+ },
+ "sources": {
+  "snapshot": "2026-10-04",
+  "api_keys_used": false,
+  "fred": [
+   {
+    "id": "PNRESCON",
+    "title": "Total Private Construction Spending: Nonresidential in the United States",
+    "label": "Private nonresidential construction spending (not seasonally adjusted)",
+    "used_as": "Forecast target",
+    "pulled": "2026-10-04",
+    "first": "1993-01-01",
+    "last": "2026-08-01",
+    "rows": 404,
+    "url": "https://fred.stlouisfed.org/series/PNRESCON"
+   },
+   {
+    "id": "PNRESCONS",
+    "title": "Total Private Construction Spending: Nonresidential in the United States",
+    "label": "Private nonresidential construction spending (seasonally adjusted annual rate)",
+    "used_as": "Pulled for reference, not used in the model",
+    "pulled": "2026-10-04",
+    "first": "1993-01-01",
+    "last": "2026-08-01",
+    "rows": 404,
+    "url": "https://fred.stlouisfed.org/series/PNRESCONS"
+   },
+   {
+    "id": "WPUIP231200",
+    "title": "Producer Price Index by Commodity: Inputs to Industries: Net Inputs to New Nonresidential Construction, Excluding Capital Investment, Labor, and Imports",
+    "label": "PPI inputs to new nonresidential construction",
+    "used_as": "Tariff pass-through estimate",
+    "pulled": "2026-10-04",
+    "first": "2014-12-01",
+    "last": "2026-08-01",
+    "rows": 141,
+    "url": "https://fred.stlouisfed.org/series/WPUIP231200"
+   },
+   {
+    "id": "WPU1017",
+    "title": "Producer Price Index by Commodity: Metals and Metal Products: Steel Mill Products",
+    "label": "PPI steel mill products",
+    "used_as": "Driver tested in the backtest, tariff pass-through estimate",
+    "pulled": "2026-10-04",
+    "first": "1939-01-01",
+    "last": "2026-08-01",
+    "rows": 1052,
+    "url": "https://fred.stlouisfed.org/series/WPU1017"
+   },
+   {
+    "id": "WPU102501",
+    "title": "Producer Price Index by Commodity: Metals and Metal Products: Aluminum Mill Shapes",
+    "label": "PPI aluminum mill shapes",
+    "used_as": "Driver tested in the backtest, tariff pass-through estimate",
+    "pulled": "2026-10-04",
+    "first": "1947-01-01",
+    "last": "2026-08-01",
+    "rows": 956,
+    "url": "https://fred.stlouisfed.org/series/WPU102501"
+   },
+   {
+    "id": "WPU102502",
+    "title": "Producer Price Index by Commodity: Metals and Metal Products: Copper and Brass Mill Shapes",
+    "label": "PPI copper and brass mill shapes",
+    "used_as": "Driver tested in the backtest, tariff pass-through estimate",
+    "pulled": "2026-10-04",
+    "first": "1953-12-01",
+    "last": "2026-08-01",
+    "rows": 873,
+    "url": "https://fred.stlouisfed.org/series/WPU102502"
+   },
+   {
+    "id": "WPU081",
+    "title": "Producer Price Index by Commodity: Lumber and Wood Products: Lumber",
+    "label": "PPI lumber",
+    "used_as": "Driver tested in the backtest, tariff pass-through estimate",
+    "pulled": "2026-10-04",
+    "first": "1926-01-01",
+    "last": "2026-08-01",
+    "rows": 1208,
+    "url": "https://fred.stlouisfed.org/series/WPU081"
+   },
+   {
+    "id": "APU000074717",
+    "title": "Average Price: Automotive Diesel Fuel (Cost per Gallon/3.785 Liters) in U.S. City Average",
+    "label": "Diesel fuel price, U.S. city average",
+    "used_as": "Driver tested in the backtest, tariff pass-through estimate, fuel scenarios",
+    "pulled": "2026-10-04",
+    "first": "1998-01-01",
+    "last": "2026-08-01",
+    "rows": 343,
+    "url": "https://fred.stlouisfed.org/series/APU000074717"
+   },
+   {
+    "id": "FEDFUNDS",
+    "title": "Federal Funds Effective Rate",
+    "label": "Federal funds effective rate (monthly)",
+    "used_as": "Driver tested in the backtest, rate path",
+    "pulled": "2026-10-04",
+    "first": "1954-07-01",
+    "last": "2026-09-01",
+    "rows": 867,
+    "url": "https://fred.stlouisfed.org/series/FEDFUNDS"
+   },
+   {
+    "id": "GS10",
+    "title": "Market Yield on U.S. Treasury Securities at 10-Year Constant Maturity, Quoted on an Investment Basis",
+    "label": "10-year Treasury yield (monthly)",
+    "used_as": "Driver tested in the backtest",
+    "pulled": "2026-10-04",
+    "first": "1953-04-01",
+    "last": "2026-09-01",
+    "rows": 882,
+    "url": "https://fred.stlouisfed.org/series/GS10"
+   },
+   {
+    "id": "USCONS",
+    "title": "All Employees, Construction",
+    "label": "Construction employment",
+    "used_as": "Driver tested in the backtest",
+    "pulled": "2026-10-04",
+    "first": "1939-01-01",
+    "last": "2026-09-01",
+    "rows": 1053,
+    "url": "https://fred.stlouisfed.org/series/USCONS"
+   },
+   {
+    "id": "JTS2300JOL",
+    "title": "Job Openings: Construction",
+    "label": "Construction job openings",
+    "used_as": "Driver tested in the backtest",
+    "pulled": "2026-10-04",
+    "first": "2000-12-01",
+    "last": "2026-08-01",
+    "rows": 309,
+    "url": "https://fred.stlouisfed.org/series/JTS2300JOL"
+   },
+   {
+    "id": "SUBLPDRCSC",
+    "title": "Net Percentage of Domestic Banks Tightening Standards for Commercial Real Estate Loans With Construction and Land Development Purposes",
+    "label": "Net share of banks tightening construction and land development loan standards (quarterly)",
+    "used_as": "Pulled, not used. Quarterly, starting October 2013. Too short, and a different frequency.",
+    "pulled": "2026-10-04",
+    "first": "2013-10-01",
+    "last": "2026-07-01",
+    "rows": 52,
+    "url": "https://fred.stlouisfed.org/series/SUBLPDRCSC"
+   },
+   {
+    "id": "PBHWYCONS",
+    "title": "Total Public Construction Spending: Highway and Street in the United States",
+    "label": "Public highway and street construction spending",
+    "used_as": "Pulled for reference, not used in the model",
+    "pulled": "2026-10-04",
+    "first": "2002-01-01",
+    "last": "2026-08-01",
+    "rows": 296,
+    "url": "https://fred.stlouisfed.org/series/PBHWYCONS"
+   },
+   {
+    "id": "FEDTARMD",
+    "title": "FOMC Summary of Economic Projections for the Fed Funds Rate, Median",
+    "label": "FOMC projections, federal funds rate, median (year end)",
+    "used_as": "Rate path",
+    "pulled": "2026-10-04",
+    "first": "2026-01-01",
+    "last": "2029-01-01",
+    "rows": 4,
+    "url": "https://fred.stlouisfed.org/series/FEDTARMD"
+   },
+   {
+    "id": "RSAFSNA",
+    "title": "Advance Retail Sales: Retail Trade and Food Services",
+    "label": "Retail and food services sales (not seasonally adjusted)",
+    "used_as": "Sample dataset",
+    "pulled": "2026-10-04",
+    "first": "1992-01-01",
+    "last": "2026-08-01",
+    "rows": 416,
+    "url": "https://fred.stlouisfed.org/series/RSAFSNA"
+   },
+   {
+    "id": "IPG2211A2N",
+    "title": "Industrial Production: Utilities: Electric and Gas Utilities (NAICS = 2211,2)",
+    "label": "Industrial production, electric and gas utilities (not seasonally adjusted)",
+    "used_as": "Sample dataset",
+    "pulled": "2026-10-04",
+    "first": "1939-01-01",
+    "last": "2026-08-01",
+    "rows": 1052,
+    "url": "https://fred.stlouisfed.org/series/IPG2211A2N"
+   }
+  ],
+  "noaa": {
+   "station": "USW00094846",
+   "name": "CHICAGO OHARE INTERNATIONAL AIRPORT, IL US",
+   "first": "1958-01-01",
+   "last": "2026-09-29",
+   "rows": 25109,
+   "pulled": "2026-10-04"
+  },
+  "abi": "skipped: no file at construction/manual/abi.csv",
+  "weather_rules": [
+   {
+    "key": "precip",
+    "element": "PRCP",
+    "op": ">",
+    "threshold": 0.1,
+    "source": "Tennessee Board of Regents, Section 01 26 20 Weather Delays",
+    "url": "https://www.tbr.edu/sites/default/files/media/2015/08/s012620%20Weather%20Delays.pdf",
+    "quote": "precipitation (rain, snow, or ice) in excess of one-tenth inch (0.10\") liquid measure"
+   },
+   {
+    "key": "heat",
+    "element": "TMAX",
+    "op": ">=",
+    "threshold": 95,
+    "source": "Cal/OSHA, 8 CCR 3395(e) high-heat procedures (a California rule, used as a reference point)",
+    "url": "https://www.dir.ca.gov/title8/3395.html",
+    "quote": "The employer shall implement high-heat procedures when the temperature equals or exceeds 95 degrees Fahrenheit."
+   },
+   {
+    "key": "cold",
+    "element": "TMIN",
+    "op": "<",
+    "threshold": 20,
+    "source": "Brick Industry Association Technical Note 1, cold weather masonry",
+    "url": "https://www.gobrick.com/media/file/1-tn1.pdf",
+    "quote": "if the ambient temperature falls below 20 °F (-6.7 °C), then a heated enclosure must be provided for masonry under construction."
+   },
+   {
+    "key": "snow",
+    "element": "SNWD",
+    "op": ">",
+    "threshold": 1.0,
+    "source": "Tennessee Board of Regents, Section 01 26 20 Weather Delays",
+    "url": "https://www.tbr.edu/sites/default/files/media/2015/08/s012620%20Weather%20Delays.pdf",
+    "quote": "standing snow in excess of one inch (1.00\")"
+   },
+   {
+    "key": "wind",
+    "element": "WSF2",
+    "op": ">",
+    "threshold": 25,
+    "source": "Tennessee Board of Regents, Section 01 26 20 Weather Delays. WSF2 is NOAA's fastest 2-minute wind, the closest daily element to a sustained wind.",
+    "url": "https://www.tbr.edu/sites/default/files/media/2015/08/s012620%20Weather%20Delays.pdf",
+    "quote": "sustained wind in excess of twenty-five (25) m.p.h."
+   }
+  ],
+  "climatology_years": "1996 to 2026"
+ },
+ "macro": {
+  "target": {
+   "id": "PNRESCON",
+   "first": "1993-01-01",
+   "last": "2026-08-01",
+   "units": "millions of dollars per month, not seasonally adjusted"
+  },
+  "published": {
+   "publication_lag_months": 1,
+   "model": "holt_winters_damped",
+   "data_through": "2026-08-01",
+   "forecast": [
+    {
+     "h": 1,
+     "date": "2026-10-01",
+     "point": 68158.5,
+     "p10": 65912.1,
+     "p50": 68162.4,
+     "p90": 72334.6
+    },
+    {
+     "h": 2,
+     "date": "2026-11-01",
+     "point": 66679.8,
+     "p10": 63913.0,
+     "p50": 66852.6,
+     "p90": 72228.6
+    },
+    {
+     "h": 3,
+     "date": "2026-12-01",
+     "point": 64633.6,
+     "p10": 61386.7,
+     "p50": 64998.0,
+     "p90": 72032.0
+    },
+    {
+     "h": 4,
+     "date": "2027-01-01",
+     "point": 59688.7,
+     "p10": 56257.0,
+     "p50": 60684.4,
+     "p90": 67572.6
+    },
+    {
+     "h": 5,
+     "date": "2027-02-01",
+     "point": 58074.9,
+     "p10": 54388.1,
+     "p50": 59628.4,
+     "p90": 66813.7
+    },
+    {
+     "h": 6,
+     "date": "2027-03-01",
+     "point": 60158.5,
+     "p10": 56114.5,
+     "p50": 61789.6,
+     "p90": 70526.6
+    },
+    {
+     "h": 7,
+     "date": "2027-04-01",
+     "point": 61774.4,
+     "p10": 57732.6,
+     "p50": 62542.9,
+     "p90": 73378.3
+    },
+    {
+     "h": 8,
+     "date": "2027-05-01",
+     "point": 63403.5,
+     "p10": 59125.1,
+     "p50": 64551.4,
+     "p90": 75245.9
+    },
+    {
+     "h": 9,
+     "date": "2027-06-01",
+     "point": 65535.4,
+     "p10": 61407.7,
+     "p50": 66252.8,
+     "p90": 78087.9
+    },
+    {
+     "h": 10,
+     "date": "2027-07-01",
+     "point": 65668.1,
+     "p10": 61139.8,
+     "p50": 66487.4,
+     "p90": 80149.6
+    },
+    {
+     "h": 11,
+     "date": "2027-08-01",
+     "point": 66629.1,
+     "p10": 62402.4,
+     "p50": 68657.9,
+     "p90": 82490.6
+    },
+    {
+     "h": 12,
+     "date": "2027-09-01",
+     "point": 66941.1,
+     "p10": 62106.3,
+     "p50": 68956.3,
+     "p90": 84065.7
+    }
+   ]
+  },
+  "variants": [
+   {
+    "publication_lag_months": 0,
+    "backtest": {
+     "first_origin": "2020-09-01",
+     "last_origin": "2026-07-01",
+     "origins": 71,
+     "horizon": 12,
+     "selection": "mean_mape_h1_h12"
+    },
+    "winner": "holt_winters_damped",
+    "winner_vs_seasonal_naive_pct": 37.73,
+    "table": [
+     {
+      "key": "seasonal_naive",
+      "name": "Seasonal naive",
+      "mean_mape": 9.5731,
+      "mean_mae": 5533.64,
+      "mean_mase": 1.0,
+      "h1_mape": 9.3408,
+      "h12_mape": 10.144,
+      "folds_h1": 71,
+      "folds_h12": 60
+     },
+     {
+      "key": "linear_trend",
+      "name": "Linear trend + seasonality",
+      "mean_mape": 14.2601,
+      "mean_mae": 8648.72,
+      "mean_mase": 1.5581,
+      "h1_mape": 11.2588,
+      "h12_mape": 16.6832,
+      "folds_h1": 71,
+      "folds_h12": 60
+     },
+     {
+      "key": "holt_winters",
+      "name": "Holt-Winters",
+      "mean_mape": 6.1917,
+      "mean_mae": 3608.85,
+      "mean_mase": 0.6439,
+      "h1_mape": 1.7867,
+      "h12_mape": 10.1679,
+      "folds_h1": 71,
+      "folds_h12": 60
+     },
+     {
+      "key": "holt_winters_damped",
+      "name": "Holt-Winters damped",
+      "mean_mape": 5.9609,
+      "mean_mae": 3396.99,
+      "mean_mase": 0.6071,
+      "h1_mape": 1.7841,
+      "h12_mape": 9.3382,
+      "folds_h1": 71,
+      "folds_h12": 60
+     },
+     {
+      "key": "momentum",
+      "name": "YoY momentum",
+      "mean_mape": 7.2895,
+      "mean_mae": 4141.1,
+      "mean_mase": 0.7443,
+      "h1_mape": 6.5787,
+      "h12_mape": 9.6621,
+      "folds_h1": 71,
+      "folds_h12": 60
+     },
+     {
+      "key": "drivers",
+      "name": "Drivers (lagged)",
+      "mean_mape": 7.1035,
+      "mean_mae": 4093.59,
+      "mean_mase": 0.7334,
+      "h1_mape": 4.8198,
+      "h12_mape": 10.2294,
+      "folds_h1": 71,
+      "folds_h12": 60
+     }
+    ],
+    "coverage": {
+     "split": "2023-09-01",
+     "nominal": 0.8,
+     "by_horizon": [
+      {
+       "h": 1,
+       "calibration_folds": 35,
+       "test_folds": 35,
+       "covered": 29,
+       "coverage": 0.8286
+      },
+      {
+       "h": 2,
+       "calibration_folds": 34,
+       "test_folds": 34,
+       "covered": 24,
+       "coverage": 0.7059
+      },
+      {
+       "h": 3,
+       "calibration_folds": 33,
+       "test_folds": 33,
+       "covered": 20,
+       "coverage": 0.6061
+      },
+      {
+       "h": 4,
+       "calibration_folds": 32,
+       "test_folds": 32,
+       "covered": 18,
+       "coverage": 0.5625
+      },
+      {
+       "h": 5,
+       "calibration_folds": 31,
+       "test_folds": 31,
+       "covered": 18,
+       "coverage": 0.5806
+      },
+      {
+       "h": 6,
+       "calibration_folds": 30,
+       "test_folds": 30,
+       "covered": 16,
+       "coverage": 0.5333
+      },
+      {
+       "h": 7,
+       "calibration_folds": 29,
+       "test_folds": 29,
+       "covered": 16,
+       "coverage": 0.5517
+      },
+      {
+       "h": 8,
+       "calibration_folds": 28,
+       "test_folds": 28,
+       "covered": 16,
+       "coverage": 0.5714
+      },
+      {
+       "h": 9,
+       "calibration_folds": 27,
+       "test_folds": 27,
+       "covered": 1,
+       "coverage": 0.037
+      },
+      {
+       "h": 10,
+       "calibration_folds": 26,
+       "test_folds": 26,
+       "covered": 0,
+       "coverage": 0.0
+      },
+      {
+       "h": 11,
+       "calibration_folds": 25,
+       "test_folds": 25,
+       "covered": 0,
+       "coverage": 0.0
+      },
+      {
+       "h": 12,
+       "calibration_folds": 24,
+       "test_folds": 24,
+       "covered": 0,
+       "coverage": 0.0
+      }
+     ]
+    }
+   },
+   {
+    "publication_lag_months": 1,
+    "backtest": {
+     "first_origin": "2020-09-01",
+     "last_origin": "2026-07-01",
+     "origins": 71,
+     "horizon": 12,
+     "selection": "mean_mape_h1_h12"
+    },
+    "winner": "holt_winters_damped",
+    "winner_vs_seasonal_naive_pct": 34.52,
+    "table": [
+     {
+      "key": "seasonal_naive",
+      "name": "Seasonal naive",
+      "mean_mape": 10.1546,
+      "mean_mae": 5918.37,
+      "mean_mase": 1.0,
+      "h1_mape": 9.3408,
+      "h12_mape": 17.122,
+      "folds_h1": 71,
+      "folds_h12": 60
+     },
+     {
+      "key": "linear_trend",
+      "name": "Linear trend + seasonality",
+      "mean_mape": 14.8174,
+      "mean_mae": 8987.53,
+      "mean_mase": 1.5461,
+      "h1_mape": 11.8326,
+      "h12_mape": 18.9955,
+      "folds_h1": 71,
+      "folds_h12": 60
+     },
+     {
+      "key": "holt_winters",
+      "name": "Holt-Winters",
+      "mean_mape": 6.9068,
+      "mean_mae": 4039.25,
+      "mean_mase": 0.6805,
+      "h1_mape": 2.991,
+      "h12_mape": 11.1383,
+      "folds_h1": 71,
+      "folds_h12": 60
+     },
+     {
+      "key": "holt_winters_damped",
+      "name": "Holt-Winters damped",
+      "mean_mape": 6.649,
+      "mean_mae": 3790.95,
+      "mean_mase": 0.6411,
+      "h1_mape": 2.9322,
+      "h12_mape": 10.412,
+      "folds_h1": 71,
+      "folds_h12": 60
+     },
+     {
+      "key": "momentum",
+      "name": "YoY momentum",
+      "mean_mape": 8.0097,
+      "mean_mae": 4577.66,
+      "mean_mase": 0.7655,
+      "h1_mape": 6.7364,
+      "h12_mape": 14.7688,
+      "folds_h1": 71,
+      "folds_h12": 60
+     },
+     {
+      "key": "drivers",
+      "name": "Drivers (lagged)",
+      "mean_mape": 7.8263,
+      "mean_mae": 4526.15,
+      "mean_mase": 0.76,
+      "h1_mape": 5.1472,
+      "h12_mape": 13.3086,
+      "folds_h1": 71,
+      "folds_h12": 60
+     }
+    ],
+    "coverage": {
+     "split": "2023-09-01",
+     "nominal": 0.8,
+     "by_horizon": [
+      {
+       "h": 1,
+       "calibration_folds": 35,
+       "test_folds": 35,
+       "covered": 24,
+       "coverage": 0.6857
+      },
+      {
+       "h": 2,
+       "calibration_folds": 34,
+       "test_folds": 34,
+       "covered": 21,
+       "coverage": 0.6176
+      },
+      {
+       "h": 3,
+       "calibration_folds": 33,
+       "test_folds": 33,
+       "covered": 19,
+       "coverage": 0.5758
+      },
+      {
+       "h": 4,
+       "calibration_folds": 32,
+       "test_folds": 32,
+       "covered": 19,
+       "coverage": 0.5938
+      },
+      {
+       "h": 5,
+       "calibration_folds": 31,
+       "test_folds": 31,
+       "covered": 17,
+       "coverage": 0.5484
+      },
+      {
+       "h": 6,
+       "calibration_folds": 30,
+       "test_folds": 30,
+       "covered": 17,
+       "coverage": 0.5667
+      },
+      {
+       "h": 7,
+       "calibration_folds": 29,
+       "test_folds": 29,
+       "covered": 15,
+       "coverage": 0.5172
+      },
+      {
+       "h": 8,
+       "calibration_folds": 28,
+       "test_folds": 28,
+       "covered": 2,
+       "coverage": 0.0714
+      },
+      {
+       "h": 9,
+       "calibration_folds": 27,
+       "test_folds": 27,
+       "covered": 0,
+       "coverage": 0.0
+      },
+      {
+       "h": 10,
+       "calibration_folds": 26,
+       "test_folds": 26,
+       "covered": 0,
+       "coverage": 0.0
+      },
+      {
+       "h": 11,
+       "calibration_folds": 25,
+       "test_folds": 25,
+       "covered": 0,
+       "coverage": 0.0
+      },
+      {
+       "h": 12,
+       "calibration_folds": 24,
+       "test_folds": 24,
+       "covered": 0,
+       "coverage": 0.0
+      }
+     ]
+    }
+   }
+  ],
+  "recent_actuals": [
+   {
+    "date": "2023-09-01",
+    "value": 66008.0
+   },
+   {
+    "date": "2023-10-01",
+    "value": 67263.0
+   },
+   {
+    "date": "2023-11-01",
+    "value": 66386.0
+   },
+   {
+    "date": "2023-12-01",
+    "value": 64917.0
+   },
+   {
+    "date": "2024-01-01",
+    "value": 61764.0
+   },
+   {
+    "date": "2024-02-01",
+    "value": 62437.0
+   },
+   {
+    "date": "2024-03-01",
+    "value": 64896.0
+   },
+   {
+    "date": "2024-04-01",
+    "value": 65253.0
+   },
+   {
+    "date": "2024-05-01",
+    "value": 66264.0
+   },
+   {
+    "date": "2024-06-01",
+    "value": 67950.0
+   },
+   {
+    "date": "2024-07-01",
+    "value": 67780.0
+   },
+   {
+    "date": "2024-08-01",
+    "value": 69139.0
+   },
+   {
+    "date": "2024-09-01",
+    "value": 68600.0
+   },
+   {
+    "date": "2024-10-01",
+    "value": 68994.0
+   },
+   {
+    "date": "2024-11-01",
+    "value": 67839.0
+   },
+   {
+    "date": "2024-12-01",
+    "value": 66182.0
+   },
+   {
+    "date": "2025-01-01",
+    "value": 63011.0
+   },
+   {
+    "date": "2025-02-01",
+    "value": 62926.0
+   },
+   {
+    "date": "2025-03-01",
+    "value": 64728.0
+   },
+   {
+    "date": "2025-04-01",
+    "value": 67046.0
+   },
+   {
+    "date": "2025-05-01",
+    "value": 66417.0
+   },
+   {
+    "date": "2025-06-01",
+    "value": 66395.0
+   },
+   {
+    "date": "2025-07-01",
+    "value": 66506.0
+   },
+   {
+    "date": "2025-08-01",
+    "value": 67174.0
+   },
+   {
+    "date": "2025-09-01",
+    "value": 66494.0
+   },
+   {
+    "date": "2025-10-01",
+    "value": 67098.0
+   },
+   {
+    "date": "2025-11-01",
+    "value": 64101.0
+   },
+   {
+    "date": "2025-12-01",
+    "value": 61846.0
+   },
+   {
+    "date": "2026-01-01",
+    "value": 58568.0
+   },
+   {
+    "date": "2026-02-01",
+    "value": 58514.0
+   },
+   {
+    "date": "2026-03-01",
+    "value": 60870.0
+   },
+   {
+    "date": "2026-04-01",
+    "value": 62046.0
+   },
+   {
+    "date": "2026-05-01",
+    "value": 62977.0
+   },
+   {
+    "date": "2026-06-01",
+    "value": 64609.0
+   },
+   {
+    "date": "2026-07-01",
+    "value": 65080.0
+   },
+   {
+    "date": "2026-08-01",
+    "value": 66591.0
+   }
+  ]
+ },
+ "contractor": {
+  "company": "Prairie Ridge Builders (fictional)",
+  "label": "Scenario analysis, not a forecast",
+  "macro_model": "holt_winters_damped",
+  "views": [
+   "12",
+   "24"
+  ],
+  "rates_source": {
+   "title": "Bloesch and Weber, \"Structural Changes in Investment and the Waning Power of Monetary Policy\", Federal Reserve Bank of New York Staff Reports no. 1190, March 2026",
+   "url": "https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr1190.pdf",
+   "quote": "the response of residential investment, non-residential structures, and equipment which peak at 15, 5, and 10 percent, respectively",
+   "shock": "The effect of a 1% decrease in the federal funds rate on real investment",
+   "checked": "2026-10-04"
+  },
+  "rates_caveats": [
+   "The 5% is the peak response of nonresidential structures SPENDING to a 100 bp CUT. Applying it to bookings, and to a rise, assumes the effect is symmetric. That is an assumption.",
+   "In that paper the spending response peaks about 10 quarters after the shock. Bookings lead spending, so the 6-month lag on bookings is an assumption.",
+   "The estimate uses 1969 to 1996 data, and Chicago Fed Letter 482 (2023) reports a positive response of structures to higher rates, which it calls puzzling. The sign is not settled."
+  ],
+  "weather_factor_sources": {
+   "neca_table": {
+    "title": "National Electrical Contractors Association, Effect of Temperature and Humidity on Productivity, reprinted in Adrian and Adrian, Total Productivity and Quality Management for Construction (1995), Table 2",
+    "url": "https://sjcivil.com/wp-content/uploads/2018/04/table2.png",
+    "values_at_60pct_humidity": "-10F 60, 0F 76, 10F 87, 20F 94, 90F 93, 100F 80, 110F 57 (percent productivity)",
+    "checked": "2026-10-04, read from the reprinted table image",
+    "caveat": "NECA uses effective temperature, which includes wind chill, and electrical work. Daily min and max temperature are stand-ins."
+   },
+   "schuldt_2021": {
+    "title": "Schuldt et al., \"Weather-Related Construction Delays in a Changing Climate\", Sustainability 13(5) 2861, 2021",
+    "url": "https://www.mdpi.com/2071-1050/13/5/2861",
+    "quotes": [
+     "Precipitation occurring as light rain (less than 4 mm per 12 h) can reduce labor productivity by up to 40%",
+     "Heavy snowfall can affect worker productivity ... and can reduce crew efficiency by 35%"
+    ],
+    "checked": "2026-10-04, read from the Wayback Machine copy"
+   },
+   "by_factor": {
+    "precip_light": "assumption, inside the \"up to 40%\" loss Schuldt et al. report for light rain",
+    "precip_severe": "assumption",
+    "heat_light": "sourced, NECA table midway between 90F (93) and 100F (80)",
+    "heat_severe": "sourced, NECA table midway between 100F (80) and 110F (57)",
+    "cold_light": "sourced, NECA table midway between 10F (87) and 20F (94)",
+    "cold_severe": "sourced, NECA table midway between -10F (60) and 0F (76)",
+    "snow_light": "assumption",
+    "snow_severe": "partly sourced, Schuldt et al. report a 35% loss for heavy snowfall, not snow depth",
+    "wind_light": "assumption",
+    "wind_severe": "assumption"
+   }
+  },
+  "weather_tiers": {
+   "precip": {
+    "element": "PRCP",
+    "light": {
+     "op": ">",
+     "threshold": 0.1,
+     "factor": 0.8
+    },
+    "severe": {
+     "op": ">=",
+     "threshold": 0.5,
+     "factor": 0.5
+    }
+   },
+   "heat": {
+    "element": "TMAX",
+    "light": {
+     "op": ">=",
+     "threshold": 95,
+     "factor": 0.87
+    },
+    "severe": {
+     "op": ">=",
+     "threshold": 100,
+     "factor": 0.69
+    }
+   },
+   "cold": {
+    "element": "TMIN",
+    "light": {
+     "op": "<",
+     "threshold": 20,
+     "factor": 0.9
+    },
+    "severe": {
+     "op": "<",
+     "threshold": 0,
+     "factor": 0.68
+    }
+   },
+   "snow": {
+    "element": "SNWD",
+    "light": {
+     "op": ">",
+     "threshold": 1.0,
+     "factor": 0.85
+    },
+    "severe": {
+     "op": ">",
+     "threshold": 6.0,
+     "factor": 0.65
+    }
+   },
+   "wind": {
+    "element": "WSF2",
+    "light": {
+     "op": ">",
+     "threshold": 25,
+     "factor": 0.75
+    },
+    "severe": {
+     "op": ">",
+     "threshold": 40,
+     "factor": 0.5
+    }
+   }
+  },
+  "model": {
+   "company": {
+    "name": "Prairie Ridge Builders (fictional)",
+    "fictional": true,
+    "as_of": "2026-09-30",
+    "months": 24,
+    "main_months": 12,
+    "extension_note": "Months 13 to 24 are a scenario extension, not a forecast. The macro forecast and its backtest cover 12 months. Beyond that, base bookings repeat the macro P50's 12-month seasonal shape with no further growth.",
+    "currency": "USD thousands"
+   },
+   "months": [
+    "2026-10",
+    "2026-11",
+    "2026-12",
+    "2027-01",
+    "2027-02",
+    "2027-03",
+    "2027-04",
+    "2027-05",
+    "2027-06",
+    "2027-07",
+    "2027-08",
+    "2027-09",
+    "2027-10",
+    "2027-11",
+    "2027-12",
+    "2028-01",
+    "2028-02",
+    "2028-03",
+    "2028-04",
+    "2028-05",
+    "2028-06",
+    "2028-07",
+    "2028-08",
+    "2028-09"
+   ],
+   "main_months": 12,
+   "extension_note": "Months 13 to 24 are a scenario extension, not a forecast. The macro forecast and its backtest cover 12 months. Beyond that, base bookings repeat the macro P50's 12-month seasonal shape with no further growth.",
+   "backlog": {
+    "fixed": [
+     7230.357142857143,
+     9042.857142857143,
+     11098.4126984127,
+     11098.4126984127,
+     10010.9126984127,
+     10010.9126984127,
+     7810.912698412698,
+     5368.055555555556,
+     3868.0555555555557,
+     3868.0555555555557,
+     3868.0555555555557,
+     1812.5,
+     1812.5,
+     1812.5,
+     1812.5,
+     1812.5,
+     1812.5,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "escalation": [
+     8188.214285714286,
+     8188.214285714286,
+     8188.214285714286,
+     10388.214285714286,
+     10388.214285714286,
+     10388.214285714286,
+     10388.214285714286,
+     10388.214285714286,
+     10388.214285714286,
+     10388.214285714286,
+     6748.214285714286,
+     6748.214285714286,
+     4835.714285714286,
+     4835.714285714286,
+     2200.0,
+     2200.0,
+     2200.0,
+     2200.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "margin_dollars": [
+     1347.4589285714287,
+     1474.3339285714287,
+     1700.4450396825398,
+     1898.4450396825398,
+     1767.9450396825398,
+     1767.9450396825398,
+     1558.9450396825396,
+     1314.6593253968254,
+     1209.6593253968254,
+     1209.6593253968254,
+     918.4593253968254,
+     692.3482142857143,
+     548.9107142857143,
+     548.9107142857143,
+     324.875,
+     324.875,
+     324.875,
+     198.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "beyond_window": 0.0,
+    "projects": [
+     {
+      "name": "Medical office building",
+      "sector": "private",
+      "contract": "fixed",
+      "value": 38000,
+      "complete": 0.55,
+      "start": 0,
+      "months_left": 7,
+      "margin": 0.1,
+      "remaining": 17100.0,
+      "monthly": 2442.857,
+      "in_window": 17100.0
+     },
+     {
+      "name": "Distribution warehouse",
+      "sector": "private",
+      "contract": "escalation",
+      "value": 52000,
+      "complete": 0.3,
+      "start": 0,
+      "months_left": 10,
+      "margin": 0.08,
+      "remaining": 36400.0,
+      "monthly": 3640.0,
+      "in_window": 36400.0
+     },
+     {
+      "name": "Suburban office renovation",
+      "sector": "private",
+      "contract": "fixed",
+      "value": 14500,
+      "complete": 0.7,
+      "start": 0,
+      "months_left": 4,
+      "margin": 0.12,
+      "remaining": 4350.0,
+      "monthly": 1087.5,
+      "in_window": 4350.0
+     },
+     {
+      "name": "Cold storage facility",
+      "sector": "private",
+      "contract": "escalation",
+      "value": 41000,
+      "complete": 0.1,
+      "start": 0,
+      "months_left": 14,
+      "margin": 0.085,
+      "remaining": 36900.0,
+      "monthly": 2635.714,
+      "in_window": 36900.0
+     },
+     {
+      "name": "Retail center shell",
+      "sector": "private",
+      "contract": "fixed",
+      "value": 22000,
+      "complete": 0.4,
+      "start": 0,
+      "months_left": 6,
+      "margin": 0.095,
+      "remaining": 13200.0,
+      "monthly": 2200.0,
+      "in_window": 13200.0
+     },
+     {
+      "name": "Laboratory fit-out",
+      "sector": "private",
+      "contract": "fixed",
+      "value": 18500,
+      "complete": 0.0,
+      "start": 2,
+      "months_left": 9,
+      "margin": 0.11,
+      "remaining": 18500.0,
+      "monthly": 2055.556,
+      "in_window": 18500.0
+     },
+     {
+      "name": "Hotel addition",
+      "sector": "private",
+      "contract": "escalation",
+      "value": 33000,
+      "complete": 0.0,
+      "start": 3,
+      "months_left": 15,
+      "margin": 0.09,
+      "remaining": 33000.0,
+      "monthly": 2200.0,
+      "in_window": 33000.0
+     },
+     {
+      "name": "Municipal public works garage",
+      "sector": "public",
+      "contract": "fixed",
+      "value": 16000,
+      "complete": 0.25,
+      "start": 0,
+      "months_left": 8,
+      "margin": 0.07,
+      "remaining": 12000.0,
+      "monthly": 1500.0,
+      "in_window": 12000.0
+     },
+     {
+      "name": "School district addition",
+      "sector": "public",
+      "contract": "escalation",
+      "value": 27000,
+      "complete": 0.15,
+      "start": 0,
+      "months_left": 12,
+      "margin": 0.075,
+      "remaining": 22950.0,
+      "monthly": 1912.5,
+      "in_window": 22950.0
+     },
+     {
+      "name": "Transit maintenance facility",
+      "sector": "public",
+      "contract": "fixed",
+      "value": 29000,
+      "complete": 0.0,
+      "start": 1,
+      "months_left": 16,
+      "margin": 0.07,
+      "remaining": 29000.0,
+      "monthly": 1812.5,
+      "in_window": 29000.0
+     }
+    ]
+   },
+   "bookings": {
+    "macro_p50": [
+     68162.4,
+     66852.6,
+     64998.0,
+     60684.4,
+     59628.4,
+     61789.6,
+     62542.9,
+     64551.4,
+     66252.8,
+     66487.4,
+     68657.9,
+     68956.3
+    ],
+    "macro_actual_last12": 758794.0,
+    "macro_growth": 0.027373,
+    "bookings_base": [
+     14821.93586138003,
+     14537.119428988633,
+     14133.836060907177,
+     13195.84234983408,
+     12966.214809289479,
+     13436.168446244963,
+     13599.973774173228,
+     14036.722746885189,
+     14406.69272556188,
+     14457.706571216957,
+     14929.682496171556,
+     14994.569672401205,
+     14821.93586138003,
+     14537.119428988633,
+     14133.836060907177,
+     13195.84234983408,
+     12966.214809289479,
+     13436.168446244963,
+     13599.973774173228,
+     14036.722746885189,
+     14406.69272556188,
+     14457.706571216957,
+     14929.682496171556,
+     14994.569672401205
+    ],
+    "trailing_12m": 165000,
+    "public_share": 0.25,
+    "fixed_price_share": 0.6,
+    "start_delay_months": 2,
+    "duration_months": 12,
+    "margin": 0.09
+   },
+   "macro_error_paths": [
+    [
+     -0.013285,
+     -0.024466,
+     -0.007934,
+     0.050295,
+     0.05246,
+     0.080468,
+     0.061188,
+     0.032814,
+     0.045929,
+     0.054861,
+     0.044784,
+     0.04384,
+     0.04384,
+     0.04384,
+     0.04384,
+     0.04384,
+     0.04384,
+     0.04384,
+     0.04384,
+     0.04384,
+     0.04384,
+     0.04384,
+     0.04384,
+     0.04384
+    ],
+    [
+     -0.020579,
+     -0.003894,
+     0.05448,
+     0.056782,
+     0.084921,
+     0.065765,
+     0.03751,
+     0.050737,
+     0.059775,
+     0.049799,
+     0.049346,
+     0.040737,
+     0.040737,
+     0.040737,
+     0.040737,
+     0.040737,
+     0.040737,
+     0.040737,
+     0.040737,
+     0.040737,
+     0.040737,
+     0.040737,
+     0.040737,
+     0.040737
+    ],
+    [
+     0.005506,
+     0.064248,
+     0.066901,
+     0.095373,
+     0.076533,
+     0.048578,
+     0.06209,
+     0.0714,
+     0.061681,
+     0.061473,
+     0.054052,
+     0.082005,
+     0.082005,
+     0.082005,
+     0.082005,
+     0.082005,
+     0.082005,
+     0.082005,
+     0.082005,
+     0.082005,
+     0.082005,
+     0.082005,
+     0.082005,
+     0.082005
+    ],
+    [
+     0.075623,
+     0.078722,
+     0.107618,
+     0.089181,
+     0.061608,
+     0.075484,
+     0.085139,
+     0.075748,
+     0.075852,
+     0.068727,
+     0.098118,
+     0.112929,
+     0.112929,
+     0.112929,
+     0.112929,
+     0.112929,
+     0.112929,
+     0.112929,
+     0.112929,
+     0.112929,
+     0.112929,
+     0.112929,
+     0.112929,
+     0.112929
+    ],
+    [
+     0.062584,
+     0.090847,
+     0.071809,
+     0.043664,
+     0.056997,
+     0.066137,
+     0.056256,
+     0.055894,
+     0.048327,
+     0.077298,
+     0.090069,
+     0.170274,
+     0.170274,
+     0.170274,
+     0.170274,
+     0.170274,
+     0.170274,
+     0.170274,
+     0.170274,
+     0.170274,
+     0.170274,
+     0.170274,
+     0.170274,
+     0.170274
+    ],
+    [
+     0.031696,
+     0.010337,
+     -0.020012,
+     -0.008774,
+     -0.001624,
+     -0.013395,
+     -0.015552,
+     -0.024826,
+     0.002525,
+     0.013756,
+     0.086483,
+     0.121881,
+     0.121881,
+     0.121881,
+     0.121881,
+     0.121881,
+     0.121881,
+     0.121881,
+     0.121881,
+     0.121881,
+     0.121881,
+     0.121881,
+     0.121881,
+     0.121881
+    ],
+    [
+     0.004559,
+     -0.026017,
+     -0.014994,
+     -0.008049,
+     -0.020014,
+     -0.022356,
+     -0.031805,
+     -0.004621,
+     0.006451,
+     0.079028,
+     0.113696,
+     0.128491,
+     0.128491,
+     0.128491,
+     0.128491,
+     0.128491,
+     0.128491,
+     0.128491,
+     0.128491,
+     0.128491,
+     0.128491,
+     0.128491,
+     0.128491,
+     0.128491
+    ],
+    [
+     -0.051738,
+     -0.041724,
+     -0.035738,
+     -0.048614,
+     -0.051821,
+     -0.062092,
+     -0.035689,
+     -0.025359,
+     0.046514,
+     0.080512,
+     0.092056,
+     0.114575,
+     0.114575,
+     0.114575,
+     0.114575,
+     0.114575,
+     0.114575,
+     0.114575,
+     0.114575,
+     0.114575,
+     0.114575,
+     0.114575,
+     0.114575,
+     0.114575
+    ],
+    [
+     -0.021958,
+     -0.015197,
+     -0.027336,
+     -0.029843,
+     -0.039449,
+     -0.012415,
+     -0.001484,
+     0.070958,
+     0.105498,
+     0.117556,
+     0.142575,
+     0.127544,
+     0.127544,
+     0.127544,
+     0.127544,
+     0.127544,
+     0.127544,
+     0.127544,
+     0.127544,
+     0.127544,
+     0.127544,
+     0.127544,
+     0.127544,
+     0.127544
+    ],
+    [
+     0.017047,
+     0.006172,
+     0.004867,
+     -0.003597,
+     0.024522,
+     0.036483,
+     0.109904,
+     0.145374,
+     0.158315,
+     0.184173,
+     0.173219,
+     0.1811,
+     0.1811,
+     0.1811,
+     0.1811,
+     0.1811,
+     0.1811,
+     0.1811,
+     0.1811,
+     0.1811,
+     0.1811,
+     0.1811,
+     0.1811,
+     0.1811
+    ],
+    [
+     -0.002632,
+     -0.004283,
+     -0.013075,
+     0.014732,
+     0.026397,
+     0.099537,
+     0.134739,
+     0.147427,
+     0.173044,
+     0.16186,
+     0.168628,
+     0.202528,
+     0.202528,
+     0.202528,
+     0.202528,
+     0.202528,
+     0.202528,
+     0.202528,
+     0.202528,
+     0.202528,
+     0.202528,
+     0.202528,
+     0.202528,
+     0.202528
+    ],
+    [
+     -0.012746,
+     -0.02187,
+     0.005622,
+     0.016987,
+     0.089842,
+     0.124774,
+     0.137205,
+     0.162578,
+     0.151162,
+     0.15771,
+     0.19054,
+     0.198575,
+     0.198575,
+     0.198575,
+     0.198575,
+     0.198575,
+     0.198575,
+     0.198575,
+     0.198575,
+     0.198575,
+     0.198575,
+     0.198575,
+     0.198575,
+     0.198575
+    ],
+    [
+     -0.011303,
+     0.016603,
+     0.028362,
+     0.101592,
+     0.136879,
+     0.149647,
+     0.175341,
+     0.16423,
+     0.171067,
+     0.204172,
+     0.213544,
+     0.227749,
+     0.227749,
+     0.227749,
+     0.227749,
+     0.227749,
+     0.227749,
+     0.227749,
+     0.227749,
+     0.227749,
+     0.227749,
+     0.227749,
+     0.227749,
+     0.227749
+    ],
+    [
+     0.019175,
+     0.031035,
+     0.10436,
+     0.139739,
+     0.152594,
+     0.178369,
+     0.167336,
+     0.174248,
+     0.207423,
+     0.216862,
+     0.231392,
+     0.221993,
+     0.221993,
+     0.221993,
+     0.221993,
+     0.221993,
+     0.221993,
+     0.221993,
+     0.221993,
+     0.221993,
+     0.221993,
+     0.221993,
+     0.221993,
+     0.221993
+    ],
+    [
+     0.039726,
+     0.113392,
+     0.149094,
+     0.162257,
+     0.188325,
+     0.17757,
+     0.184745,
+     0.218171,
+     0.227847,
+     0.242604,
+     0.234303,
+     0.264892,
+     0.264892,
+     0.264892,
+     0.264892,
+     0.264892,
+     0.264892,
+     0.264892,
+     0.264892,
+     0.264892,
+     0.264892,
+     0.264892,
+     0.264892,
+     0.264892
+    ],
+    [
+     0.086343,
+     0.120984,
+     0.133138,
+     0.158249,
+     0.146584,
+     0.152894,
+     0.185499,
+     0.194396,
+     0.208411,
+     0.199406,
+     0.226575,
+     0.254789,
+     0.254789,
+     0.254789,
+     0.254789,
+     0.254789,
+     0.254789,
+     0.254789,
+     0.254789,
+     0.254789,
+     0.254789,
+     0.254789,
+     0.254789,
+     0.254789
+    ],
+    [
+     0.107419,
+     0.119042,
+     0.143647,
+     0.131501,
+     0.137355,
+     0.169527,
+     0.178012,
+     0.191636,
+     0.182259,
+     0.209075,
+     0.235574,
+     0.329516,
+     0.329516,
+     0.329516,
+     0.329516,
+     0.329516,
+     0.329516,
+     0.329516,
+     0.329516,
+     0.329516,
+     0.329516,
+     0.329516,
+     0.329516,
+     0.329516
+    ],
+    [
+     0.046923,
+     0.068699,
+     0.053865,
+     0.057166,
+     0.086911,
+     0.093091,
+     0.104526,
+     0.09307,
+     0.117909,
+     0.142531,
+     0.227356,
+     0.265235,
+     0.265235,
+     0.265235,
+     0.265235,
+     0.265235,
+     0.265235,
+     0.265235,
+     0.265235,
+     0.265235,
+     0.265235,
+     0.265235,
+     0.265235,
+     0.265235
+    ],
+    [
+     0.031056,
+     0.014746,
+     0.016643,
+     0.045056,
+     0.04997,
+     0.060201,
+     0.047602,
+     0.071356,
+     0.094947,
+     0.178792,
+     0.211912,
+     0.231078,
+     0.231078,
+     0.231078,
+     0.231078,
+     0.231078,
+     0.231078,
+     0.231078,
+     0.231078,
+     0.231078,
+     0.231078,
+     0.231078,
+     0.231078,
+     0.231078
+    ],
+    [
+     0.00409,
+     0.00557,
+     0.033585,
+     0.038122,
+     0.047995,
+     0.035056,
+     0.058486,
+     0.081769,
+     0.165322,
+     0.198166,
+     0.215984,
+     0.228121,
+     0.228121,
+     0.228121,
+     0.228121,
+     0.228121,
+     0.228121,
+     0.228121,
+     0.228121,
+     0.228121,
+     0.228121,
+     0.228121,
+     0.228121,
+     0.228121
+    ],
+    [
+     -0.014924,
+     0.012287,
+     0.01606,
+     0.025208,
+     0.011578,
+     0.034354,
+     0.057015,
+     0.139977,
+     0.172259,
+     0.189544,
+     0.19909,
+     0.182341,
+     0.182341,
+     0.182341,
+     0.182341,
+     0.182341,
+     0.182341,
+     0.182341,
+     0.182341,
+     0.182341,
+     0.182341,
+     0.182341,
+     0.182341,
+     0.182341
+    ],
+    [
+     0.027586,
+     0.031958,
+     0.041676,
+     0.028589,
+     0.051879,
+     0.075029,
+     0.158456,
+     0.191179,
+     0.208883,
+     0.218827,
+     0.204012,
+     0.194461,
+     0.194461,
+     0.194461,
+     0.194461,
+     0.194461,
+     0.194461,
+     0.194461,
+     0.194461,
+     0.194461,
+     0.194461,
+     0.194461,
+     0.194461,
+     0.194461
+    ],
+    [
+     0.032212,
+     0.04194,
+     0.028862,
+     0.052161,
+     0.075319,
+     0.158754,
+     0.191485,
+     0.209196,
+     0.219147,
+     0.204339,
+     0.194819,
+     0.194433,
+     0.194433,
+     0.194433,
+     0.194433,
+     0.194433,
+     0.194433,
+     0.194433,
+     0.194433,
+     0.194433,
+     0.194433,
+     0.194433,
+     0.194433,
+     0.194433
+    ],
+    [
+     0.014574,
+     0.000422,
+     0.022702,
+     0.044891,
+     0.127405,
+     0.159261,
+     0.176142,
+     0.185304,
+     0.169746,
+     0.159514,
+     0.155668,
+     0.178204,
+     0.178204,
+     0.178204,
+     0.178204,
+     0.178204,
+     0.178204,
+     0.178204,
+     0.178204,
+     0.178204,
+     0.178204,
+     0.178204,
+     0.178204,
+     0.178204
+    ],
+    [
+     -0.005455,
+     0.016594,
+     0.038565,
+     0.12087,
+     0.152529,
+     0.169222,
+     0.178205,
+     0.162478,
+     0.152085,
+     0.148086,
+     0.169878,
+     0.153487,
+     0.153487,
+     0.153487,
+     0.153487,
+     0.153487,
+     0.153487,
+     0.153487,
+     0.153487,
+     0.153487,
+     0.153487,
+     0.153487,
+     0.153487,
+     0.153487
+    ],
+    [
+     0.007803,
+     0.029428,
+     0.111407,
+     0.142754,
+     0.159151,
+     0.167853,
+     0.151859,
+     0.141213,
+     0.136973,
+     0.158537,
+     0.141034,
+     0.140555,
+     0.140555,
+     0.140555,
+     0.140555,
+     0.140555,
+     0.140555,
+     0.140555,
+     0.140555,
+     0.140555,
+     0.140555,
+     0.140555,
+     0.140555,
+     0.140555
+    ],
+    [
+     0.04308,
+     0.125594,
+     0.15745,
+     0.174331,
+     0.183492,
+     0.167934,
+     0.157702,
+     0.153856,
+     0.175794,
+     0.158646,
+     0.159894,
+     0.168954,
+     0.168954,
+     0.168954,
+     0.168954,
+     0.168954,
+     0.168954,
+     0.168954,
+     0.168954,
+     0.168954,
+     0.168954,
+     0.168954,
+     0.168954,
+     0.168954
+    ],
+    [
+     0.105051,
+     0.136101,
+     0.152216,
+     0.16065,
+     0.1444,
+     0.133512,
+     0.129043,
+     0.150388,
+     0.132677,
+     0.13339,
+     0.139853,
+     0.150239,
+     0.150239,
+     0.150239,
+     0.150239,
+     0.150239,
+     0.150239,
+     0.150239,
+     0.150239,
+     0.150239,
+     0.150239,
+     0.150239,
+     0.150239,
+     0.150239
+    ],
+    [
+     0.113104,
+     0.128317,
+     0.135894,
+     0.118831,
+     0.107169,
+     0.101964,
+     0.122611,
+     0.104238,
+     0.10432,
+     0.110185,
+     0.117664,
+     0.160404,
+     0.160404,
+     0.160404,
+     0.160404,
+     0.160404,
+     0.160404,
+     0.160404,
+     0.160404,
+     0.160404,
+     0.160404,
+     0.160404,
+     0.160404,
+     0.160404
+    ],
+    [
+     0.046694,
+     0.051068,
+     0.030963,
+     0.016411,
+     0.00846,
+     0.026499,
+     0.005647,
+     0.003376,
+     0.007004,
+     0.012359,
+     0.04478,
+     0.078545,
+     0.078545,
+     0.078545,
+     0.078545,
+     0.078545,
+     0.078545,
+     0.078545,
+     0.078545,
+     0.078545,
+     0.078545,
+     0.078545,
+     0.078545,
+     0.078545
+    ],
+    [
+     0.016796,
+     -0.004654,
+     -0.020484,
+     -0.029648,
+     -0.012762,
+     -0.034709,
+     -0.038021,
+     -0.035381,
+     -0.030966,
+     0.000563,
+     0.029996,
+     0.018585,
+     0.018585,
+     0.018585,
+     0.018585,
+     0.018585,
+     0.018585,
+     0.018585,
+     0.018585,
+     0.018585,
+     0.018585,
+     0.018585,
+     0.018585,
+     0.018585
+    ],
+    [
+     -0.018261,
+     -0.034625,
+     -0.044296,
+     -0.027892,
+     -0.050297,
+     -0.054043,
+     -0.051817,
+     -0.047794,
+     -0.016637,
+     0.012441,
+     -0.000691,
+     -0.02719,
+     -0.02719,
+     -0.02719,
+     -0.02719,
+     -0.02719,
+     -0.02719,
+     -0.02719,
+     -0.02719,
+     -0.02719,
+     -0.02719,
+     -0.02719,
+     -0.02719,
+     -0.02719
+    ],
+    [
+     -0.03861,
+     -0.048272,
+     -0.03183,
+     -0.05486,
+     -0.058936,
+     -0.057045,
+     -0.052432,
+     -0.021013,
+     0.009135,
+     -0.004881,
+     -0.032246,
+     -0.055281,
+     -0.055281,
+     -0.055281,
+     -0.055281,
+     -0.055281,
+     -0.055281,
+     -0.055281,
+     -0.055281,
+     -0.055281,
+     -0.055281,
+     -0.055281,
+     -0.055281,
+     -0.055281
+    ],
+    [
+     -0.026694,
+     -0.009587,
+     -0.031323,
+     -0.034435,
+     -0.031605,
+     -0.027009,
+     0.004692,
+     0.034287,
+     0.021647,
+     -0.004761,
+     -0.0249,
+     -0.036881,
+     -0.036881,
+     -0.036881,
+     -0.036881,
+     -0.036881,
+     -0.036881,
+     -0.036881,
+     -0.036881,
+     -0.036881,
+     -0.036881,
+     -0.036881,
+     -0.036881,
+     -0.036881
+    ],
+    [
+     0.009259,
+     -0.012239,
+     -0.01486,
+     -0.011586,
+     -0.00566,
+     0.027006,
+     0.05834,
+     0.045449,
+     0.019155,
+     -0.000654,
+     -0.010548,
+     -0.013947,
+     -0.013947,
+     -0.013947,
+     -0.013947,
+     -0.013947,
+     -0.013947,
+     -0.013947,
+     -0.013947,
+     -0.013947,
+     -0.013947,
+     -0.013947,
+     -0.013947,
+     -0.013947
+    ],
+    [
+     -0.00311,
+     -0.005372,
+     -0.001758,
+     0.004491,
+     0.037465,
+     0.06909,
+     0.056477,
+     0.030445,
+     0.010887,
+     0.00123,
+     -0.001063,
+     0.002134,
+     0.002134,
+     0.002134,
+     0.002134,
+     0.002134,
+     0.002134,
+     0.002134,
+     0.002134,
+     0.002134,
+     0.002134,
+     0.002134,
+     0.002134,
+     0.002134
+    ],
+    [
+     -0.024068,
+     -0.021188,
+     -0.015635,
+     0.016677,
+     0.047673,
+     0.034462,
+     0.007863,
+     -0.012235,
+     -0.022404,
+     -0.025184,
+     -0.02425,
+     -0.047171,
+     -0.047171,
+     -0.047171,
+     -0.047171,
+     -0.047171,
+     -0.047171,
+     -0.047171,
+     -0.047171,
+     -0.047171,
+     -0.047171,
+     -0.047171,
+     -0.047171,
+     -0.047171
+    ],
+    [
+     4.2e-05,
+     0.005698,
+     0.038406,
+     0.068957,
+     0.057226,
+     0.031681,
+     0.012363,
+     0.002937,
+     0.000579,
+     0.001845,
+     -0.018171,
+     -0.032348,
+     -0.032348,
+     -0.032348,
+     -0.032348,
+     -0.032348,
+     -0.032348,
+     -0.032348,
+     -0.032348,
+     -0.032348,
+     -0.032348,
+     -0.032348,
+     -0.032348,
+     -0.032348
+    ],
+    [
+     0.009536,
+     0.042394,
+     0.073089,
+     0.061494,
+     0.036078,
+     0.016882,
+     0.007573,
+     0.005326,
+     0.006697,
+     -0.013219,
+     -0.02691,
+     -0.024331,
+     -0.024331,
+     -0.024331,
+     -0.024331,
+     -0.024331,
+     -0.024331,
+     -0.024331,
+     -0.024331,
+     -0.024331,
+     -0.024331,
+     -0.024331,
+     -0.024331,
+     -0.024331
+    ],
+    [
+     0.038734,
+     0.069286,
+     0.057554,
+     0.032008,
+     0.01269,
+     0.003263,
+     0.000905,
+     0.002171,
+     -0.017846,
+     -0.031632,
+     -0.029515,
+     -0.023282,
+     -0.023282,
+     -0.023282,
+     -0.023282,
+     -0.023282,
+     -0.023282,
+     -0.023282,
+     -0.023282,
+     -0.023282,
+     -0.023282,
+     -0.023282,
+     -0.023282,
+     -0.023282
+    ],
+    [
+     0.063358,
+     0.051394,
+     0.025628,
+     0.006099,
+     -0.003527,
+     -0.006074,
+     -0.004989,
+     -0.025176,
+     -0.039125,
+     -0.037162,
+     -0.031678,
+     0.004613,
+     0.004613,
+     0.004613,
+     0.004613,
+     0.004613,
+     0.004613,
+     0.004613,
+     0.004613,
+     0.004613,
+     0.004613,
+     0.004613,
+     0.004613,
+     0.004613
+    ],
+    [
+     0.018892,
+     -0.00815,
+     -0.02889,
+     -0.039666,
+     -0.043307,
+     -0.04326,
+     -0.064435,
+     -0.079321,
+     -0.078248,
+     -0.07361,
+     -0.041428,
+     -0.018346,
+     -0.018346,
+     -0.018346,
+     -0.018346,
+     -0.018346,
+     -0.018346,
+     -0.018346,
+     -0.018346,
+     -0.018346,
+     -0.018346,
+     -0.018346,
+     -0.018346,
+     -0.018346
+    ],
+    [
+     -0.039813,
+     -0.061795,
+     -0.073752,
+     -0.078514,
+     -0.079532,
+     -0.101718,
+     -0.117566,
+     -0.117406,
+     -0.113636,
+     -0.082278,
+     -0.063199,
+     -0.081506,
+     -0.081506,
+     -0.081506,
+     -0.081506,
+     -0.081506,
+     -0.081506,
+     -0.081506,
+     -0.081506,
+     -0.081506,
+     -0.081506,
+     -0.081506,
+     -0.081506,
+     -0.081506
+    ],
+    [
+     -0.050522,
+     -0.062037,
+     -0.066378,
+     -0.066998,
+     -0.088805,
+     -0.104292,
+     -0.103791,
+     -0.099695,
+     -0.068028,
+     -0.048655,
+     -0.065537,
+     -0.061696,
+     -0.061696,
+     -0.061696,
+     -0.061696,
+     -0.061696,
+     -0.061696,
+     -0.061696,
+     -0.061696,
+     -0.061696,
+     -0.061696,
+     -0.061696,
+     -0.061696,
+     -0.061696
+    ],
+    [
+     -0.033514,
+     -0.036736,
+     -0.036293,
+     -0.05709,
+     -0.071617,
+     -0.070204,
+     -0.065243,
+     -0.032754,
+     -0.012599,
+     -0.028739,
+     -0.021292,
+     -0.06685,
+     -0.06685,
+     -0.06685,
+     -0.06685,
+     -0.06685,
+     -0.06685,
+     -0.06685,
+     -0.06685,
+     -0.06685,
+     -0.06685,
+     -0.06685,
+     -0.06685,
+     -0.06685
+    ],
+    [
+     -0.013945,
+     -0.012606,
+     -0.032554,
+     -0.046275,
+     -0.044095,
+     -0.038405,
+     -0.005224,
+     0.015588,
+     7.3e-05,
+     0.008113,
+     -0.034564,
+     -0.06984,
+     -0.06984,
+     -0.06984,
+     -0.06984,
+     -0.06984,
+     -0.06984,
+     -0.06984,
+     -0.06984,
+     -0.06984,
+     -0.06984,
+     -0.06984,
+     -0.06984,
+     -0.06984
+    ],
+    [
+     -9.1e-05,
+     -0.019854,
+     -0.03355,
+     -0.031094,
+     -0.024351,
+     0.009626,
+     0.032035,
+     0.016274,
+     0.023979,
+     -0.018676,
+     -0.05262,
+     -0.049608,
+     -0.049608,
+     -0.049608,
+     -0.049608,
+     -0.049608,
+     -0.049608,
+     -0.049608,
+     -0.049608,
+     -0.049608,
+     -0.049608,
+     -0.049608,
+     -0.049608,
+     -0.049608
+    ],
+    [
+     -0.017636,
+     -0.031245,
+     -0.028706,
+     -0.021885,
+     0.012167,
+     0.034647,
+     0.018953,
+     0.026723,
+     -0.015872,
+     -0.049758,
+     -0.046478,
+     -0.053027,
+     -0.053027,
+     -0.053027,
+     -0.053027,
+     -0.053027,
+     -0.053027,
+     -0.053027,
+     -0.053027,
+     -0.053027,
+     -0.053027,
+     -0.053027,
+     -0.053027,
+     -0.053027
+    ],
+    [
+     -0.033357,
+     -0.030902,
+     -0.024159,
+     0.009818,
+     0.032227,
+     0.016466,
+     0.024171,
+     -0.018484,
+     -0.052428,
+     -0.049203,
+     -0.056008,
+     -0.076561,
+     -0.076561,
+     -0.076561,
+     -0.076561,
+     -0.076561,
+     -0.076561,
+     -0.076561,
+     -0.076561,
+     -0.076561,
+     -0.076561,
+     -0.076561,
+     -0.076561,
+     -0.076561
+    ],
+    [
+     -0.010494,
+     -0.00295,
+     0.031787,
+     0.05492,
+     0.039845,
+     0.048202,
+     0.006166,
+     -0.027189,
+     -0.023405,
+     -0.029678,
+     -0.047761,
+     -0.058343,
+     -0.058343,
+     -0.058343,
+     -0.058343,
+     -0.058343,
+     -0.058343,
+     -0.058343,
+     -0.058343,
+     -0.058343,
+     -0.058343,
+     -0.058343,
+     -0.058343,
+     -0.058343
+    ],
+    [
+     0.011366,
+     0.046665,
+     0.070331,
+     0.055763,
+     0.064602,
+     0.023024,
+     -0.009897,
+     -0.0057,
+     -0.011581,
+     -0.029291,
+     -0.03814,
+     -0.063862,
+     -0.063862,
+     -0.063862,
+     -0.063862,
+     -0.063862,
+     -0.063862,
+     -0.063862,
+     -0.063862,
+     -0.063862,
+     -0.063862,
+     -0.063862,
+     -0.063862,
+     -0.063862
+    ],
+    [
+     0.043311,
+     0.066845,
+     0.052152,
+     0.060873,
+     0.019182,
+     -0.013847,
+     -0.009751,
+     -0.015729,
+     -0.033531,
+     -0.042467,
+     -0.068595,
+     -0.070779,
+     -0.070779,
+     -0.070779,
+     -0.070779,
+     -0.070779,
+     -0.070779,
+     -0.070779,
+     -0.070779,
+     -0.070779,
+     -0.070779,
+     -0.070779,
+     -0.070779,
+     -0.070779
+    ],
+    [
+     0.058385,
+     0.04336,
+     0.051765,
+     0.009774,
+     -0.023539,
+     -0.019713,
+     -0.025948,
+     -0.043995,
+     -0.053162,
+     -0.07951,
+     -0.082718,
+     -0.051743,
+     -0.051743,
+     -0.051743,
+     -0.051743,
+     -0.051743,
+     -0.051743,
+     -0.051743,
+     -0.051743,
+     -0.051743,
+     -0.051743,
+     -0.051743,
+     -0.051743,
+     -0.051743
+    ],
+    [
+     0.006822,
+     0.013794,
+     -0.029559,
+     -0.064165,
+     -0.061569,
+     -0.068972,
+     -0.088127,
+     -0.098348,
+     -0.125698,
+     -0.129857,
+     -0.103305,
+     -0.07634,
+     -0.07634,
+     -0.07634,
+     -0.07634,
+     -0.07634,
+     -0.07634,
+     -0.07634,
+     -0.07634,
+     -0.07634,
+     -0.07634,
+     -0.07634,
+     -0.07634,
+     -0.07634
+    ],
+    [
+     -0.01045,
+     -0.054754,
+     -0.090264,
+     -0.088526,
+     -0.096744,
+     -0.116674,
+     -0.127632,
+     -0.15568,
+     -0.160503,
+     -0.134583,
+     -0.110553,
+     -0.112731,
+     -0.112731,
+     -0.112731,
+     -0.112731,
+     -0.112731,
+     -0.112731,
+     -0.112731,
+     -0.112731,
+     -0.112731,
+     -0.112731,
+     -0.112731,
+     -0.112731,
+     -0.112731
+    ],
+    [
+     -0.037356,
+     -0.072055,
+     -0.069841,
+     -0.077689,
+     -0.096816,
+     -0.106693,
+     -0.13405,
+     -0.139022,
+     -0.113083,
+     -0.089894,
+     -0.089534,
+     -0.098238,
+     -0.098238,
+     -0.098238,
+     -0.098238,
+     -0.098238,
+     -0.098238,
+     -0.098238,
+     -0.098238,
+     -0.098238,
+     -0.098238,
+     -0.098238,
+     -0.098238,
+     -0.098238
+    ],
+    [
+     -0.077898,
+     -0.075913,
+     -0.083978,
+     -0.103313,
+     -0.113386,
+     -0.140929,
+     -0.146079,
+     -0.120309,
+     -0.09728,
+     -0.097071,
+     -0.106514,
+     -0.123701,
+     -0.123701,
+     -0.123701,
+     -0.123701,
+     -0.123701,
+     -0.123701,
+     -0.123701,
+     -0.123701,
+     -0.123701,
+     -0.123701,
+     -0.123701,
+     -0.123701,
+     -0.123701
+    ],
+    [
+     -0.033671,
+     -0.040078,
+     -0.057839,
+     -0.066416,
+     -0.092538,
+     -0.096338,
+     -0.069285,
+     -0.045038,
+     -0.043672,
+     -0.052015,
+     -0.063862,
+     -0.074813,
+     -0.074813,
+     -0.074813,
+     -0.074813,
+     -0.074813,
+     -0.074813,
+     -0.074813,
+     -0.074813,
+     -0.074813,
+     -0.074813,
+     -0.074813,
+     -0.074813,
+     -0.074813
+    ],
+    [
+     -0.000726,
+     -0.017175,
+     -0.024826,
+     -0.049734,
+     -0.051573,
+     -0.022817,
+     0.003906,
+     0.005928,
+     -0.002209,
+     -0.013282,
+     -0.019937,
+     -0.012558,
+     -0.012558,
+     -0.012558,
+     -0.012558,
+     -0.012558,
+     -0.012558,
+     -0.012558,
+     -0.012558,
+     -0.012558,
+     -0.012558,
+     -0.012558,
+     -0.012558,
+     -0.012558
+    ],
+    [
+     -0.02115,
+     -0.028956,
+     -0.054012,
+     -0.055992,
+     -0.02737,
+     -0.000774,
+     0.001128,
+     -0.007124,
+     -0.018306,
+     -0.025064,
+     -0.018167,
+     -0.009738,
+     -0.009738,
+     -0.009738,
+     -0.009738,
+     -0.009738,
+     -0.009738,
+     -0.009738,
+     -0.009738,
+     -0.009738,
+     -0.009738,
+     -0.009738,
+     -0.009738,
+     -0.009738
+    ]
+   ],
+   "costs": {
+    "material_share": 0.4,
+    "fuel_share": 0.02,
+    "escalation_pass_through": 0.8
+   },
+   "weather": {
+    "mean": [
+     2.0933,
+     1.8519,
+     2.7689,
+     3.7783,
+     3.3389,
+     2.6348,
+     2.7483,
+     2.6274,
+     2.1037,
+     1.8523,
+     1.7116,
+     1.3513,
+     2.0933,
+     1.8519,
+     2.7689,
+     3.7783,
+     3.3389,
+     2.6348,
+     2.7483,
+     2.6274,
+     2.1037,
+     1.8523,
+     1.7116,
+     1.3513
+    ],
+    "p10": [
+     0.945,
+     0.93,
+     1.3,
+     2.345,
+     1.8,
+     1.6,
+     1.86,
+     1.4,
+     1.126,
+     0.95,
+     0.89,
+     0.43,
+     0.945,
+     0.93,
+     1.3,
+     2.345,
+     1.8,
+     1.6,
+     1.86,
+     1.4,
+     1.126,
+     0.95,
+     0.89,
+     0.43
+    ],
+    "p90": [
+     3.425,
+     2.83,
+     3.964,
+     5.888,
+     5.411,
+     3.42,
+     3.755,
+     3.6,
+     3.168,
+     2.776,
+     2.65,
+     2.21,
+     3.425,
+     2.83,
+     3.964,
+     5.888,
+     5.411,
+     3.42,
+     3.755,
+     3.6,
+     3.168,
+     2.776,
+     2.65,
+     2.21
+    ],
+    "weekdays": [
+     22,
+     21,
+     23,
+     21,
+     20,
+     23,
+     22,
+     21,
+     22,
+     22,
+     22,
+     22,
+     21,
+     22,
+     23,
+     21,
+     21,
+     23,
+     20,
+     23,
+     22,
+     21,
+     23,
+     21
+    ],
+    "years": [
+     {
+      "start": "2002-10",
+      "lost": [
+       1.35,
+       1.35,
+       2.3,
+       3.29,
+       2.12,
+       2.7,
+       2.75,
+       2.85,
+       1.2,
+       2.35,
+       1.21,
+       0.9,
+       1.2,
+       2.95,
+       3.0,
+       3.46,
+       2.65,
+       2.8,
+       1.95,
+       3.6,
+       1.65,
+       1.4,
+       2.5,
+       0.75
+      ]
+     },
+     {
+      "start": "2003-10",
+      "lost": [
+       1.2,
+       2.95,
+       3.0,
+       3.46,
+       2.65,
+       2.8,
+       1.95,
+       3.6,
+       1.65,
+       1.4,
+       2.5,
+       0.75,
+       1.9,
+       2.95,
+       2.67,
+       5.1,
+       1.8,
+       2.3,
+       2.5,
+       1.25,
+       0.71,
+       1.75,
+       0.85,
+       1.9
+      ]
+     },
+     {
+      "start": "2004-10",
+      "lost": [
+       1.9,
+       2.95,
+       2.67,
+       5.1,
+       1.8,
+       2.3,
+       2.5,
+       1.25,
+       0.71,
+       1.75,
+       0.85,
+       1.9,
+       0.25,
+       2.2,
+       2.92,
+       1.95,
+       1.45,
+       2.5,
+       1.5,
+       2.75,
+       0.95,
+       2.03,
+       2.28,
+       1.6
+      ]
+     },
+     {
+      "start": "2005-10",
+      "lost": [
+       0.25,
+       2.2,
+       2.92,
+       1.95,
+       1.45,
+       2.5,
+       1.5,
+       2.75,
+       0.95,
+       2.03,
+       2.28,
+       1.6,
+       3.1,
+       1.7,
+       2.6,
+       3.0,
+       4.33,
+       2.7,
+       2.65,
+       1.4,
+       2.4,
+       2.5,
+       2.6,
+       1.4
+      ]
+     },
+     {
+      "start": "2006-10",
+      "lost": [
+       3.1,
+       1.7,
+       2.6,
+       3.0,
+       4.33,
+       2.7,
+       2.65,
+       1.4,
+       2.4,
+       2.5,
+       2.6,
+       1.4,
+       2.55,
+       2.55,
+       3.25,
+       4.36,
+       4.12,
+       2.7,
+       3.4,
+       2.25,
+       1.95,
+       1.65,
+       1.25,
+       1.9
+      ]
+     },
+     {
+      "start": "2007-10",
+      "lost": [
+       2.55,
+       2.55,
+       3.25,
+       4.36,
+       4.12,
+       2.7,
+       3.4,
+       2.25,
+       1.95,
+       1.65,
+       1.25,
+       1.9,
+       1.75,
+       1.5,
+       5.37,
+       5.87,
+       3.97,
+       2.25,
+       3.65,
+       1.95,
+       2.1,
+       1.25,
+       2.0,
+       0.45
+      ]
+     },
+     {
+      "start": "2008-10",
+      "lost": [
+       1.75,
+       1.5,
+       5.37,
+       5.87,
+       3.97,
+       2.25,
+       3.65,
+       1.95,
+       2.1,
+       1.25,
+       2.0,
+       0.45,
+       3.75,
+       1.4,
+       3.5,
+       3.65,
+       3.3,
+       1.3,
+       2.2,
+       3.15,
+       2.7,
+       1.85,
+       0.9,
+       2.4
+      ]
+     },
+     {
+      "start": "2009-10",
+      "lost": [
+       3.75,
+       1.4,
+       3.5,
+       3.65,
+       3.3,
+       1.3,
+       2.2,
+       3.15,
+       2.7,
+       1.85,
+       0.9,
+       2.4,
+       1.25,
+       2.05,
+       3.45,
+       3.02,
+       5.6,
+       1.4,
+       3.75,
+       2.85,
+       3.33,
+       3.01,
+       1.25,
+       2.4
+      ]
+     },
+     {
+      "start": "2010-10",
+      "lost": [
+       1.25,
+       2.05,
+       3.45,
+       3.02,
+       5.6,
+       1.4,
+       3.75,
+       2.85,
+       3.33,
+       3.01,
+       1.25,
+       2.4,
+       1.65,
+       1.95,
+       1.3,
+       2.3,
+       2.2,
+       3.7,
+       1.5,
+       2.9,
+       1.14,
+       4.33,
+       0.78,
+       1.8
+      ]
+     },
+     {
+      "start": "2011-10",
+      "lost": [
+       1.65,
+       1.95,
+       1.3,
+       2.3,
+       2.2,
+       3.7,
+       1.5,
+       2.9,
+       1.14,
+       4.33,
+       0.78,
+       1.8,
+       2.85,
+       0.8,
+       1.5,
+       4.17,
+       3.25,
+       3.05,
+       3.7,
+       3.45,
+       3.15,
+       2.33,
+       1.28,
+       1.38
+      ]
+     },
+     {
+      "start": "2012-10",
+      "lost": [
+       2.85,
+       0.8,
+       1.5,
+       4.17,
+       3.25,
+       3.05,
+       3.7,
+       3.45,
+       3.15,
+       2.33,
+       1.28,
+       1.38,
+       1.65,
+       2.2,
+       3.88,
+       6.15,
+       6.02,
+       3.37,
+       3.4,
+       2.6,
+       3.15,
+       1.9,
+       2.75,
+       1.65
+      ]
+     },
+     {
+      "start": "2013-10",
+      "lost": [
+       1.65,
+       2.2,
+       3.88,
+       6.15,
+       6.02,
+       3.37,
+       3.4,
+       2.6,
+       3.15,
+       1.9,
+       2.75,
+       1.65,
+       2.95,
+       2.7,
+       1.2,
+       3.28,
+       5.33,
+       3.4,
+       2.4,
+       3.2,
+       3.45,
+       1.5,
+       1.2,
+       2.15
+      ]
+     },
+     {
+      "start": "2014-10",
+      "lost": [
+       2.95,
+       2.7,
+       1.2,
+       3.28,
+       5.33,
+       3.4,
+       2.4,
+       3.2,
+       3.45,
+       1.5,
+       1.2,
+       2.15,
+       2.4,
+       4.3,
+       3.2,
+       3.41,
+       2.95,
+       3.2,
+       2.05,
+       3.4,
+       1.35,
+       3.4,
+       2.65,
+       1.7
+      ]
+     },
+     {
+      "start": "2015-10",
+      "lost": [
+       2.4,
+       4.3,
+       3.2,
+       3.41,
+       2.95,
+       3.2,
+       2.05,
+       3.4,
+       1.35,
+       3.4,
+       2.65,
+       1.7,
+       1.4,
+       1.4,
+       4.09,
+       2.95,
+       2.05,
+       3.85,
+       2.35,
+       3.6,
+       3.5,
+       2.75,
+       1.65,
+       0.25
+      ]
+     },
+     {
+      "start": "2016-10",
+      "lost": [
+       1.4,
+       1.4,
+       4.09,
+       2.95,
+       2.05,
+       3.85,
+       2.35,
+       3.6,
+       3.5,
+       2.75,
+       1.65,
+       0.25,
+       2.7,
+       1.75,
+       2.89,
+       4.81,
+       3.92,
+       2.1,
+       2.15,
+       3.5,
+       1.88,
+       0.33,
+       3.6,
+       2.1
+      ]
+     },
+     {
+      "start": "2017-10",
+      "lost": [
+       2.7,
+       1.75,
+       2.89,
+       4.81,
+       3.92,
+       2.1,
+       2.15,
+       3.5,
+       1.88,
+       0.33,
+       3.6,
+       2.1,
+       2.4,
+       1.85,
+       1.7,
+       4.02,
+       3.5,
+       2.52,
+       3.8,
+       4.8,
+       2.95,
+       1.95,
+       1.65,
+       1.7
+      ]
+     },
+     {
+      "start": "2018-10",
+      "lost": [
+       2.4,
+       1.85,
+       1.7,
+       4.02,
+       3.5,
+       2.52,
+       3.8,
+       4.8,
+       2.95,
+       1.95,
+       1.65,
+       1.7,
+       3.65,
+       2.05,
+       1.85,
+       2.35,
+       2.77,
+       2.25,
+       2.75,
+       1.9,
+       2.2,
+       1.78,
+       0.89,
+       2.3
+      ]
+     },
+     {
+      "start": "2019-10",
+      "lost": [
+       3.65,
+       2.05,
+       1.85,
+       2.35,
+       2.77,
+       2.25,
+       2.75,
+       1.9,
+       2.2,
+       1.78,
+       0.89,
+       2.3,
+       3.4,
+       1.45,
+       2.3,
+       3.45,
+       6.8,
+       2.85,
+       1.45,
+       1.5,
+       2.1,
+       0.95,
+       2.2,
+       1.4
+      ]
+     },
+     {
+      "start": "2020-10",
+      "lost": [
+       3.4,
+       1.45,
+       2.3,
+       3.45,
+       6.8,
+       2.85,
+       1.45,
+       1.5,
+       2.1,
+       0.95,
+       2.2,
+       1.4,
+       2.85,
+       0.55,
+       2.25,
+       3.24,
+       3.65,
+       2.7,
+       2.65,
+       2.55,
+       2.29,
+       1.7,
+       0.9,
+       0.2
+      ]
+     },
+     {
+      "start": "2021-10",
+      "lost": [
+       2.85,
+       0.55,
+       2.25,
+       3.24,
+       3.65,
+       2.7,
+       2.65,
+       2.55,
+       2.29,
+       1.7,
+       0.9,
+       0.2,
+       2.45,
+       0.95,
+       2.74,
+       2.47,
+       3.87,
+       2.55,
+       2.15,
+       0.9,
+       1.0,
+       1.85,
+       1.84,
+       1.1
+      ]
+     },
+     {
+      "start": "2022-10",
+      "lost": [
+       2.45,
+       0.95,
+       2.74,
+       2.47,
+       3.87,
+       2.55,
+       2.15,
+       0.9,
+       1.0,
+       1.85,
+       1.84,
+       1.1,
+       1.3,
+       0.9,
+       2.15,
+       3.49,
+       1.6,
+       2.95,
+       2.85,
+       3.5,
+       1.73,
+       1.3,
+       2.43,
+       0.45
+      ]
+     },
+     {
+      "start": "2023-10",
+      "lost": [
+       1.3,
+       0.9,
+       2.15,
+       3.49,
+       1.6,
+       2.95,
+       2.85,
+       3.5,
+       1.73,
+       1.3,
+       2.43,
+       0.45,
+       1.7,
+       2.75,
+       2.35,
+       3.69,
+       2.67,
+       3.2,
+       3.75,
+       1.95,
+       1.98,
+       2.38,
+       1.3,
+       0.0
+      ]
+     },
+     {
+      "start": "2024-10",
+      "lost": [
+       1.7,
+       2.75,
+       2.35,
+       3.69,
+       2.67,
+       3.2,
+       3.75,
+       1.95,
+       1.98,
+       2.38,
+       1.3,
+       0.0,
+       2.1,
+       1.15,
+       3.25,
+       3.64,
+       2.05,
+       3.25,
+       4.05,
+       0.75,
+       2.65,
+       2.14,
+       1.1,
+       0.76
+      ]
+     }
+    ],
+    "climatology_years": "1996 to 2026",
+    "exposure": 0.5,
+    "gc_per_lost_day": 45
+   },
+   "materials": {
+    "coefficients": {
+     "WPU1017": 0.043036,
+     "WPU102501": 0.043161,
+     "WPU102502": 0.051273,
+     "WPU081": 0.058408,
+     "APU000074717": 0.109764
+    },
+    "intercept": 0.002598,
+    "r2": 0.6493,
+    "resid_sd": 0.006091,
+    "n": 138,
+    "sample": [
+     "2015-01",
+     "2026-08"
+    ],
+    "episodes": [
+     {
+      "key": "2025_2026",
+      "label": "2025 to 2026 episode",
+      "from": "2025-01",
+      "to": "2026-08",
+      "metals_log_change": {
+       "WPU1017": 0.376549,
+       "WPU102501": 0.406922,
+       "WPU102502": 0.230347
+      },
+      "ppi_effect": 0.045579,
+      "observed_input_ppi_log_change": 0.102878,
+      "basis": "From the last month before the first 2025 metals action to the latest month in the snapshot. It reflects current tariff levels, so it is the default. Over a 19-month window the price change also includes global price and demand moves, so treat it as the larger estimate.",
+      "actions": [
+       "Proclamations 10895 and 10896, aluminum and steel, Federal Register 2025-02-18",
+       "Proclamation 10947, aluminum and steel, Federal Register 2025-06-09",
+       "Proclamation 10962, copper, Federal Register 2025-08-05",
+       "Proclamations 11021, 11032 and 11045, aluminum, steel and copper, Federal Register 2026-04-09 to 2026-07-23"
+      ],
+      "ppi_path": [
+       0.00759645,
+       0.0151929,
+       0.02278934,
+       0.03038579,
+       0.03798224,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869,
+       0.04557869
+      ]
+     },
+     {
+      "key": "2018",
+      "label": "2018 episode",
+      "from": "2018-02",
+      "to": "2018-08",
+      "metals_log_change": {
+       "WPU1017": 0.149662,
+       "WPU102501": 0.062536
+      },
+      "ppi_effect": 0.00914,
+      "observed_input_ppi_log_change": 0.037423,
+      "basis": "Six months around the 2018 steel and aluminum tariffs. Copper is left out because it was not covered and fell over the window.",
+      "actions": [],
+      "ppi_path": [
+       0.00152333,
+       0.00304665,
+       0.00456998,
+       0.00609331,
+       0.00761663,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996,
+       0.00913996
+      ]
+     }
+    ]
+   },
+   "rates": {
+    "current": {
+     "date": "2026-09",
+     "value": 3.75
+    },
+    "projection_release": "September 2026",
+    "projection": {
+     "2026": 4.1,
+     "2027": 4.1,
+     "2028": 3.9,
+     "2029": 3.6
+    },
+    "base_path": [
+     3.8654,
+     3.9846,
+     4.1,
+     4.1,
+     4.1,
+     4.1,
+     4.1,
+     4.1,
+     4.1,
+     4.1,
+     4.1,
+     4.1,
+     4.1,
+     4.1,
+     4.1,
+     4.0831,
+     4.0661,
+     4.0503,
+     4.0333,
+     4.0169,
+     4.0,
+     3.9836,
+     3.9667,
+     3.9497
+    ],
+    "scenario_starts": 2,
+    "history": [
+     {
+      "lag_months": 6,
+      "regression": "simple",
+      "growth_per_100bp": 0.0487,
+      "r2": 0.371,
+      "n": 380
+     },
+     {
+      "lag_months": 6,
+      "regression": "with cycle controls",
+      "growth_per_100bp": 0.0206,
+      "r2": 0.701,
+      "n": 380
+     },
+     {
+      "lag_months": 9,
+      "regression": "simple",
+      "growth_per_100bp": 0.0494,
+      "r2": 0.382,
+      "n": 380
+     },
+     {
+      "lag_months": 9,
+      "regression": "with cycle controls",
+      "growth_per_100bp": 0.0266,
+      "r2": 0.601,
+      "n": 380
+     },
+     {
+      "lag_months": 12,
+      "regression": "simple",
+      "growth_per_100bp": 0.0469,
+      "r2": 0.343,
+      "n": 380
+     },
+     {
+      "lag_months": 12,
+      "regression": "with cycle controls",
+      "growth_per_100bp": 0.0305,
+      "r2": 0.529,
+      "n": 380
+     }
+    ],
+    "bookings_per_100bp": -0.05,
+    "lag_months": 6
+   },
+   "funding": {
+    "assumption": true,
+    "delayed_public_cut": 0.6,
+    "delay_months": 6
+   },
+   "fuel": {
+    "latest": {
+     "date": "2026-08",
+     "value": 5.547
+    },
+    "p10": -0.237435,
+    "p90": 0.304032,
+    "monthly_sd": 0.047102,
+    "n": 331
+   },
+   "monte_carlo": {
+    "draws": 1000,
+    "seed": 20261004,
+    "rate_uncertainty": 0.5,
+    "quantiles": [
+     10,
+     50,
+     90
+    ]
+   },
+   "presets": [
+    {
+     "key": "base",
+     "tariff_episode": 0,
+     "label": "Base case",
+     "weather": 0,
+     "tariff": 0.0,
+     "rate_bp": 0,
+     "funding_delay": 0,
+     "diesel": 0
+    },
+    {
+     "key": "harsh_winter",
+     "tariff_episode": 0,
+     "label": "Harsh winter",
+     "weather": 1,
+     "tariff": 0.0,
+     "rate_bp": 0,
+     "funding_delay": 0,
+     "diesel": 0
+    },
+    {
+     "key": "tariffs_raised",
+     "tariff_episode": 0,
+     "label": "Tariffs raised",
+     "weather": 0,
+     "tariff": 1.0,
+     "rate_bp": 0,
+     "funding_delay": 0,
+     "diesel": 0
+    },
+    {
+     "key": "rates_higher",
+     "tariff_episode": 0,
+     "label": "Rates higher for longer",
+     "weather": 0,
+     "tariff": 0.0,
+     "rate_bp": 25,
+     "funding_delay": 0,
+     "diesel": 0
+    },
+    {
+     "key": "funding_delayed",
+     "tariff_episode": 0,
+     "label": "Funding delayed",
+     "weather": 0,
+     "tariff": 0.0,
+     "rate_bp": 0,
+     "funding_delay": 1,
+     "diesel": 0
+    }
+   ],
+   "sliders": {
+    "weather": {
+     "min": -1,
+     "max": 1,
+     "step": 0.25
+    },
+    "tariff": {
+     "min": -0.5,
+     "max": 1.5,
+     "step": 0.25
+    },
+    "tariff_episode": {
+     "min": 0,
+     "max": 1,
+     "step": 1
+    },
+    "rate_bp": {
+     "min": -50,
+     "max": 50,
+     "step": 25
+    },
+    "funding_delay": {
+     "min": 0,
+     "max": 1,
+     "step": 1
+    },
+    "diesel": {
+     "min": -1,
+     "max": 1,
+     "step": 0.5
+    }
+   }
+  },
+  "reference": {
+   "base": {
+    "settings": {
+     "weather": 0.0,
+     "tariff": 0.0,
+     "rate_bp": 0.0,
+     "funding_delay": 0.0,
+     "diesel": 0.0,
+     "tariff_episode": 0
+    },
+    "views": {
+     "12": {
+      "revenue": 259970.59683335852,
+      "gross_profit": 22629.71085785941,
+      "gross_margin": 0.08704719354229541,
+      "bookings": 169516.4649430544,
+      "deferred": 0.0
+     },
+     "24": {
+      "revenue": 455771.44287514157,
+      "gross_profit": 40044.179858762735,
+      "gross_margin": 0.08786022135602038,
+      "bookings": 339032.92988610873,
+      "deferred": 0.0
+     }
+    },
+    "months": [
+     {
+      "month": "2026-10",
+      "planned": 15418.57142857143,
+      "done": 15418.57142857143,
+      "carry": 0.0,
+      "bookings": 14821.93586138003,
+      "revenue": 15418.57142857143,
+      "gross_profit": 1347.4589285714287,
+      "lost_days": 2.0933,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2026-11",
+      "planned": 17231.071428571428,
+      "done": 17231.071428571428,
+      "carry": 0.0,
+      "bookings": 14537.119428988633,
+      "revenue": 17231.071428571428,
+      "gross_profit": 1474.3339285714287,
+      "lost_days": 1.8519,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2026-12",
+      "planned": 20521.788305908656,
+      "done": 20521.788305908656,
+      "carry": 0.0,
+      "bookings": 14133.836060907177,
+      "revenue": 20521.788305908656,
+      "gross_profit": 1811.60955864289,
+      "lost_days": 2.7689,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-01",
+      "planned": 23933.21492499104,
+      "done": 23933.21492499104,
+      "carry": 0.0,
+      "bookings": 13195.84234983408,
+      "revenue": 23933.21492499104,
+      "gross_profit": 2118.637954360305,
+      "lost_days": 3.7783,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-02",
+      "planned": 24023.534596733305,
+      "done": 24023.534596733305,
+      "carry": 0.0,
+      "bookings": 12966.214809289479,
+      "revenue": 24023.534596733305,
+      "gross_profit": 2094.1417248171088,
+      "lost_days": 3.3389,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-03",
+      "planned": 25123.188125886147,
+      "done": 25123.188125886147,
+      "carry": 0.0,
+      "bookings": 13436.168446244963,
+      "revenue": 25123.188125886147,
+      "gross_profit": 2193.1105424408643,
+      "lost_days": 2.6348,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-04",
+      "planned": 24003.706026660264,
+      "done": 24003.706026660264,
+      "carry": 0.0,
+      "bookings": 13599.973774173228,
+      "revenue": 24003.706026660264,
+      "gross_profit": 2081.357153510535,
+      "lost_days": 2.7483,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-05",
+      "planned": 22680.52958765687,
+      "done": 22680.52958765687,
+      "carry": 0.0,
+      "bookings": 14036.722746885189,
+      "revenue": 22680.52958765687,
+      "gross_profit": 1937.8427025716578,
+      "lost_days": 2.6274,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-06",
+      "planned": 22313.86073550464,
+      "done": 22313.86073550464,
+      "carry": 0.0,
+      "bookings": 14406.69272556188,
+      "revenue": 22313.86073550464,
+      "gross_profit": 1934.8425058779571,
+      "lost_days": 2.1037,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-07",
+      "planned": 23483.587631078408,
+      "done": 23483.587631078408,
+      "carry": 0.0,
+      "bookings": 14457.706571216957,
+      "revenue": 23483.587631078408,
+      "gross_profit": 2040.117926479596,
+      "lost_days": 1.8523,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-08",
+      "planned": 21044.145358208563,
+      "done": 21044.145358208563,
+      "carry": 0.0,
+      "bookings": 14929.682496171556,
+      "revenue": 21044.145358208563,
+      "gross_profit": 1856.9681219213103,
+      "lost_days": 1.7116,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-09",
+      "planned": 20193.398683587755,
+      "done": 20193.398683587755,
+      "carry": 0.0,
+      "bookings": 14994.569672401205,
+      "revenue": 20193.398683587755,
+      "gross_profit": 1739.2898100943266,
+      "lost_days": 1.3513,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-10",
+      "planned": 19525.038891602053,
+      "done": 19525.038891602053,
+      "carry": 0.0,
+      "bookings": 14821.93586138003,
+      "revenue": 19525.038891602053,
+      "gross_profit": 1707.824928815613,
+      "lost_days": 2.0933,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-11",
+      "planned": 20774.58636430215,
+      "done": 20774.58636430215,
+      "carry": 0.0,
+      "bookings": 14537.119428988633,
+      "revenue": 20774.58636430215,
+      "gross_profit": 1820.2842013586223,
+      "lost_days": 1.8519,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-12",
+      "planned": 18138.87207858786,
+      "done": 18138.87207858786,
+      "carry": 0.0,
+      "bookings": 14133.836060907177,
+      "revenue": 18138.87207858786,
+      "gross_profit": 1596.2484870729077,
+      "lost_days": 2.7689,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-01",
+      "planned": 18138.87207858786,
+      "done": 18138.87207858786,
+      "carry": 0.0,
+      "bookings": 13195.84234983408,
+      "revenue": 18138.87207858786,
+      "gross_profit": 1596.2484870729077,
+      "lost_days": 3.7783,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-02",
+      "planned": 18138.87207858786,
+      "done": 18138.87207858786,
+      "carry": 0.0,
+      "bookings": 12966.214809289479,
+      "revenue": 18138.87207858786,
+      "gross_profit": 1596.2484870729077,
+      "lost_days": 3.3389,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-03",
+      "planned": 16326.372078587863,
+      "done": 16326.372078587863,
+      "carry": 0.0,
+      "bookings": 13436.168446244963,
+      "revenue": 16326.372078587863,
+      "gross_profit": 1469.3734870729077,
+      "lost_days": 2.6348,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-04",
+      "planned": 14126.372078587863,
+      "done": 14126.372078587863,
+      "carry": 0.0,
+      "bookings": 13599.973774173228,
+      "revenue": 14126.372078587863,
+      "gross_profit": 1271.3734870729077,
+      "lost_days": 2.7483,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-05",
+      "planned": 14126.372078587861,
+      "done": 14126.372078587861,
+      "carry": 0.0,
+      "bookings": 14036.722746885189,
+      "revenue": 14126.372078587861,
+      "gross_profit": 1271.3734870729074,
+      "lost_days": 2.6274,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-06",
+      "planned": 14126.372078587865,
+      "done": 14126.372078587865,
+      "carry": 0.0,
+      "bookings": 14406.69272556188,
+      "revenue": 14126.372078587865,
+      "gross_profit": 1271.373487072908,
+      "lost_days": 2.1037,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-07",
+      "planned": 14126.372078587863,
+      "done": 14126.372078587863,
+      "carry": 0.0,
+      "bookings": 14457.706571216957,
+      "revenue": 14126.372078587863,
+      "gross_profit": 1271.3734870729077,
+      "lost_days": 1.8523,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-08",
+      "planned": 14126.372078587865,
+      "done": 14126.372078587865,
+      "carry": 0.0,
+      "bookings": 14929.682496171556,
+      "revenue": 14126.372078587865,
+      "gross_profit": 1271.373487072908,
+      "lost_days": 1.7116,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-09",
+      "planned": 14126.372078587865,
+      "done": 14126.372078587865,
+      "carry": 0.0,
+      "bookings": 14994.569672401205,
+      "revenue": 14126.372078587865,
+      "gross_profit": 1271.373487072908,
+      "lost_days": 1.3513,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     }
+    ],
+    "change_from_base": {
+     "12": {
+      "revenue": 0.0,
+      "gross_profit": 0.0,
+      "gross_margin_pts": 0.0
+     },
+     "24": {
+      "revenue": 0.0,
+      "gross_profit": 0.0,
+      "gross_margin_pts": 0.0
+     }
+    },
+    "bridge": {
+     "12": [
+      {
+       "step": "Base plan",
+       "revenue": 259970.59683335852,
+       "gross_profit": 22629.71085785941
+      },
+      {
+       "step": "Weather",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Materials and tariffs",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Rates",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Public funding",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Fuel",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Scenario",
+       "revenue": 259970.59683335852,
+       "gross_profit": 22629.71085785941
+      }
+     ],
+     "24": [
+      {
+       "step": "Base plan",
+       "revenue": 455771.44287514157,
+       "gross_profit": 40044.179858762735
+      },
+      {
+       "step": "Weather",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Materials and tariffs",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Rates",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Public funding",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Fuel",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Scenario",
+       "revenue": 455771.44287514157,
+       "gross_profit": 40044.179858762735
+      }
+     ]
+    },
+    "monte_carlo": {
+     "views": {
+      "12": {
+       "revenue": {
+        "p10": 256439.04680345667,
+        "p50": 261512.0903869401,
+        "p90": 267625.4775333266
+       },
+       "gross_profit": {
+        "p10": 21366.243047393116,
+        "p50": 22618.014570983392,
+        "p90": 24107.095535469558
+       },
+       "gross_margin": {
+        "p10": 0.0816310290048514,
+        "p50": 0.08665716252319342,
+        "p90": 0.0917923686356665
+       }
+      },
+      "24": {
+       "revenue": {
+        "p10": 441503.0907106648,
+        "p50": 462959.0642205485,
+        "p90": 495309.4788392294
+       },
+       "gross_profit": {
+        "p10": 36847.54477800442,
+        "p50": 40617.80955472085,
+        "p90": 45024.65593048098
+       },
+       "gross_margin": {
+        "p10": 0.0803459513861946,
+        "p50": 0.08725119994020039,
+        "p90": 0.09442547480025935
+       }
+      }
+     },
+     "monthly_revenue": [
+      {
+       "p10": 14947.068690690994,
+       "p50": 15317.977566894515,
+       "p90": 15432.398418659419
+      },
+      {
+       "p10": 16787.784822681475,
+       "p50": 17229.14806352716,
+       "p90": 17694.647776693713
+      },
+      {
+       "p10": 20148.060619371467,
+       "p50": 20545.984699854875,
+       "p90": 20963.1481410499
+      },
+      {
+       "p10": 23468.789846723314,
+       "p50": 23953.342616192203,
+       "p90": 24265.927616091863
+      },
+      {
+       "p10": 22798.05281646889,
+       "p50": 24004.940713961325,
+       "p90": 24544.36298109131
+      },
+      {
+       "p10": 24721.032624177584,
+       "p50": 25303.09861012904,
+       "p90": 26527.221750591558
+      },
+      {
+       "p10": 23555.474128431746,
+       "p50": 24108.998848237352,
+       "p90": 24786.076441042795
+      },
+      {
+       "p10": 22079.95771633406,
+       "p50": 22759.478827352337,
+       "p90": 23537.348493296777
+      },
+      {
+       "p10": 21817.472355086364,
+       "p50": 22538.913296385115,
+       "p90": 23418.811794147365
+      },
+      {
+       "p10": 22801.969428404784,
+       "p50": 23717.441346351014,
+       "p90": 24711.14370354534
+      },
+      {
+       "p10": 20371.00187197623,
+       "p50": 21337.461347469383,
+       "p90": 22592.629942523577
+      },
+      {
+       "p10": 19489.965742590193,
+       "p50": 20469.954490311542,
+       "p90": 21917.52855384197
+      },
+      {
+       "p10": 18710.96257998589,
+       "p50": 19797.56672392891,
+       "p90": 21408.057433647657
+      },
+      {
+       "p10": 19887.47662800144,
+       "p50": 21216.132082400403,
+       "p90": 23077.440816891878
+      },
+      {
+       "p10": 17249.649655585003,
+       "p50": 18548.646801418465,
+       "p90": 20618.39614348965
+      },
+      {
+       "p10": 17237.139674296875,
+       "p50": 18514.861289336102,
+       "p90": 20753.660700108685
+      },
+      {
+       "p10": 16956.327630555254,
+       "p50": 18444.019543337243,
+       "p90": 20883.615810673167
+      },
+      {
+       "p10": 15482.800914746722,
+       "p50": 17089.60092449853,
+       "p90": 19608.202040258824
+      },
+      {
+       "p10": 13202.778925598534,
+       "p50": 14610.301019181186,
+       "p90": 17246.073890805626
+      },
+      {
+       "p10": 13185.42177434483,
+       "p50": 14674.938997629077,
+       "p90": 17418.027631733185
+      },
+      {
+       "p10": 13196.723503882666,
+       "p50": 14665.794108446515,
+       "p90": 17427.593288815413
+      },
+      {
+       "p10": 13126.37677547799,
+       "p50": 14705.236719833167,
+       "p90": 17573.631524340406
+      },
+      {
+       "p10": 13138.09928961629,
+       "p50": 14710.059471189856,
+       "p90": 17659.697744540626
+      },
+      {
+       "p10": 13073.770630359262,
+       "p50": 14663.40417623139,
+       "p90": 17676.52290290665
+      }
+     ]
+    }
+   },
+   "harsh_winter": {
+    "settings": {
+     "weather": 1.0,
+     "tariff": 0.0,
+     "rate_bp": 0.0,
+     "funding_delay": 0.0,
+     "diesel": 0.0,
+     "tariff_episode": 0
+    },
+    "views": {
+     "12": {
+      "revenue": 259567.53525782522,
+      "gross_profit": 22273.0960003714,
+      "gross_margin": 0.08580848131969897,
+      "bookings": 169516.4649430544,
+      "deferred": 403.06157553326193
+     },
+     "24": {
+      "revenue": 455476.60118562914,
+      "gross_profit": 39378.12574289263,
+      "gross_margin": 0.08645477207915694,
+      "bookings": 339032.92988610873,
+      "deferred": 294.84168951218453
+     }
+    },
+    "months": [
+     {
+      "month": "2026-10",
+      "planned": 15418.57142857143,
+      "done": 14951.914347402599,
+      "carry": 466.6570811688307,
+      "bookings": 14821.93586138003,
+      "revenue": 14951.914347402599,
+      "gross_profit": 1276.7136091355521,
+      "lost_days": 3.425,
+      "capacity": 0.9697340909090909,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 29.96324999999999
+     },
+     {
+      "month": "2026-11",
+      "planned": 17231.071428571428,
+      "done": 17285.58212270747,
+      "carry": 412.14638703278615,
+      "bookings": 14537.119428988633,
+      "revenue": 17285.58212270747,
+      "gross_profit": 1456.9907510388834,
+      "lost_days": 2.83,
+      "capacity": 0.9767119047619047,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 22.00725
+     },
+     {
+      "month": "2026-12",
+      "planned": 20521.788305908656,
+      "done": 20390.06196790809,
+      "carry": 543.8727250333541,
+      "bookings": 14133.836060907177,
+      "revenue": 20390.06196790809,
+      "gross_profit": 1773.0913535838274,
+      "lost_days": 3.964,
+      "capacity": 0.9740195652173913,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 26.88975
+     },
+     {
+      "month": "2027-01",
+      "planned": 23933.21492499104,
+      "done": 23247.580225851623,
+      "carry": 1229.5074241727707,
+      "bookings": 13195.84234983408,
+      "revenue": 23247.580225851623,
+      "gross_profit": 2010.4753220562225,
+      "lost_days": 5.888,
+      "capacity": 0.9497690476190477,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 47.46824999999999
+     },
+     {
+      "month": "2027-02",
+      "planned": 24023.534596733305,
+      "done": 23944.871311618088,
+      "carry": 1308.1707092879878,
+      "bookings": 12966.214809289479,
+      "revenue": 23944.871311618088,
+      "gross_profit": 2040.6623628085636,
+      "lost_days": 5.411,
+      "capacity": 0.9481975,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 46.62224999999999
+     },
+     {
+      "month": "2027-03",
+      "planned": 25123.188125886147,
+      "done": 25980.187031752856,
+      "carry": 451.17180342127904,
+      "bookings": 13436.168446244963,
+      "revenue": 25980.187031752856,
+      "gross_profit": 2250.25464228611,
+      "lost_days": 3.42,
+      "capacity": 0.9829304347826087,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 17.667
+     },
+     {
+      "month": "2027-04",
+      "planned": 24003.706026660264,
+      "done": 23895.361341182837,
+      "carry": 559.5164888987056,
+      "bookings": 13599.973774173228,
+      "revenue": 23895.361341182837,
+      "gross_profit": 2049.311854772402,
+      "lost_days": 3.755,
+      "capacity": 0.9771204545454546,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 22.65075
+     },
+     {
+      "month": "2027-05",
+      "planned": 22680.52958765687,
+      "done": 22701.873009554198,
+      "carry": 538.1730670013785,
+      "bookings": 14036.722746885189,
+      "revenue": 22701.873009554198,
+      "gross_profit": 1917.7828017169863,
+      "lost_days": 3.6,
+      "capacity": 0.9768428571428571,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 21.883499999999998
+     },
+     {
+      "month": "2027-06",
+      "planned": 22313.86073550464,
+      "done": 22299.274266687677,
+      "carry": 552.7595358183426,
+      "bookings": 14406.69272556188,
+      "revenue": 22299.274266687677,
+      "gross_profit": 1909.630958171623,
+      "lost_days": 3.168,
+      "capacity": 0.9758113636363637,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 23.946750000000005
+     },
+     {
+      "month": "2027-07",
+      "planned": 23483.587631078408,
+      "done": 23531.74776057715,
+      "carry": 504.59940631960126,
+      "bookings": 14457.706571216957,
+      "revenue": 23531.74776057715,
+      "gross_profit": 2023.5185492794203,
+      "lost_days": 2.776,
+      "capacity": 0.9790068181818182,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 20.783249999999995
+     },
+     {
+      "month": "2027-08",
+      "planned": 21044.145358208563,
+      "done": 21089.16880800468,
+      "carry": 459.5759565234839,
+      "bookings": 14929.682496171556,
+      "revenue": 21089.16880800468,
+      "gross_profit": 1839.8270611681733,
+      "lost_days": 2.65,
+      "capacity": 0.9786727272727272,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 21.113999999999997
+     },
+     {
+      "month": "2027-09",
+      "planned": 20193.398683587755,
+      "done": 20249.913064577977,
+      "carry": 403.06157553326193,
+      "bookings": 14994.569672401205,
+      "revenue": 20249.913064577977,
+      "gross_profit": 1724.8367343536363,
+      "lost_days": 2.21,
+      "capacity": 0.9804840909090909,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 19.32075
+     },
+     {
+      "month": "2027-10",
+      "planned": 19525.038891602053,
+      "done": 19296.237338752362,
+      "carry": 631.8631283829527,
+      "bookings": 14821.93586138003,
+      "revenue": 19296.237338752362,
+      "gross_profit": 1657.8487611524122,
+      "lost_days": 3.425,
+      "capacity": 0.9682928571428572,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 29.96324999999999
+     },
+     {
+      "month": "2027-11",
+      "planned": 20774.58636430215,
+      "done": 20930.593850667028,
+      "carry": 475.85564201807574,
+      "bookings": 14537.119428988633,
+      "revenue": 20930.593850667028,
+      "gross_profit": 1811.9464395372956,
+      "lost_days": 2.83,
+      "capacity": 0.9777704545454545,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 22.00725
+     },
+     {
+      "month": "2027-12",
+      "planned": 18138.87207858786,
+      "done": 18131.109001064717,
+      "carry": 483.61871954122034,
+      "bookings": 14133.836060907177,
+      "revenue": 18131.109001064717,
+      "gross_profit": 1568.6755743769218,
+      "lost_days": 3.964,
+      "capacity": 0.9740195652173913,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 26.88975
+     },
+     {
+      "month": "2028-01",
+      "planned": 18138.87207858786,
+      "done": 17687.065349633536,
+      "carry": 935.4254484955454,
+      "bookings": 13195.84234983408,
+      "revenue": 17687.065349633536,
+      "gross_profit": 1509.020553867796,
+      "lost_days": 5.888,
+      "capacity": 0.9497690476190477,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 47.46824999999999
+     },
+     {
+      "month": "2028-02",
+      "planned": 18138.87207858786,
+      "done": 18133.253434086513,
+      "carry": 941.0440929968936,
+      "bookings": 12966.214809289479,
+      "revenue": 18133.253434086513,
+      "gross_profit": 1549.1317877628392,
+      "lost_days": 5.411,
+      "capacity": 0.9506642857142857,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 46.62224999999999
+     },
+     {
+      "month": "2028-03",
+      "planned": 16326.372078587863,
+      "done": 16972.668885108054,
+      "carry": 294.7472864767042,
+      "bookings": 13436.168446244963,
+      "revenue": 16972.668885108054,
+      "gross_profit": 1509.8731996597248,
+      "lost_days": 3.42,
+      "capacity": 0.9829304347826087,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 17.667
+     },
+     {
+      "month": "2028-04",
+      "planned": 14126.372078587863,
+      "done": 14058.175843444305,
+      "carry": 362.9435216202619,
+      "bookings": 13599.973774173228,
+      "revenue": 14058.175843444305,
+      "gross_profit": 1242.5850759099874,
+      "lost_days": 3.755,
+      "capacity": 0.9748325,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 22.65075
+     },
+     {
+      "month": "2028-05",
+      "planned": 14126.372078587861,
+      "done": 14182.961070800244,
+      "carry": 306.35452940787945,
+      "bookings": 14036.722746885189,
+      "revenue": 14182.961070800244,
+      "gross_profit": 1254.582996372022,
+      "lost_days": 3.6,
+      "capacity": 0.9788565217391304,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 21.883499999999998
+     },
+     {
+      "month": "2028-06",
+      "planned": 14126.372078587865,
+      "done": 14083.618632339158,
+      "carry": 349.10797565658686,
+      "bookings": 14406.69272556188,
+      "revenue": 14083.618632339158,
+      "gross_profit": 1243.5789269105242,
+      "lost_days": 3.168,
+      "capacity": 0.9758113636363637,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 23.946750000000005
+     },
+     {
+      "month": "2028-07",
+      "planned": 14126.372078587863,
+      "done": 14157.122889337174,
+      "carry": 318.35716490727646,
+      "bookings": 14457.706571216957,
+      "revenue": 14157.122889337174,
+      "gross_profit": 1253.3578100403456,
+      "lost_days": 2.776,
+      "capacity": 0.9780071428571429,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 20.783249999999995
+     },
+     {
+      "month": "2028-08",
+      "planned": 14126.372078587865,
+      "done": 14150.05676692784,
+      "carry": 294.6724765673007,
+      "bookings": 14929.682496171556,
+      "revenue": 14150.05676692784,
+      "gross_profit": 1252.3911090235056,
+      "lost_days": 2.65,
+      "capacity": 0.9796,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 21.113999999999997
+     },
+     {
+      "month": "2028-09",
+      "planned": 14126.372078587865,
+      "done": 14126.202865642981,
+      "carry": 294.84168951218453,
+      "bookings": 14994.569672401205,
+      "revenue": 14126.202865642981,
+      "gross_profit": 1252.037507907868,
+      "lost_days": 2.21,
+      "capacity": 0.9795547619047619,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 19.32075
+     }
+    ],
+    "change_from_base": {
+     "12": {
+      "revenue": -403.0615755332983,
+      "gross_profit": -356.6148574880099,
+      "gross_margin_pts": -0.12387122225964442
+     },
+     "24": {
+      "revenue": -294.84168951242464,
+      "gross_profit": -666.0541158701017,
+      "gross_margin_pts": -0.1405449276863438
+     }
+    },
+    "bridge": {
+     "12": [
+      {
+       "step": "Base plan",
+       "revenue": 259970.59683335852,
+       "gross_profit": 22629.71085785941
+      },
+      {
+       "step": "Weather",
+       "revenue": -403.0615755332983,
+       "gross_profit": -356.6148574880099
+      },
+      {
+       "step": "Materials and tariffs",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Rates",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Public funding",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Fuel",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Scenario",
+       "revenue": 259567.53525782522,
+       "gross_profit": 22273.0960003714
+      }
+     ],
+     "24": [
+      {
+       "step": "Base plan",
+       "revenue": 455771.44287514157,
+       "gross_profit": 40044.179858762735
+      },
+      {
+       "step": "Weather",
+       "revenue": -294.84168951242464,
+       "gross_profit": -666.0541158701017
+      },
+      {
+       "step": "Materials and tariffs",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Rates",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Public funding",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Fuel",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Scenario",
+       "revenue": 455476.60118562914,
+       "gross_profit": 39378.12574289263
+      }
+     ]
+    },
+    "monte_carlo": {
+     "views": {
+      "12": {
+       "revenue": {
+        "p10": 256146.05414901994,
+        "p50": 261158.29849231872,
+        "p90": 267349.37860595575
+       },
+       "gross_profit": {
+        "p10": 21011.5311362922,
+        "p50": 22265.811450931586,
+        "p90": 23746.501348831465
+       },
+       "gross_margin": {
+        "p10": 0.08038374994526186,
+        "p50": 0.08544624148947258,
+        "p90": 0.0905795047640854
+       }
+      },
+      "24": {
+       "revenue": {
+        "p10": 441327.56675895513,
+        "p50": 462729.3782119192,
+        "p90": 494933.9750549336
+       },
+       "gross_profit": {
+        "p10": 36187.52699343039,
+        "p50": 39964.89661341155,
+        "p90": 44374.96446128284
+       },
+       "gross_margin": {
+        "p10": 0.07896910748704399,
+        "p50": 0.08589945073825186,
+        "p90": 0.09307210215412173
+       }
+      }
+     },
+     "monthly_revenue": [
+      {
+       "p10": 14480.836017756525,
+       "p50": 14851.110776658177,
+       "p90": 15257.124722388933
+      },
+      {
+       "p10": 16659.04412179194,
+       "p50": 17253.335703056116,
+       "p90": 17958.371338822028
+      },
+      {
+       "p10": 19847.579383585387,
+       "p50": 20442.91694545634,
+       "p90": 21054.3847152034
+      },
+      {
+       "p10": 22582.10401309273,
+       "p50": 23378.706372067325,
+       "p90": 24155.68325308242
+      },
+      {
+       "p10": 22334.579533611985,
+       "p50": 23974.093125485597,
+       "p90": 24789.89119311319
+      },
+      {
+       "p10": 24776.46227845664,
+       "p50": 26097.193922932922,
+       "p90": 27607.791166220017
+      },
+      {
+       "p10": 23277.953482720193,
+       "p50": 24124.651530551437,
+       "p90": 24934.182897279952
+      },
+      {
+       "p10": 21832.68360190931,
+       "p50": 22717.19166257375,
+       "p90": 23722.470465294216
+      },
+      {
+       "p10": 21647.718257333465,
+       "p50": 22529.242163513696,
+       "p90": 23454.281924148265
+      },
+      {
+       "p10": 22609.610382225233,
+       "p50": 23776.157257977502,
+       "p90": 24850.88285033479
+      },
+      {
+       "p10": 20281.847838613965,
+       "p50": 21492.69097413674,
+       "p90": 22839.537259820627
+      },
+      {
+       "p10": 19345.70143020207,
+       "p50": 20578.062654774076,
+       "p90": 22009.78414961668
+      },
+      {
+       "p10": 18401.772760696706,
+       "p50": 19707.20440978837,
+       "p90": 21273.64518007534
+      },
+      {
+       "p10": 19959.185553297906,
+       "p50": 21524.553919619284,
+       "p90": 23368.446514441002
+      },
+      {
+       "p10": 17233.4216028632,
+       "p50": 18615.472467753003,
+       "p90": 20691.974346705712
+      },
+      {
+       "p10": 16804.26625937976,
+       "p50": 18201.17255095322,
+       "p90": 20483.16786223214
+      },
+      {
+       "p10": 16846.509727664834,
+       "p50": 18502.140192254767,
+       "p90": 21020.409722982844
+      },
+      {
+       "p10": 15719.95553218608,
+       "p50": 17727.855401927165,
+       "p90": 20319.323188271766
+      },
+      {
+       "p10": 13123.873630308395,
+       "p50": 14543.928292374483,
+       "p90": 17274.454044782964
+      },
+      {
+       "p10": 13104.305889984224,
+       "p50": 14743.525914366346,
+       "p90": 17573.16650569014
+      },
+      {
+       "p10": 13094.309573225042,
+       "p50": 14539.813871751918,
+       "p90": 17360.814753156865
+      },
+      {
+       "p10": 13058.175578715063,
+       "p50": 14621.256956798661,
+       "p90": 17637.835150257644
+      },
+      {
+       "p10": 13065.040476088163,
+       "p50": 14767.450025427057,
+       "p90": 17806.373669951477
+      },
+      {
+       "p10": 13025.512833899256,
+       "p50": 14619.352150811306,
+       "p90": 17648.738748879758
+      }
+     ]
+    }
+   },
+   "tariffs_raised": {
+    "settings": {
+     "weather": 0.0,
+     "tariff": 1.0,
+     "rate_bp": 0.0,
+     "funding_delay": 0.0,
+     "diesel": 0.0,
+     "tariff_episode": 0
+    },
+    "views": {
+     "12": {
+      "revenue": 261521.47727802533,
+      "gross_profit": 20554.04646300599,
+      "gross_margin": 0.07859410506906413,
+      "bookings": 169516.4649430544,
+      "deferred": 0.0
+     },
+     "24": {
+      "revenue": 458488.61183092656,
+      "gross_profit": 35807.301451185966,
+      "gross_margin": 0.07809856237910301,
+      "bookings": 339032.92988610873,
+      "deferred": 0.0
+     }
+    },
+    "months": [
+     {
+      "month": "2026-10",
+      "planned": 15418.57142857143,
+      "done": 15418.57142857143,
+      "carry": 0.0,
+      "bookings": 14821.93586138003,
+      "revenue": 15436.805546204578,
+      "gross_profit": 1322.77403551531,
+      "lost_days": 2.0933,
+      "capacity": 1.0,
+      "material_cost": 42.919010689266095,
+      "escalation_revenue": 18.234117633147484,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2026-11",
+      "planned": 17231.071428571428,
+      "done": 17231.071428571428,
+      "carry": 0.0,
+      "bookings": 14537.119428988633,
+      "revenue": 17267.75208910255,
+      "gross_profit": 1414.5272690952968,
+      "lost_days": 1.8519,
+      "capacity": 1.0,
+      "material_cost": 96.4873200072541,
+      "escalation_revenue": 36.68066053112218,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2026-12",
+      "planned": 20521.788305908656,
+      "done": 20521.788305908656,
+      "carry": 0.0,
+      "bookings": 14133.836060907177,
+      "revenue": 20580.178003757188,
+      "gross_profit": 1697.4839174737342,
+      "lost_days": 2.7689,
+      "capacity": 1.0,
+      "material_cost": 172.5153390176894,
+      "escalation_revenue": 58.389697848533515,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-01",
+      "planned": 23933.21492499104,
+      "done": 23933.21492499104,
+      "carry": 0.0,
+      "bookings": 13195.84234983408,
+      "revenue": 24035.502120504152,
+      "gross_profit": 1951.7145121257927,
+      "lost_days": 3.7783,
+      "capacity": 1.0,
+      "material_cost": 269.21063774762536,
+      "escalation_revenue": 102.2871955131133,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-02",
+      "planned": 24023.534596733305,
+      "done": 24023.534596733305,
+      "carry": 0.0,
+      "bookings": 12966.214809289479,
+      "revenue": 24157.401002273167,
+      "gross_profit": 1888.4289802440837,
+      "lost_days": 3.3389,
+      "capacity": 1.0,
+      "material_cost": 339.5791501128876,
+      "escalation_revenue": 133.8664055398627,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-03",
+      "planned": 25123.188125886147,
+      "done": 25123.188125886147,
+      "carry": 0.0,
+      "bookings": 13436.168446244963,
+      "revenue": 25290.412428743657,
+      "gross_profit": 1932.6122114488503,
+      "lost_days": 2.6348,
+      "capacity": 1.0,
+      "material_cost": 427.7226338495239,
+      "escalation_revenue": 167.22430285751008,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-04",
+      "planned": 24003.706026660264,
+      "done": 24003.706026660264,
+      "carry": 0.0,
+      "bookings": 13599.973774173228,
+      "revenue": 24176.927847675503,
+      "gross_profit": 1845.6538513521214,
+      "lost_days": 2.7483,
+      "capacity": 1.0,
+      "material_cost": 408.9251231736513,
+      "escalation_revenue": 173.22182101523723,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-05",
+      "planned": 22680.52958765687,
+      "done": 22680.52958765687,
+      "carry": 0.0,
+      "bookings": 14036.722746885189,
+      "revenue": 22860.104514226936,
+      "gross_profit": 1730.497147284743,
+      "lost_days": 2.6274,
+      "capacity": 1.0,
+      "material_cost": 386.92048185698167,
+      "escalation_revenue": 179.5749265700669,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-06",
+      "planned": 22313.86073550464,
+      "done": 22313.86073550464,
+      "carry": 0.0,
+      "bookings": 14406.69272556188,
+      "revenue": 22499.36473017248,
+      "gross_profit": 1740.209655359697,
+      "lost_days": 2.1037,
+      "capacity": 1.0,
+      "material_cost": 380.1368451860993,
+      "escalation_revenue": 185.5039946678396,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-07",
+      "planned": 23483.587631078408,
+      "done": 23483.587631078408,
+      "carry": 0.0,
+      "bookings": 14457.706571216957,
+      "revenue": 23675.43395375787,
+      "gross_profit": 1831.9718240333277,
+      "lost_days": 1.8523,
+      "capacity": 1.0,
+      "material_cost": 399.9924251257325,
+      "escalation_revenue": 191.84632267946404,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-08",
+      "planned": 21044.145358208563,
+      "done": 21044.145358208563,
+      "carry": 0.0,
+      "bookings": 14929.682496171556,
+      "revenue": 21192.712870996904,
+      "gross_profit": 1647.6306100198326,
+      "lost_days": 1.7116,
+      "capacity": 1.0,
+      "material_cost": 357.9050246898174,
+      "escalation_revenue": 148.5675127883399,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-09",
+      "planned": 20193.398683587755,
+      "done": 20193.398683587755,
+      "carry": 0.0,
+      "bookings": 14994.569672401205,
+      "revenue": 20348.882170610355,
+      "gross_profit": 1550.5424490531982,
+      "lost_days": 1.3513,
+      "capacity": 1.0,
+      "material_cost": 344.2308480637293,
+      "escalation_revenue": 155.48348702260103,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-10",
+      "planned": 19525.038891602053,
+      "done": 19525.038891602053,
+      "carry": 0.0,
+      "bookings": 14821.93586138003,
+      "revenue": 19661.028417481102,
+      "gross_profit": 1511.4638267349249,
+      "lost_days": 2.0933,
+      "capacity": 1.0,
+      "material_cost": 332.350627959737,
+      "escalation_revenue": 135.98952587904884,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-11",
+      "planned": 20774.58636430215,
+      "done": 20774.58636430215,
+      "carry": 0.0,
+      "bookings": 14537.119428988633,
+      "revenue": 20917.358304116846,
+      "gross_profit": 1609.4950154243563,
+      "lost_days": 1.8519,
+      "capacity": 1.0,
+      "material_cost": 353.56112574896116,
+      "escalation_revenue": 142.77193981469506,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-12",
+      "planned": 18138.87207858786,
+      "done": 18138.87207858786,
+      "carry": 0.0,
+      "bookings": 14133.836060907177,
+      "revenue": 18245.71378718531,
+      "gross_profit": 1394.5149408507878,
+      "lost_days": 2.7689,
+      "capacity": 1.0,
+      "material_cost": 308.57525481956594,
+      "escalation_revenue": 106.84170859744614,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-01",
+      "planned": 18138.87207858786,
+      "done": 18138.87207858786,
+      "carry": 0.0,
+      "bookings": 13195.84234983408,
+      "revenue": 18245.71378718531,
+      "gross_profit": 1394.5149408507878,
+      "lost_days": 3.7783,
+      "capacity": 1.0,
+      "material_cost": 308.57525481956594,
+      "escalation_revenue": 106.84170859744614,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-02",
+      "planned": 18138.87207858786,
+      "done": 18138.87207858786,
+      "carry": 0.0,
+      "bookings": 12966.214809289479,
+      "revenue": 18245.71378718531,
+      "gross_profit": 1394.5149408507878,
+      "lost_days": 3.3389,
+      "capacity": 1.0,
+      "material_cost": 308.57525481956594,
+      "escalation_revenue": 106.84170859744614,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-03",
+      "planned": 16326.372078587863,
+      "done": 16326.372078587863,
+      "carry": 0.0,
+      "bookings": 13436.168446244963,
+      "revenue": 16432.979663987426,
+      "gross_profit": 1298.8483612753073,
+      "lost_days": 2.6348,
+      "capacity": 1.0,
+      "material_cost": 277.1327111971613,
+      "escalation_revenue": 106.60758539956095,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-04",
+      "planned": 14126.372078587863,
+      "done": 14126.372078587863,
+      "carry": 0.0,
+      "bookings": 13599.973774173228,
+      "revenue": 14203.104467626641,
+      "gross_profit": 1108.317160365503,
+      "lost_days": 2.7483,
+      "capacity": 1.0,
+      "material_cost": 239.78871574618356,
+      "escalation_revenue": 76.73238903877875,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-05",
+      "planned": 14126.372078587861,
+      "done": 14126.372078587861,
+      "carry": 0.0,
+      "bookings": 14036.722746885189,
+      "revenue": 14203.10446762664,
+      "gross_profit": 1108.3171603655028,
+      "lost_days": 2.6274,
+      "capacity": 1.0,
+      "material_cost": 239.78871574618353,
+      "escalation_revenue": 76.73238903877873,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-06",
+      "planned": 14126.372078587865,
+      "done": 14126.372078587865,
+      "carry": 0.0,
+      "bookings": 14406.69272556188,
+      "revenue": 14203.104467626643,
+      "gross_profit": 1108.317160365503,
+      "lost_days": 2.1037,
+      "capacity": 1.0,
+      "material_cost": 239.7887157461836,
+      "escalation_revenue": 76.73238903877876,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-07",
+      "planned": 14126.372078587863,
+      "done": 14126.372078587863,
+      "carry": 0.0,
+      "bookings": 14457.706571216957,
+      "revenue": 14203.104467626641,
+      "gross_profit": 1108.317160365503,
+      "lost_days": 1.8523,
+      "capacity": 1.0,
+      "material_cost": 239.78871574618356,
+      "escalation_revenue": 76.73238903877875,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-08",
+      "planned": 14126.372078587865,
+      "done": 14126.372078587865,
+      "carry": 0.0,
+      "bookings": 14929.682496171556,
+      "revenue": 14203.104467626643,
+      "gross_profit": 1108.317160365503,
+      "lost_days": 1.7116,
+      "capacity": 1.0,
+      "material_cost": 239.7887157461836,
+      "escalation_revenue": 76.73238903877876,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-09",
+      "planned": 14126.372078587865,
+      "done": 14126.372078587865,
+      "carry": 0.0,
+      "bookings": 14994.569672401205,
+      "revenue": 14203.104467626643,
+      "gross_profit": 1108.317160365503,
+      "lost_days": 1.3513,
+      "capacity": 1.0,
+      "material_cost": 239.7887157461836,
+      "escalation_revenue": 76.73238903877876,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     }
+    ],
+    "change_from_base": {
+     "12": {
+      "revenue": 1550.8804446668073,
+      "gross_profit": -2075.6643948534183,
+      "gross_margin_pts": -0.8453088473231285
+     },
+     "24": {
+      "revenue": 2717.1689557849895,
+      "gross_profit": -4236.878407576769,
+      "gross_margin_pts": -0.9761658976917373
+     }
+    },
+    "bridge": {
+     "12": [
+      {
+       "step": "Base plan",
+       "revenue": 259970.59683335852,
+       "gross_profit": 22629.71085785941
+      },
+      {
+       "step": "Weather",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Materials and tariffs",
+       "revenue": 1550.8804446668073,
+       "gross_profit": -2075.6643948534183
+      },
+      {
+       "step": "Rates",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Public funding",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Fuel",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Scenario",
+       "revenue": 261521.47727802533,
+       "gross_profit": 20554.04646300599
+      }
+     ],
+     "24": [
+      {
+       "step": "Base plan",
+       "revenue": 455771.44287514157,
+       "gross_profit": 40044.179858762735
+      },
+      {
+       "step": "Weather",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Materials and tariffs",
+       "revenue": 2717.1689557849895,
+       "gross_profit": -4236.878407576769
+      },
+      {
+       "step": "Rates",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Public funding",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Fuel",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Scenario",
+       "revenue": 458488.61183092656,
+       "gross_profit": 35807.301451185966
+      }
+     ]
+    },
+    "monte_carlo": {
+     "views": {
+      "12": {
+       "revenue": {
+        "p10": 257941.0354623094,
+        "p50": 263063.53272951266,
+        "p90": 269218.0533483559
+       },
+       "gross_profit": {
+        "p10": 19231.013637055188,
+        "p50": 20530.76299809391,
+        "p90": 21972.86313452957
+       },
+       "gross_margin": {
+        "p10": 0.0730090346313773,
+        "p50": 0.07813994053849632,
+        "p90": 0.08343587370255544
+       }
+      },
+      "24": {
+       "revenue": {
+        "p10": 444203.12739737355,
+        "p50": 465630.5493788662,
+        "p90": 498210.03787709237
+       },
+       "gross_profit": {
+        "p10": 32599.753803565945,
+        "p50": 36236.23240531697,
+        "p90": 40500.30910947114
+       },
+       "gross_margin": {
+        "p10": 0.07034418943120864,
+        "p50": 0.07748798591279937,
+        "p90": 0.08474936152861914
+       }
+      }
+     },
+     "monthly_revenue": [
+      {
+       "p10": 14964.657544011581,
+       "p50": 15336.137051524041,
+       "p90": 15450.737972294053
+      },
+      {
+       "p10": 16823.617047939762,
+       "p50": 17265.79927945744,
+       "p90": 17732.39013669206
+      },
+      {
+       "p10": 20205.407120824664,
+       "p50": 20604.499054214415,
+       "p90": 21023.541702855866
+      },
+      {
+       "p10": 23568.63761344812,
+       "p50": 24055.653799662523,
+       "p90": 24368.824305908314
+      },
+      {
+       "p10": 22925.935012633974,
+       "p50": 24138.70000453633,
+       "p90": 24680.728391104392
+      },
+      {
+       "p10": 24884.493748773864,
+       "p50": 25470.359188873397,
+       "p90": 26702.780944654445
+      },
+      {
+       "p10": 23725.36434292767,
+       "p50": 24284.805202583644,
+       "p90": 24962.144077875888
+      },
+      {
+       "p10": 22255.807923579898,
+       "p50": 22938.081123430093,
+       "p90": 23723.336953743543
+      },
+      {
+       "p10": 22002.99742349456,
+       "p50": 22726.56064019426,
+       "p90": 23611.434740176555
+      },
+      {
+       "p10": 22991.55740305289,
+       "p50": 23909.72262073185,
+       "p90": 24909.382938842362
+      },
+      {
+       "p10": 20512.27384580311,
+       "p50": 21489.528432340463,
+       "p90": 22750.142488852478
+      },
+      {
+       "p10": 19637.352013892058,
+       "p50": 20625.722205383834,
+       "p90": 22082.970152122532
+      },
+      {
+       "p10": 18844.254230476563,
+       "p50": 19932.051029306524,
+       "p90": 21552.352167780668
+      },
+      {
+       "p10": 20027.20409681958,
+       "p50": 21362.97567285665,
+       "p90": 23231.500122074922
+      },
+      {
+       "p10": 17354.371216903946,
+       "p50": 18658.622810716566,
+       "p90": 20737.995675101618
+      },
+      {
+       "p10": 17341.073156243787,
+       "p50": 18625.355438971004,
+       "p90": 20876.95238435659
+      },
+      {
+       "p10": 17057.238149621266,
+       "p50": 18556.812066351755,
+       "p90": 21008.19220512563
+      },
+      {
+       "p10": 15585.989544168615,
+       "p50": 17200.63944186112,
+       "p90": 19732.73191347773
+      },
+      {
+       "p10": 13274.66165665697,
+       "p50": 14689.432127157852,
+       "p90": 17336.602909606587
+      },
+      {
+       "p10": 13258.91307827797,
+       "p50": 14752.08120418591,
+       "p90": 17510.558490226846
+      },
+      {
+       "p10": 13268.491617635606,
+       "p50": 14745.284079239882,
+       "p90": 17522.525295061667
+      },
+      {
+       "p10": 13197.48979737111,
+       "p50": 14782.601062386168,
+       "p90": 17671.683831467915
+      },
+      {
+       "p10": 13204.609236314978,
+       "p50": 14790.782544115635,
+       "p90": 17758.18031276451
+      },
+      {
+       "p10": 13145.091676332408,
+       "p50": 14746.26711896707,
+       "p90": 17771.203475961604
+      }
+     ]
+    }
+   },
+   "rates_higher": {
+    "settings": {
+     "weather": 0.0,
+     "tariff": 0.0,
+     "rate_bp": 25.0,
+     "funding_delay": 0.0,
+     "diesel": 0.0,
+     "tariff_episode": 0
+    },
+    "views": {
+     "12": {
+      "revenue": 259925.52277916856,
+      "gross_profit": 22625.654192982314,
+      "gross_margin": 0.08704668149193244,
+      "bookings": 168781.60679973746,
+      "deferred": 0.0
+     },
+     "24": {
+      "revenue": 454250.8975076735,
+      "gross_profit": 39907.33077569061,
+      "gross_margin": 0.08785305872734454,
+      "bookings": 336179.11593100365,
+      "deferred": 0.0
+     }
+    },
+    "months": [
+     {
+      "month": "2026-10",
+      "planned": 15418.57142857143,
+      "done": 15418.57142857143,
+      "carry": 0.0,
+      "bookings": 14821.93586138003,
+      "revenue": 15418.57142857143,
+      "gross_profit": 1347.4589285714287,
+      "lost_days": 2.0933,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2026-11",
+      "planned": 17231.071428571428,
+      "done": 17231.071428571428,
+      "carry": 0.0,
+      "bookings": 14537.119428988633,
+      "revenue": 17231.071428571428,
+      "gross_profit": 1474.3339285714287,
+      "lost_days": 1.8519,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2026-12",
+      "planned": 20521.788305908656,
+      "done": 20521.788305908656,
+      "carry": 0.0,
+      "bookings": 14133.836060907177,
+      "revenue": 20521.788305908656,
+      "gross_profit": 1811.60955864289,
+      "lost_days": 2.7689,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-01",
+      "planned": 23933.21492499104,
+      "done": 23933.21492499104,
+      "carry": 0.0,
+      "bookings": 13195.84234983408,
+      "revenue": 23933.21492499104,
+      "gross_profit": 2118.637954360305,
+      "lost_days": 3.7783,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-02",
+      "planned": 24023.534596733305,
+      "done": 24023.534596733305,
+      "carry": 0.0,
+      "bookings": 12966.214809289479,
+      "revenue": 24023.534596733305,
+      "gross_profit": 2094.1417248171088,
+      "lost_days": 3.3389,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-03",
+      "planned": 25123.188125886147,
+      "done": 25123.188125886147,
+      "carry": 0.0,
+      "bookings": 13436.168446244963,
+      "revenue": 25123.188125886147,
+      "gross_profit": 2193.1105424408643,
+      "lost_days": 2.6348,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-04",
+      "planned": 24003.706026660264,
+      "done": 24003.706026660264,
+      "carry": 0.0,
+      "bookings": 13599.973774173228,
+      "revenue": 24003.706026660264,
+      "gross_profit": 2081.357153510535,
+      "lost_days": 2.7483,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-05",
+      "planned": 22680.52958765687,
+      "done": 22680.52958765687,
+      "carry": 0.0,
+      "bookings": 14036.722746885189,
+      "revenue": 22680.52958765687,
+      "gross_profit": 1937.8427025716578,
+      "lost_days": 2.6274,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-06",
+      "planned": 22313.86073550464,
+      "done": 22313.86073550464,
+      "carry": 0.0,
+      "bookings": 14226.609066492356,
+      "revenue": 22313.86073550464,
+      "gross_profit": 1934.8425058779571,
+      "lost_days": 2.1037,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-07",
+      "planned": 23483.587631078408,
+      "done": 23483.587631078408,
+      "carry": 0.0,
+      "bookings": 14276.985239076746,
+      "revenue": 23483.587631078408,
+      "gross_profit": 2040.117926479596,
+      "lost_days": 1.8523,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-08",
+      "planned": 21029.138386619437,
+      "done": 21029.138386619437,
+      "carry": 0.0,
+      "bookings": 14743.061464969413,
+      "revenue": 21029.138386619437,
+      "gross_profit": 1855.6174944782888,
+      "lost_days": 1.7116,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-09",
+      "planned": 20163.331600986945,
+      "done": 20163.331600986945,
+      "carry": 0.0,
+      "bookings": 14807.137551496191,
+      "revenue": 20163.331600986945,
+      "gross_profit": 1736.5837726602533,
+      "lost_days": 1.3513,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-10",
+      "planned": 19479.42005640106,
+      "done": 19479.42005640106,
+      "carry": 0.0,
+      "bookings": 14636.66166311278,
+      "revenue": 19479.42005640106,
+      "gross_profit": 1703.719233647524,
+      "lost_days": 2.0933,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-11",
+      "planned": 20713.34818569241,
+      "done": 20713.34818569241,
+      "carry": 0.0,
+      "bookings": 14355.405436126277,
+      "revenue": 20713.34818569241,
+      "gross_profit": 1814.7727652837452,
+      "lost_days": 1.8519,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-12",
+      "planned": 18062.194383455855,
+      "done": 18062.194383455855,
+      "carry": 0.0,
+      "bookings": 13957.163110145837,
+      "revenue": 18062.194383455855,
+      "gross_profit": 1589.3474945110265,
+      "lost_days": 2.7689,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-01",
+      "planned": 18047.051550717322,
+      "done": 18047.051550717322,
+      "carry": 0.0,
+      "bookings": 13030.894320461155,
+      "revenue": 18047.051550717322,
+      "gross_profit": 1587.9846395645588,
+      "lost_days": 3.7783,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-02",
+      "planned": 18032.328804820543,
+      "done": 18032.328804820543,
+      "carry": 0.0,
+      "bookings": 12804.137124173361,
+      "revenue": 18032.328804820543,
+      "gross_profit": 1586.659592433849,
+      "lost_days": 3.3389,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-03",
+      "planned": 16206.083135706134,
+      "done": 16206.083135706134,
+      "carry": 0.0,
+      "bookings": 13268.216340666902,
+      "revenue": 16206.083135706134,
+      "gross_profit": 1458.547482213552,
+      "lost_days": 2.6348,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-04",
+      "planned": 13992.576661946456,
+      "done": 13992.576661946456,
+      "carry": 0.0,
+      "bookings": 13429.974101996064,
+      "revenue": 13992.576661946456,
+      "gross_profit": 1259.331899575181,
+      "lost_days": 2.7483,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-05",
+      "planned": 13978.580653148287,
+      "done": 13978.580653148287,
+      "carry": 0.0,
+      "bookings": 13861.263712549124,
+      "revenue": 13978.580653148287,
+      "gross_profit": 1258.0722587833457,
+      "lost_days": 2.6274,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-06",
+      "planned": 13964.41401380019,
+      "done": 13964.41401380019,
+      "carry": 0.0,
+      "bookings": 14226.609066492356,
+      "revenue": 13964.41401380019,
+      "gross_profit": 1256.797261242017,
+      "lost_days": 2.1037,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-07",
+      "planned": 13949.792427605516,
+      "done": 13949.792427605516,
+      "carry": 0.0,
+      "bookings": 14276.985239076746,
+      "revenue": 13949.792427605516,
+      "gross_profit": 1255.4813184844963,
+      "lost_days": 1.8523,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-08",
+      "planned": 13949.792427605516,
+      "done": 13949.792427605516,
+      "carry": 0.0,
+      "bookings": 14743.061464969413,
+      "revenue": 13949.792427605516,
+      "gross_profit": 1255.4813184844963,
+      "lost_days": 1.7116,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-09",
+      "planned": 13949.792427605516,
+      "done": 13949.792427605516,
+      "carry": 0.0,
+      "bookings": 14807.137551496191,
+      "revenue": 13949.792427605516,
+      "gross_profit": 1255.4813184844963,
+      "lost_days": 1.3513,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     }
+    ],
+    "change_from_base": {
+     "12": {
+      "revenue": -45.07405418995768,
+      "gross_profit": -4.05666487709459,
+      "gross_margin_pts": -5.120503629718609e-05
+     },
+     "24": {
+      "revenue": -1520.5453674680903,
+      "gross_profit": -136.84908307212754,
+      "gross_margin_pts": -0.0007162628675838612
+     }
+    },
+    "bridge": {
+     "12": [
+      {
+       "step": "Base plan",
+       "revenue": 259970.59683335852,
+       "gross_profit": 22629.71085785941
+      },
+      {
+       "step": "Weather",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Materials and tariffs",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Rates",
+       "revenue": -45.07405418995768,
+       "gross_profit": -4.05666487709459
+      },
+      {
+       "step": "Public funding",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Fuel",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Scenario",
+       "revenue": 259925.52277916856,
+       "gross_profit": 22625.654192982314
+      }
+     ],
+     "24": [
+      {
+       "step": "Base plan",
+       "revenue": 455771.44287514157,
+       "gross_profit": 40044.179858762735
+      },
+      {
+       "step": "Weather",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Materials and tariffs",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Rates",
+       "revenue": -1520.5453674680903,
+       "gross_profit": -136.84908307212754
+      },
+      {
+       "step": "Public funding",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Fuel",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Scenario",
+       "revenue": 454250.8975076735,
+       "gross_profit": 39907.33077569061
+      }
+     ]
+    },
+    "monte_carlo": {
+     "views": {
+      "12": {
+       "revenue": {
+        "p10": 256365.1214198213,
+        "p50": 261450.91197588155,
+        "p90": 267590.58545042865
+       },
+       "gross_profit": {
+        "p10": 21363.235774493434,
+        "p50": 22611.89657709415,
+        "p90": 24099.48471654045
+       },
+       "gross_margin": {
+        "p10": 0.08163098195016202,
+        "p50": 0.08665664059484843,
+        "p90": 0.09179086543175831
+       }
+      },
+      "24": {
+       "revenue": {
+        "p10": 440294.2024047996,
+        "p50": 461295.10729329486,
+        "p90": 493318.46403048106
+       },
+       "gross_profit": {
+        "p10": 36704.49269159942,
+        "p50": 40449.421739292586,
+        "p90": 44855.18576947333
+       },
+       "gross_margin": {
+        "p10": 0.08034797200301183,
+        "p50": 0.08724574296277171,
+        "p90": 0.0944100679870318
+       }
+      }
+     },
+     "monthly_revenue": [
+      {
+       "p10": 14947.068690690994,
+       "p50": 15317.977566894515,
+       "p90": 15432.398418659419
+      },
+      {
+       "p10": 16787.784822681475,
+       "p50": 17229.14806352716,
+       "p90": 17694.647776693713
+      },
+      {
+       "p10": 20148.060619371467,
+       "p50": 20545.984699854875,
+       "p90": 20963.1481410499
+      },
+      {
+       "p10": 23468.789846723314,
+       "p50": 23953.342616192203,
+       "p90": 24265.927616091863
+      },
+      {
+       "p10": 22798.05281646889,
+       "p50": 24004.940713961325,
+       "p90": 24544.36298109131
+      },
+      {
+       "p10": 24721.032624177584,
+       "p50": 25303.09861012904,
+       "p90": 26527.221750591558
+      },
+      {
+       "p10": 23555.474128431746,
+       "p50": 24108.998848237352,
+       "p90": 24786.076441042795
+      },
+      {
+       "p10": 22079.95771633406,
+       "p50": 22759.478827352337,
+       "p90": 23537.348493296777
+      },
+      {
+       "p10": 21817.472355086364,
+       "p50": 22538.913296385115,
+       "p90": 23418.811794147365
+      },
+      {
+       "p10": 22801.969428404784,
+       "p50": 23717.441346351014,
+       "p90": 24711.14370354534
+      },
+      {
+       "p10": 20354.11013722081,
+       "p50": 21327.82641056646,
+       "p90": 22574.01191756195
+      },
+      {
+       "p10": 19470.130333949477,
+       "p50": 20440.448945918986,
+       "p90": 21889.94025028408
+      },
+      {
+       "p10": 18661.880398720805,
+       "p50": 19758.812204350463,
+       "p90": 21346.34364519697
+      },
+      {
+       "p10": 19819.184100519476,
+       "p50": 21148.238820964973,
+       "p90": 23021.376269470224
+      },
+      {
+       "p10": 17166.740032473477,
+       "p50": 18472.621329660065,
+       "p90": 20534.453903742917
+      },
+      {
+       "p10": 17139.992904415827,
+       "p50": 18417.7045498572,
+       "p90": 20679.908189368733
+      },
+      {
+       "p10": 16861.18832649855,
+       "p50": 18345.009346629402,
+       "p90": 20741.533096812575
+      },
+      {
+       "p10": 15369.416411758939,
+       "p50": 16968.711657137275,
+       "p90": 19449.597404326043
+      },
+      {
+       "p10": 13087.781964812393,
+       "p50": 14494.281481883787,
+       "p90": 17102.27015588746
+      },
+      {
+       "p10": 13026.665505625748,
+       "p50": 14490.591079237234,
+       "p90": 17227.778082833065
+      },
+      {
+       "p10": 13031.256989196589,
+       "p50": 14514.867853122687,
+       "p90": 17209.5323200304
+      },
+      {
+       "p10": 12973.521184909672,
+       "p50": 14508.23631591324,
+       "p90": 17368.658949196502
+      },
+      {
+       "p10": 12949.540315076687,
+       "p50": 14530.40895273934,
+       "p90": 17432.259469566503
+      },
+      {
+       "p10": 12914.28760564925,
+       "p50": 14444.650473320256,
+       "p90": 17473.749457089725
+      }
+     ]
+    }
+   },
+   "funding_delayed": {
+    "settings": {
+     "weather": 0.0,
+     "tariff": 0.0,
+     "rate_bp": 0.0,
+     "funding_delay": 1.0,
+     "diesel": 0.0,
+     "tariff_episode": 0
+    },
+    "views": {
+     "12": {
+      "revenue": 252102.18246463657,
+      "gross_profit": 21921.553564674436,
+      "gross_margin": 0.08695503287739076,
+      "bookings": 157052.79739955772,
+      "deferred": 0.0
+     },
+     "24": {
+      "revenue": 443307.7753316448,
+      "gross_profit": 38922.44977984803,
+      "gross_margin": 0.08780006114426844,
+      "bookings": 326569.262342612,
+      "deferred": 0.0
+     }
+    },
+    "months": [
+     {
+      "month": "2026-10",
+      "planned": 15418.57142857143,
+      "done": 15418.57142857143,
+      "carry": 0.0,
+      "bookings": 12598.645482173026,
+      "revenue": 15418.57142857143,
+      "gross_profit": 1347.4589285714287,
+      "lost_days": 2.0933,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2026-11",
+      "planned": 17231.071428571428,
+      "done": 17231.071428571428,
+      "carry": 0.0,
+      "bookings": 12356.551514640338,
+      "revenue": 17231.071428571428,
+      "gross_profit": 1474.3339285714287,
+      "lost_days": 1.8519,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2026-12",
+      "planned": 20336.514107641404,
+      "done": 20336.514107641404,
+      "carry": 0.0,
+      "bookings": 12013.7606517711,
+      "revenue": 20336.514107641404,
+      "gross_profit": 1794.9348807988374,
+      "lost_days": 2.7689,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-01",
+      "planned": 23566.226733861433,
+      "done": 23566.226733861433,
+      "carry": 0.0,
+      "bookings": 11216.465997358968,
+      "revenue": 23566.226733861433,
+      "gross_profit": 2085.60901715864,
+      "lost_days": 3.7783,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-02",
+      "planned": 23479.873454842356,
+      "done": 23479.873454842356,
+      "carry": 0.0,
+      "bookings": 11021.282587896056,
+      "revenue": 23479.873454842356,
+      "gross_profit": 2045.2122220469234,
+      "lost_days": 3.3389,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-03",
+      "planned": 24414.578954622273,
+      "done": 24414.578954622273,
+      "carry": 0.0,
+      "bookings": 11420.743179308218,
+      "revenue": 24414.578954622273,
+      "gross_profit": 2129.3357170271156,
+      "lost_days": 2.6348,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-04",
+      "planned": 23133.019170280273,
+      "done": 23133.019170280273,
+      "carry": 0.0,
+      "bookings": 13599.973774173228,
+      "revenue": 23133.019170280273,
+      "gross_profit": 2002.9953364363357,
+      "lost_days": 2.7483,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-05",
+      "planned": 21641.890625698816,
+      "done": 21641.890625698816,
+      "carry": 0.0,
+      "bookings": 14036.722746885189,
+      "revenue": 21641.890625698816,
+      "gross_profit": 1844.3651959954332,
+      "lost_days": 2.6274,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-06",
+      "planned": 21275.221773546586,
+      "done": 21275.221773546586,
+      "carry": 0.0,
+      "bookings": 14406.69272556188,
+      "revenue": 21275.221773546586,
+      "gross_profit": 1841.3649993017323,
+      "lost_days": 2.1037,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-07",
+      "planned": 22444.94866912035,
+      "done": 22444.94866912035,
+      "carry": 0.0,
+      "bookings": 14457.706571216957,
+      "revenue": 22444.94866912035,
+      "gross_profit": 1946.6404199033714,
+      "lost_days": 1.8523,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-08",
+      "planned": 20005.50639625051,
+      "done": 20005.50639625051,
+      "carry": 0.0,
+      "bookings": 14929.682496171556,
+      "revenue": 20005.50639625051,
+      "gross_profit": 1763.4906153450854,
+      "lost_days": 1.7116,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-09",
+      "planned": 19154.7597216297,
+      "done": 19154.7597216297,
+      "carry": 0.0,
+      "bookings": 14994.569672401205,
+      "revenue": 19154.7597216297,
+      "gross_profit": 1645.8123035181015,
+      "lost_days": 1.3513,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-10",
+      "planned": 18486.399929643994,
+      "done": 18486.399929643994,
+      "carry": 0.0,
+      "bookings": 14821.93586138003,
+      "revenue": 18486.399929643994,
+      "gross_profit": 1614.3474222393882,
+      "lost_days": 2.0933,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-11",
+      "planned": 19735.947402344096,
+      "done": 19735.947402344096,
+      "carry": 0.0,
+      "bookings": 14537.119428988633,
+      "revenue": 19735.947402344096,
+      "gross_profit": 1726.8066947823972,
+      "lost_days": 1.8519,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2027-12",
+      "planned": 17285.50731489706,
+      "done": 17285.50731489706,
+      "carry": 0.0,
+      "bookings": 14133.836060907177,
+      "revenue": 17285.50731489706,
+      "gross_profit": 1519.4456583407352,
+      "lost_days": 2.7689,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-01",
+      "planned": 17467.221307759417,
+      "done": 17467.221307759417,
+      "carry": 0.0,
+      "bookings": 13195.84234983408,
+      "revenue": 17467.221307759417,
+      "gross_profit": 1535.7999176983474,
+      "lost_days": 3.7783,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-02",
+      "planned": 17643.894258520755,
+      "done": 17643.894258520755,
+      "carry": 0.0,
+      "bookings": 12966.214809289479,
+      "revenue": 17643.894258520755,
+      "gross_profit": 1551.700483266868,
+      "lost_days": 3.3389,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-03",
+      "planned": 15996.342287893682,
+      "done": 15996.342287893682,
+      "carry": 0.0,
+      "bookings": 13436.168446244963,
+      "revenue": 15996.342287893682,
+      "gross_profit": 1439.6708059104312,
+      "lost_days": 2.6348,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-04",
+      "planned": 13958.4199730098,
+      "done": 13958.4199730098,
+      "carry": 0.0,
+      "bookings": 13599.973774173228,
+      "revenue": 13958.4199730098,
+      "gross_profit": 1256.257797570882,
+      "lost_days": 2.7483,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-05",
+      "planned": 14126.372078587861,
+      "done": 14126.372078587861,
+      "carry": 0.0,
+      "bookings": 14036.722746885189,
+      "revenue": 14126.372078587861,
+      "gross_profit": 1271.3734870729074,
+      "lost_days": 2.6274,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-06",
+      "planned": 14126.372078587865,
+      "done": 14126.372078587865,
+      "carry": 0.0,
+      "bookings": 14406.69272556188,
+      "revenue": 14126.372078587865,
+      "gross_profit": 1271.373487072908,
+      "lost_days": 2.1037,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-07",
+      "planned": 14126.372078587863,
+      "done": 14126.372078587863,
+      "carry": 0.0,
+      "bookings": 14457.706571216957,
+      "revenue": 14126.372078587863,
+      "gross_profit": 1271.3734870729077,
+      "lost_days": 1.8523,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-08",
+      "planned": 14126.372078587865,
+      "done": 14126.372078587865,
+      "carry": 0.0,
+      "bookings": 14929.682496171556,
+      "revenue": 14126.372078587865,
+      "gross_profit": 1271.373487072908,
+      "lost_days": 1.7116,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     },
+     {
+      "month": "2028-09",
+      "planned": 14126.372078587865,
+      "done": 14126.372078587865,
+      "carry": 0.0,
+      "bookings": 14994.569672401205,
+      "revenue": 14126.372078587865,
+      "gross_profit": 1271.373487072908,
+      "lost_days": 1.3513,
+      "capacity": 1.0,
+      "material_cost": 0.0,
+      "escalation_revenue": 0.0,
+      "fuel_cost": 0.0,
+      "overhead": 0.0
+     }
+    ],
+    "change_from_base": {
+     "12": {
+      "revenue": -7868.4143687219475,
+      "gross_profit": -708.1572931849732,
+      "gross_margin_pts": -0.009216066490465302
+     },
+     "24": {
+      "revenue": -12463.667543496762,
+      "gross_profit": -1121.7300789147048,
+      "gross_margin_pts": -0.0060160211751938975
+     }
+    },
+    "bridge": {
+     "12": [
+      {
+       "step": "Base plan",
+       "revenue": 259970.59683335852,
+       "gross_profit": 22629.71085785941
+      },
+      {
+       "step": "Weather",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Materials and tariffs",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Rates",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Public funding",
+       "revenue": -7868.4143687219475,
+       "gross_profit": -708.1572931849732
+      },
+      {
+       "step": "Fuel",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Scenario",
+       "revenue": 252102.18246463657,
+       "gross_profit": 21921.553564674436
+      }
+     ],
+     "24": [
+      {
+       "step": "Base plan",
+       "revenue": 455771.44287514157,
+       "gross_profit": 40044.179858762735
+      },
+      {
+       "step": "Weather",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Materials and tariffs",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Rates",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Public funding",
+       "revenue": -12463.667543496762,
+       "gross_profit": -1121.7300789147048
+      },
+      {
+       "step": "Fuel",
+       "revenue": 0.0,
+       "gross_profit": 0.0
+      },
+      {
+       "step": "Scenario",
+       "revenue": 443307.7753316448,
+       "gross_profit": 38922.44977984803
+      }
+     ]
+    },
+    "monte_carlo": {
+     "views": {
+      "12": {
+       "revenue": {
+        "p10": 248987.13643405694,
+        "p50": 253424.07178109922,
+        "p90": 258927.7331442818
+       },
+       "gross_profit": {
+        "p10": 20688.421577449302,
+        "p50": 21904.624584661196,
+        "p90": 23287.528402536762
+       },
+       "gross_margin": {
+        "p10": 0.08158113333697074,
+        "p50": 0.08658766324616557,
+        "p90": 0.0916570706452703
+       }
+      },
+      "24": {
+       "revenue": {
+        "p10": 429659.8529275327,
+        "p50": 450755.6596170468,
+        "p90": 481861.18734353164
+       },
+       "gross_profit": {
+        "p10": 35822.37062085051,
+        "p50": 39475.09278714692,
+        "p90": 43741.12823663676
+       },
+       "gross_margin": {
+        "p10": 0.08029147505603561,
+        "p50": 0.08719429164547918,
+        "p90": 0.09435362383529053
+       }
+      }
+     },
+     "monthly_revenue": [
+      {
+       "p10": 14947.068690690994,
+       "p50": 15317.977566894515,
+       "p90": 15432.398418659419
+      },
+      {
+       "p10": 16787.784822681475,
+       "p50": 17229.14806352716,
+       "p90": 17694.647776693713
+      },
+      {
+       "p10": 19967.78920282568,
+       "p50": 20359.31865272124,
+       "p90": 20772.4705912656
+      },
+      {
+       "p10": 23088.69616398282,
+       "p50": 23583.440694467798,
+       "p90": 23885.231452189855
+      },
+      {
+       "p10": 22271.63215055399,
+       "p50": 23462.10461833707,
+       "p90": 23942.573194632114
+      },
+      {
+       "p10": 24032.6118906642,
+       "p50": 24583.235260727328,
+       "p90": 25765.587481389146
+      },
+      {
+       "p10": 22708.293595788666,
+       "p50": 23229.33633197417,
+       "p90": 23828.60915051147
+      },
+      {
+       "p10": 21099.26947768999,
+       "p50": 21705.721102687185,
+       "p90": 22399.90042263928
+      },
+      {
+       "p10": 20829.59088312034,
+       "p50": 21478.19859183114,
+       "p90": 22250.944794830757
+      },
+      {
+       "p10": 21822.59401044624,
+       "p50": 22650.596376072066,
+       "p90": 23553.299779157885
+      },
+      {
+       "p10": 19374.47860654197,
+       "p50": 20272.217881992387,
+       "p90": 21438.1118805151
+      },
+      {
+       "p10": 18496.576391331677,
+       "p50": 19417.06255375978,
+       "p90": 20784.267694299677
+      },
+      {
+       "p10": 17730.620692072982,
+       "p50": 18738.44239930113,
+       "p90": 20263.08090933796
+      },
+      {
+       "p10": 18903.544870369842,
+       "p50": 20159.71033496997,
+       "p90": 21935.58731803555
+      },
+      {
+       "p10": 16438.030101075277,
+       "p50": 17673.20333811696,
+       "p90": 19654.424439049126
+      },
+      {
+       "p10": 16598.086568732215,
+       "p50": 17840.197205556728,
+       "p90": 20020.17682220373
+      },
+      {
+       "p10": 16494.454702347666,
+       "p50": 17939.520849601315,
+       "p90": 20329.85478267604
+      },
+      {
+       "p10": 15172.377673761088,
+       "p50": 16746.15584546933,
+       "p90": 19218.866191158697
+      },
+      {
+       "p10": 13048.36759568471,
+       "p50": 14434.900562751238,
+       "p90": 17051.07530501201
+      },
+      {
+       "p10": 13185.42177434483,
+       "p50": 14674.938997629077,
+       "p90": 17414.83147598576
+      },
+      {
+       "p10": 13196.723503882666,
+       "p50": 14665.656873053962,
+       "p90": 17427.59099561549
+      },
+      {
+       "p10": 13126.376721534478,
+       "p50": 14705.236421767775,
+       "p90": 17573.631458526583
+      },
+      {
+       "p10": 13138.09928961629,
+       "p50": 14710.059471189856,
+       "p90": 17659.697744540626
+      },
+      {
+       "p10": 13073.770630359262,
+       "p50": 14663.40417623139,
+       "p90": 17676.52290290665
+      }
+     ]
+    }
+   }
+  }
+ },
+ "workbook": {
+  "path": "/assets/lab/prairie-ridge-model.xlsx",
+  "sha256_16": "e42b150f16086d24",
+  "bytes": 68383
+ }
+}

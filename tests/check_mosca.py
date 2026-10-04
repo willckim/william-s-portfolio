@@ -124,7 +124,7 @@ def main() -> int:
             for s in table:
                 page.click(f'button[data-preset="{s}"]')
                 pressed = page.eval_on_selector_all(
-                    '.preset[aria-pressed="true"]', "els => els.map(e => e.dataset.preset)")
+                    '#m-presets .preset[aria-pressed="true"]', "els => els.map(e => e.dataset.preset)")
                 rep.check(f"{s}: only its own preset shows as pressed", pressed == [s], f"{pressed}")
 
             # Sliders are live and local: moving z changes the summary, and nothing is fetched.

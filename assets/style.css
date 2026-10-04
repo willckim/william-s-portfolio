@@ -600,6 +600,51 @@ details summary { cursor: pointer; font-size: 14px; font-weight: 500; color: var
   .mosca-table .pill { font-size: 12px; padding: 3px 7px; }
 }
 
+/* ---------- Lab: Construction Forecast ---------- */
+.cf { background: var(--surface); border: 1px solid var(--rule); border-radius: 12px; padding: clamp(16px, 3vw, 28px); }
+.cf-label { font-size: 15px; color: var(--ink-2); margin: 0 0 18px; max-width: 80ch; }
+.cf-label .pill { margin-right: 4px; }
+.pill.cf-real { background: var(--ledger-2); color: var(--ledger); }
+.pill.cf-fict { background: var(--amber-2); color: var(--amber); box-shadow: inset 0 0 0 1px var(--amber); }
+.cf-controls { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.cf-out { min-width: 0; flex: 0 1 45%; font-size: 13px; color: var(--ink-2); text-align: right; }
+.cf-sub { font-size: 13px; font-weight: 500; margin: 8px 0 4px; }
+.cf-toggles { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 6px 0 4px; }
+.cf-seg { border: 0; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; }
+.cf-seg legend { float: left; font-size: 14px; font-weight: 600; margin-right: 10px; padding: 0; }
+.cf-seg label { font-size: 14px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.cf-seg input { accent-color: var(--accent); width: 18px; height: 18px; margin: 0; }
+.cf-stats { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+.cf-stats dd { font-size: 22px; }
+.cf-stats-small dd { font-size: 17px; color: var(--ink); }
+.cf-why { color: var(--ink-2); max-width: 78ch; }
+.cf-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; }
+.cf-charts .chart-wrap { margin: 8px 0; min-width: 0; }
+.cf-band { fill: var(--accent); opacity: .16; stroke: none; }
+.ch-line.cf-scen, .key.cf-scen { --c: var(--accent); stroke: var(--c); }
+.ch-line.cf-base, .key.cf-base { --c: var(--ink-3); stroke: var(--c); stroke-dasharray: 6 4; stroke-width: 2; }
+.ch-line.cf-actual, .key.cf-actual { --c: var(--ink-2); stroke: var(--c); }
+.key.cf-band-key::before { height: 10px; vertical-align: -1px; background: var(--accent); opacity: .3; }
+.key.cf-base::before { background: none; border-top: 2px dashed var(--ink-3); height: 0; }
+.cf-ext { fill: var(--bone-2); }
+.cf-bar-up, .key.cf-bar-up { --c: var(--ledger); fill: var(--c); }
+.cf-bar-down, .key.cf-bar-down { --c: var(--coral); fill: var(--c); }
+.cf-bar-total, .key.cf-bar-total { --c: var(--blueprint); fill: var(--c); }
+.key.cf-bar-up::before, .key.cf-bar-down::before, .key.cf-bar-total::before { width: 12px; height: 12px; vertical-align: -1px; border-radius: 2px; }
+.cf-val { font-weight: 600; fill: var(--ink); }
+.cf-table td, .cf-table th { vertical-align: top; }
+.cf-table .cf-win { font-weight: 700; color: var(--accent); }
+.cf-how { margin-top: 28px; max-width: 86ch; }
+.cf-how h3 { font-size: 20px; margin: 0 0 8px; }
+.cf-how > details { border-top: 1px solid var(--rule); padding: 12px 0; }
+.cf-how > details > summary { font-size: 16px; font-weight: 600; }
+.cf-how p, .cf-how li { color: var(--ink-2); }
+.cf-how details details { margin: 8px 0; }
+@media (max-width: 760px) {
+  .cf-charts { grid-template-columns: 1fr; }
+  .cf-out { flex-basis: 50%; }
+}
+
 /* ---------- Chips ---------- */
 .chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; }
 .chips li { font-size: 14px; padding: 5px 12px; border-radius: 999px; background: var(--accent-2); color: var(--ink); border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent); }

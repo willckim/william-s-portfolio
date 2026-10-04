@@ -23,6 +23,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from diagram import Diagram, Group, Stage, render  # noqa: E402
+import constructiongen  # noqa: E402
 import labgen  # noqa: E402
 import quickgen  # noqa: E402
 
@@ -146,6 +147,7 @@ IMPORT_MAP = ('<script type="importmap">' + json.dumps({
 
 HEADER_RX = re.compile(r'<header class="site-header">.*?</header>', re.S)
 QUANTUM_RX = re.compile(r"<!-- gen:quantum -->.*?<!-- /gen:quantum -->", re.S)
+CONSTRUCTION_RX = re.compile(r"<!-- gen:construction -->.*?<!-- /gen:construction -->", re.S)
 
 FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E"
            "%3Crect width='32' height='32' rx='7' fill='%23f5f1ea'/%3E%3Cpath d='M6 9l5 15 5-10 5 10 "
@@ -540,8 +542,12 @@ def expected() -> dict[Path, str]:
             if len(QUANTUM_RX.findall(text)) != 1:
                 raise SystemExit("lab.html: expected exactly one gen:quantum region")
             text = QUANTUM_RX.sub(lambda m: labgen.quantum_region(), text)
+            if len(CONSTRUCTION_RX.findall(text)) != 1:
+                raise SystemExit("lab.html: expected exactly one gen:construction region")
+            text = CONSTRUCTION_RX.sub(lambda m: constructiongen.construction_region(), text)
         out[path] = text
     out[ROOT / "assets" / "lab" / "pqc-data.js"] = labgen.pqc_js()
+    out[ROOT / "assets" / "lab" / "construction-data.js"] = constructiongen.construction_js()
     out[ROOT / "quick.html"] = quickgen.page(CASES, FAVICON)
     urls = [href for _, href, _, _ in NAV] + [f"/work/{c.slug}" for c in CASES] + ["/copilot", "/quick"]
     out[ROOT / "sitemap.xml"] = (

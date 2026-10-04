@@ -13,6 +13,7 @@ from __future__ import annotations
 import re
 import sys
 import urllib.error
+import urllib.parse
 import urllib.request
 
 from playwright.sync_api import sync_playwright
@@ -47,8 +48,17 @@ def external_links() -> dict[str, list[str]]:
     return found
 
 
+# FRED closes the connection on a browser user agent that carries no cookies, so a
+# real series page times out here while opening fine in a browser. Identifying as a
+# script gets an honest 200 or 404 from it, so its links are still checked.
+SCRIPT_UA_HOSTS = ("fred.stlouisfed.org",)
+SCRIPT_UA = "williamckim.com link check (python urllib)"
+
+
 def fetch(url: str) -> tuple[int | str, str]:
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "text/html,*/*"})
+    host = urllib.parse.urlsplit(url).hostname or ""
+    agent = SCRIPT_UA if host in SCRIPT_UA_HOSTS else UA
+    req = urllib.request.Request(url, headers={"User-Agent": agent, "Accept": "text/html,*/*"})
     try:
         with urllib.request.urlopen(req, timeout=25) as r:
             return r.status, r.geturl()

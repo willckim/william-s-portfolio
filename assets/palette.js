@@ -20,6 +20,7 @@
     ["Case studies", "Accounting Time Tracker", "/work/time-tracker", "timekeeping approval audit trail azure function"],
     ["Case studies", "Practitioner Website Consolidation", "/work/consolidation", "platform specification prototype tax w-9 tin erp"],
     ["Lab tools", "Tour Engine: tour this site", "/lab#tour", "walkthrough guided spotlight host adapter mutation testing"],
+    ["Lab tools", "Construction Forecast", "/lab#construction", "fp&a scenario backtest forecast construction spending tariffs weather rates excel prairie ridge"],
     ["Lab tools", "Mosca's inequality calculator", "/lab#pqc", "post-quantum pqc readiness harvest now decrypt later retention exposure"],
     ["Lab tools", "Grover search visualizer", "/lab#grover", "quantum amplitude iterations qiskit"],
     ["Lab tools", "Quantum finance results", "/lab#quantum", "qaoa portfolio monte carlo amplitude estimation forecaster"],

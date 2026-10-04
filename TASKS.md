@@ -10,12 +10,17 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
   (`tools/extract_qf.py` runs the seeded scripts and parses their output)
 - `quantum-finance/04_security/pqc_readiness` at 5345b40: Mosca inputs
   (`tools/extract_pqc.py`) and published results (graded by `tests/check_mosca.py`)
+- `forecasting-engine` (private, never pushed) at the commit in `tools/data/construction.json`:
+  Construction Forecast data, scenario model and Excel workbook (`tools/extract_construction.py`,
+  refuses a dirty tree, FORECAST_DIR overrides ~/OneDrive/forecasting-engine). The page shows the
+  commit hash and "Source is private for now", never a repo link.
 - `willckim/tour-engine` at 7eefca5: vendored with the recorder disabled
   (cloned at ~/OneDrive/tour-engine for check_tour's recorder control; TOUR_ENGINE_SRC overrides)
 
 ## Regenerate
 - `py tools/sitegen.py` rewrites the header on every page, the five case studies,
-  the Lab's quantum region, `assets/lab/pqc-data.js` and `sitemap.xml`
+  the Lab's quantum and construction regions, `assets/lab/pqc-data.js`,
+  `assets/lab/construction-data.js` and `sitemap.xml`
 - `--check` fails if any committed page differs from what it would write
 
 ## Commits, in order
@@ -27,6 +32,15 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
 - [x] 6. Command palette
 - [x] 7. Dark mode
 - [x] 8. Polish and performance
+- [x] 9. Construction Forecast panel (Lab, between Tour Engine and Post-Quantum Readiness)
+  - [x] extractor, generator, scenario engine port, panel, palette entry, /quick via Products row
+  - [x] tests/check_construction.py: browser vs engine Python for every preset and two custom mixes,
+        five mutants, keyboard, text alternatives, reduced motion, no network, download, dirty-tree refusal
+  - [x] check_copy: "Prairie Ridge Builders" always followed by "(fictional)"
+  - [x] full check suite and Lighthouse /lab 95+ (99/100/100/100 on 2026-10-04)
+  - [x] check_mosca preset selector scoped to #m-presets (it matched the new panel's presets)
+  - [x] check_pages fetches FRED with a script user agent (FRED drops cookieless browser agents)
+- [ ] 10. Forecast your own data (second tab in the same panel)
 
 ## Checks (all in tests/, Python Playwright; `npm --prefix tests install` for axe and Lighthouse)
 - [x] check_copy: no em dashes, semicolons or stale CPA date in visible copy
