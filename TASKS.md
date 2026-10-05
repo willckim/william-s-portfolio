@@ -40,7 +40,13 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
   - [x] full check suite and Lighthouse /lab 95+ (99/100/100/100 on 2026-10-04)
   - [x] check_mosca preset selector scoped to #m-presets (it matched the new panel's presets)
   - [x] check_pages fetches FRED with a script user agent (FRED drops cookieless browser agents)
-- [ ] 10. Forecast your own data (second tab in the same panel)
+- [x] 10. Forecast your own data (second tab in the same panel)
+  - [x] assets/lab/autocast.js: parser and a port of the engine's src/autoforecast.py, nothing uploaded
+  - [x] tests/check_autocast.py: three FRED samples and five synthetic fixtures against the engine's Python,
+        parser formats, one bad file per error message, drop and choose with no network request, CSV download,
+        keyboard tabs, live regions, deterministic race test, seven mutants
+  - [x] check_tour: a card counts as shown only when visible (Firefox 15/20 false failures before), runs guarded
+- [ ] 11. Final gates, then push the site (the forecasting engine stays private, no remote)
 
 ## Checks (all in tests/, Python Playwright; `npm --prefix tests install` for axe and Lighthouse)
 - [x] check_copy: no em dashes, semicolons or stale CPA date in visible copy

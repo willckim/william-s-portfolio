@@ -118,6 +118,15 @@ def rendered(rep: Report) -> None:
                     page.check('input[name="cf-metric"][value="revenue"]')
                     texts.append(page.inner_text("#construction"))
                     texts += page.eval_on_selector_all("#construction desc", "ds => ds.map(d => d.textContent)")
+                    page.click("#cf-tab-own")                            # the second tab: a result and an error
+                    page.click('button[data-sample="retail"]')
+                    page.wait_for_function("() => (document.getElementById('ac-status').textContent || '').includes('Winner by backtest')")
+                    texts.append(page.inner_text("#construction"))
+                    texts += page.eval_on_selector_all("#construction desc", "ds => ds.map(d => d.textContent)")
+                    page.set_input_files("#ac-file", files=[{"name": "bad.csv", "mimeType": "text/csv",
+                                                              "buffer": b"date,value\n2020-01,1\n2020-04,2\n"}])
+                    page.wait_for_function("() => !document.getElementById('ac-error').hidden")
+                    texts.append(page.inner_text("#ac-error"))
                     page.keyboard.press("Control+k")
                     page.wait_for_selector("dialog.palette[open]")
                     texts.append(page.inner_text("dialog.palette"))

@@ -136,19 +136,21 @@ def main() -> int:
     root = Path(args[0] if args else os.environ.get("FORECAST_DIR") or DEFAULT_DIR)
     prov = provenance(root)                       # refuse a dirty tree before reading anything
     results = root / "construction" / "results"
-    for p in (results / "macro.json", results / "contractor.json", results / "prairie_ridge_model.xlsx"):
+    for p in (results / "macro.json", results / "contractor.json", results / "samples.json",
+              results / "prairie_ridge_model.xlsx"):
         if not p.exists():
             raise SystemExit(f"not found: {p}")
     # A clean status says nothing about ignored files, so require the results to be
     # tracked: then a clean tree means they are exactly what the commit holds.
-    for name in ("macro.json", "contractor.json", "prairie_ridge_model.xlsx"):
+    for name in ("macro.json", "contractor.json", "samples.json", "prairie_ridge_model.xlsx"):
         tracked = subprocess.run(["git", "-C", str(root), "ls-files", "--error-unmatch", f"construction/results/{name}"],
                                  capture_output=True, text=True)
         if tracked.returncode != 0:
             raise SystemExit(f"construction/results/{name} is not tracked by git, so the commit cannot vouch for it")
     macro = json.loads((results / "macro.json").read_text(encoding="utf-8"))
     contractor = json.loads((results / "contractor.json").read_text(encoding="utf-8"))
-    if macro["snapshot"] != contractor["snapshot"]:
+    samples = json.loads((results / "samples.json").read_text(encoding="utf-8"))
+    if not macro["snapshot"] == contractor["snapshot"] == samples["snapshot"]:
         raise SystemExit("macro and contractor results come from different snapshots")
     snapshot = root / "construction" / "snapshots" / macro["snapshot"]
     manifest = json.loads((snapshot / "manifest.json").read_text(encoding="utf-8"))
@@ -164,7 +166,8 @@ def main() -> int:
         "_generated_by": "tools/extract_construction.py",
         "extracted_at": datetime.now().isoformat(timespec="seconds"),
         "provenance": {**prov, "files": {name: sha16(results / name) for name in
-                                         ("macro.json", "contractor.json", "prairie_ridge_model.xlsx")}},
+                                         ("macro.json", "contractor.json", "samples.json",
+                                          "prairie_ridge_model.xlsx")}},
         "sources": sources_block(manifest, sources, usage(macro_spec, cfg, sources)),
         "macro": {**macro_block(macro), "recent_actuals": recent_actuals(snapshot, macro["target"]["id"])},
         "contractor": {
@@ -176,6 +179,7 @@ def main() -> int:
             "model": contractor["model"],
             "reference": contractor["presets"],         # for the parity check only, never shipped
         },
+        "samples": samples,                             # dates and values ship, results are the parity reference
         "workbook": {"path": "/assets/lab/prairie-ridge-model.xlsx", "sha256_16": sha16(WORKBOOK_OUT),
                      "bytes": WORKBOOK_OUT.stat().st_size},
     }

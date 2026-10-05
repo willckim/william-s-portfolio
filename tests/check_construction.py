@@ -268,7 +268,9 @@ def main() -> int:
             page.check('input[name="cf-view"][value="12"]')
 
             # Text alternatives on every chart in the panel.
-            charts = page.eval_on_selector_all("#construction svg.chart", """els => els.map(s => {
+            # The own-data chart has no data until a visitor brings some. check_autocast.py
+            # checks its text alternative after a forecast runs.
+            charts = page.eval_on_selector_all("#construction svg.chart:not(#ac-chart)", """els => els.map(s => {
                 const ids = (s.getAttribute('aria-labelledby') || '').split(' ');
                 return { role: s.getAttribute('role'), texts: ids.map(i => (document.getElementById(i) || {}).textContent || '') };
             })""")

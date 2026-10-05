@@ -640,9 +640,26 @@ details summary { cursor: pointer; font-size: 14px; font-weight: 500; color: var
 .cf-how > details > summary { font-size: 16px; font-weight: 600; }
 .cf-how p, .cf-how li { color: var(--ink-2); }
 .cf-how details details { margin: 8px 0; }
+.cf-tabs { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: -1px; position: relative; }
+.cf-tabs[hidden] { display: none; }
+.cf-tabs [role="tab"] { font: inherit; font-size: 15px; font-weight: 600; cursor: pointer; padding: 10px 16px; color: var(--ink-2);
+  background: var(--bone); border: 1px solid var(--rule); border-bottom-color: var(--rule); border-radius: 10px 10px 0 0; }
+.cf-tabs [role="tab"][aria-selected="true"] { color: var(--accent); background: var(--surface); border-bottom-color: var(--surface);
+  box-shadow: inset 0 3px 0 var(--accent); }
+.cf-tabs:not([hidden]) + .cf { border-top-left-radius: 0; }
+.ac-input { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px 28px; align-items: start; }
+.ac-drop { border: 2px dashed var(--rule); border-radius: 10px; padding: 18px; text-align: center; }
+.ac-drop.is-over { border-color: var(--accent); background: var(--accent-2); }
+.ac-drop .small { color: var(--ink-2); margin: 10px 0 0; }
+.ac-file { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.ac-file:focus-visible + label { outline: 3px solid var(--accent); outline-offset: 3px; }
+.ac-status { margin: 16px 0 6px; font-weight: 600; min-height: 1.4em; }
+.ac-status.ac-error { color: var(--coral); }
+#ac-results { margin-top: 6px; }
 @media (max-width: 760px) {
   .cf-charts { grid-template-columns: 1fr; }
   .cf-out { flex-basis: 50%; }
+  .ac-input { grid-template-columns: 1fr; }
 }
 
 /* ---------- Chips ---------- */
