@@ -66,7 +66,7 @@ WATCH = """(() => {
   });
   (function card() {
     const t = document.querySelector('[data-tour-ui="tooltip"]');
-    if (t && !t.hidden && t.getBoundingClientRect().height > 0) {
+    if (t && !t.hidden && t.getBoundingClientRect().height > 0 && getComputedStyle(t).visibility === 'visible') {
       window.__cardAt = performance.now(); window.__cardDuringWipe = wipingNow(); return;
     }
     requestAnimationFrame(card);
@@ -88,7 +88,14 @@ STATE = """() => {
   if (!window.Tour) return null;
   const s = Tour.state();
   const tip = document.querySelector('[data-tour-ui="tooltip"]');
-  s.shown = !!tip && !tip.hidden && tip.getBoundingClientRect().height > 0;
+  // Shown means a person can see it. During a page change the host draws the next
+  // card on the page that is leaving and hides it with visibility: hidden
+  // (html.tour-leaving). In Firefox, whose fallback wipe takes 0.42 s, that hidden
+  // card was read as shown, and drive() clicked its target, the link already being
+  // followed, while the page went away: 15 of 20 runs timed out on a click that no
+  // visitor could ever make. Visibility inherits, so the tooltip's own value counts.
+  s.shown = !!tip && !tip.hidden && tip.getBoundingClientRect().height > 0
+            && getComputedStyle(tip).visibility === 'visible';
   s.title = tip ? (tip.querySelector('.tour-tip__title') || {}).textContent : null;
   s.page = document.body.dataset.page;
   s.next = !!(tip && tip.querySelector('.tour-btn-next'));
@@ -444,32 +451,45 @@ def main() -> int:
         with sync_playwright() as p:
             chrome = p.chromium.launch(channel="chrome")
             run = lambda name: not only or name in only   # noqa: E731
+
+            # A click that times out used to end the whole check with a bare
+            # "Page.click: Timeout" and no word of which run or element. Each run now
+            # records its own crash as a FAIL row, with Playwright's call log, which
+            # names the selector and why it could not be clicked, and the rest go on.
+            def guarded(name: str, browser, fn, *args, **kwargs) -> None:
+                try:
+                    fn(*args, **kwargs)
+                except Exception as e:  # noqa: BLE001 - reported as a failure, not swallowed
+                    rep.check(f"{name}: ran to the end without an exception", False,
+                              f"{type(e).__name__}: {str(e)[:700]}")
+                    for ctx in list(browser.contexts):
+                        ctx.close()
             if run("copy"):
-                copy(rep, chrome, base)
+                guarded("copy", chrome, copy, rep, chrome, base)
             if run("desktop"):
-                drive(rep, chrome, base, "desktop Chrome")
+                guarded("desktop Chrome", chrome, drive, rep, chrome, base, "desktop Chrome")
             if run("firefox"):
                 try:
                     firefox = p.firefox.launch()
                 except Exception as e:  # noqa: BLE001
                     rep.not_run("desktop Firefox", f"no Playwright Firefox: {str(e)[:80]}")
                 else:
-                    drive(rep, firefox, base, "desktop Firefox")
+                    guarded("desktop Firefox", firefox, drive, rep, firefox, base, "desktop Firefox")
                     firefox.close()
             if run("phone"):
-                drive(rep, chrome, base, "phone", width=390, height=844, phone=True)
+                guarded("phone", chrome, drive, rep, chrome, base, "phone", width=390, height=844, phone=True)
             if run("reduced"):
-                drive(rep, chrome, base, "reduced motion", reduced=True)
+                guarded("reduced motion", chrome, drive, rep, chrome, base, "reduced motion", reduced=True)
             if run("dark"):
-                drive(rep, chrome, base, "dark mode", dark=True)
+                guarded("dark mode", chrome, drive, rep, chrome, base, "dark mode", dark=True)
             if run("lab"):
-                drive(rep, chrome, base, "desktop, from the Lab's Try it", start="/lab")
+                guarded("from the Lab", chrome, drive, rep, chrome, base, "desktop, from the Lab's Try it", start="/lab")
             if run("preloader"):
-                preloader(rep, chrome, base)
+                guarded("preloader", chrome, preloader, rep, chrome, base)
             if run("skip"):
-                skips(rep, chrome, base)
+                guarded("skip", chrome, skips, rep, chrome, base)
             if run("palette"):
-                palette(rep, chrome, base)
+                guarded("palette", chrome, palette, rep, chrome, base)
             if run("recorder"):
                 r = recorder_runs(chrome, base, None)
                 rep.check("deployed build: ?tour=record and Tour.record() record nothing",
