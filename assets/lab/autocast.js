@@ -171,29 +171,45 @@
     return null;
   }
 
-  function run(periods, values) {
+  // settings (optional) mirror autoforecast.run: first_origin [year, month],
+  // publication_lag, max_points (null for the whole series). A visitor's own file
+  // gets the defaults, because the page cannot know when it is published.
+  function run(periods, values, settings) {
+    settings = settings || {};
     var frequency = detectFrequency(periods);
     if (!frequency) throw new Error("The dates are not evenly monthly or quarterly.");
-    var m = SEASON[frequency], h = m;
+    var m = SEASON[frequency], h = m, lag = settings.publication_lag ? +settings.publication_lag : 0;
     if (values.length < MIN_POINTS[frequency]) {
       throw new Error("Only " + values.length + " " + frequency + " points. At least " + MIN_POINTS[frequency] + " are needed to see a seasonal pattern.");
     }
-    var total = values.length, kept = Math.min(total, MAX_POINTS[frequency]);
+    var cap = settings.max_points === undefined ? MAX_POINTS[frequency] : settings.max_points;
+    var total = values.length, kept = cap === null ? total : Math.min(total, cap);
     periods = periods.slice(total - kept); values = values.slice(total - kept);
-    var n = values.length, testable = 2 * m + h + MIN_FOLDS;
+    var n = values.length, testable = 2 * m + lag + h + MIN_FOLDS;
     if (n < testable) {
       throw new Error(n + " " + frequency + " points are enough to see a seasonal pattern, but testing a forecast " + h + " " +
         UNIT[frequency][1] + " ahead needs at least " + testable + ": " + (2 * m + 1) + " to fit the models and enough after that " +
         "to check every " + UNIT[frequency][0] + " ahead at least " + MIN_FOLDS + " times.");
     }
-    var firstOrigin = Math.max(2 * m, n - 1 - ORIGINS[frequency]), origins = [];
+    var firstOrigin, origins = [];
+    if (settings.first_origin) {
+      firstOrigin = -1;
+      for (var fi = 0; fi < periods.length; fi++) {
+        if (periods[fi][0] === settings.first_origin[0] && periods[fi][1] === settings.first_origin[1]) { firstOrigin = fi; break; }
+      }
+      if (firstOrigin < 0) throw new Error("The first backtest origin is not in the series.");
+      if (firstOrigin < 2 * m + lag || n - firstOrigin - h < MIN_FOLDS) throw new Error("The first backtest origin leaves too little to fit or to test.");
+    } else {
+      firstOrigin = Math.max(2 * m + lag, n - 1 - ORIGINS[frequency]);
+    }
     for (var o = firstOrigin; o < n - 1; o++) origins.push(o);
     var note = mapeNote(values), positive = allPositive(values), table = [], errors = {};
     MODELS.forEach(function (model) {
       var byH = {}, hh;
       for (hh = 1; hh <= h; hh++) byH[hh] = [];
       origins.forEach(function (origin) {
-        var f = fitPredict(model.key, values.slice(0, origin + 1), m, h);
+        var known = origin - lag;                                // the last period published at the origin
+        var f = fitPredict(model.key, values.slice(0, known + 1), m, h + lag).slice(lag);
         for (var k = 1; k <= h; k++) if (origin + k < n) byH[k].push([values[origin + k], f[k - 1]]);
       });
       errors[model.key] = byH;
@@ -222,14 +238,15 @@
       bands[k] = {};
       QS.forEach(function (q) { bands[k]["p" + q] = percentile(errs, q); });
     });
-    var final = fitPredict(winner, values, m, h), last = monthIndex(periods[periods.length - 1][0], periods[periods.length - 1][1]);
+    var final = fitPredict(winner, values, m, h + lag).slice(lag), last = monthIndex(periods[periods.length - 1][0], periods[periods.length - 1][1]);
     var forecast = final.map(function (point, i) {
-      var idx = last + (i + 1) * STEP[frequency], row = { year: Math.floor(idx / 12), month: idx % 12 + 1, point: point };
+      var idx = last + (lag + i + 1) * STEP[frequency], row = { year: Math.floor(idx / 12), month: idx % 12 + 1, point: point };
       if (bands[i + 1]) QS.forEach(function (q) { var e = bands[i + 1]["p" + q]; row["p" + q] = positive ? point * Math.exp(e) : point + e; });
       return row;
     });
     return { frequency: frequency, season: m, horizon: h, points_used: n, points_dropped: total - kept,
              seasonal_strength: seasonalStrength(values, m), origins: origins.length,
+             first_origin: periods[firstOrigin].slice(), publication_lag: lag,
              metric: note ? "MAE" : "MAPE", mape_note: note, band_scale: positive ? "ratio" : "difference",
              table: table, winner: winner, forecast: forecast, periods: periods, values: values };
   }
@@ -419,7 +436,7 @@
   // never overwrites a newer result or error: a big file still being read, or a
   // sample clicked just before a bad file is dropped, must not replace the newer
   // file's message with the older forecast.
-  function analyse(name, text, token) {
+  function analyse(name, text, token, settings) {
     var mine = token === undefined ? ++latest : token, parsed;
     if (mine !== latest) return;
     try { parsed = parse(text); } catch (e) { fail(e.message); return; }
@@ -427,9 +444,9 @@
     setTimeout(function () {                                    // let the status paint before the work
       if (mine !== latest) return;
       var result;
-      try { result = run(parsed.periods, parsed.values); } catch (e) { if (mine === latest) fail(e.message); return; }
+      try { result = run(parsed.periods, parsed.values, settings); } catch (e) { if (mine === latest) fail(e.message); return; }
       if (mine !== latest) return;
-      current = { name: name, result: result };
+      current = { name: name, result: result, matchesMain: !!(settings && settings.first_origin) };
       show(current);
     }, 20);
   }
@@ -439,12 +456,15 @@
     var strength = r.seasonal_strength === null ? "too short to measure" :
       (r.seasonal_strength >= 0.5 ? "strong" : r.seasonal_strength >= 0.2 ? "moderate" : "weak") + " (" + r.seasonal_strength.toFixed(2) + ")";
     setStatus(c.name + ": " + r.frequency + ", " + r.points_used + " points" + (r.points_dropped ? " (the oldest " + r.points_dropped + " left out)" : "") +
-      ". Winner by backtest: " + winner.name + ".", false);
+      ". Winner by backtest: " + winner.name + "." +
+      (c.matchesMain ? " Tested with the main forecast's settings, so it matches the Contractor scenarios tab." : ""), false);
     $("ac-freq").textContent = r.frequency.charAt(0).toUpperCase() + r.frequency.slice(1);
     $("ac-points").textContent = String(r.points_used);
     $("ac-seasonal").textContent = strength;
     $("ac-winner").textContent = winner.name;
-    $("ac-origins").textContent = r.origins + " origins, " + r.horizon + " " + (r.frequency === "monthly" ? "months" : "quarters") + " ahead";
+    $("ac-origins").textContent = r.origins + " origins from " + label(r.first_origin) + ", " + r.horizon + " " +
+      (r.frequency === "monthly" ? "months" : "quarters") + " ahead" +
+      (r.publication_lag ? ", data known " + r.publication_lag + " " + (r.frequency === "monthly" ? "month" : "quarter") + " late" : "");
     var body = $("ac-table").querySelector("tbody");
     while (body.firstChild) body.removeChild(body.firstChild);
     r.table.forEach(function (t) {
@@ -576,7 +596,7 @@
     b.textContent = s.label;
     b.addEventListener("click", function () {
       var csv = ["date,value"].concat(s.dates.map(function (d, i) { return d + "," + s.values[i]; })).join("\n");
-      analyse(s.label + " (FRED " + s.series_id + ")", csv);
+      analyse(s.label + " (FRED " + s.series_id + ")", csv, undefined, s.settings || undefined);
     });
     sampleRow.appendChild(b);
   });

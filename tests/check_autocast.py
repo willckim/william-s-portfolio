@@ -29,6 +29,7 @@ FIXTURES = DATA["samples"]["test_fixtures"]["cases"]          # synthetic, never
 JS = (ROOT / "assets" / "lab" / "autocast.js").read_text(encoding="utf-8")
 REL = 1e-9
 KEYS = ("frequency", "season", "horizon", "points_used", "points_dropped", "seasonal_strength", "origins",
+        "first_origin", "publication_lag",
         "metric", "band_scale", "winner", "table", "forecast")
 
 MUTANTS = {
@@ -39,6 +40,7 @@ MUTANTS = {
     "backtest uses one origin fewer": ("for (var o = firstOrigin; o < n - 1; o++)", "for (var o = firstOrigin + 1; o < n - 1; o++)"),
     "band read off the wrong percentile": ("percentile(errs, q)", "percentile(errs, 100 - q)"),
     "the testable minimum is dropped": ("if (n < testable) {", "if (false) {"),
+    "a sample's settings are ignored": ("run(parsed.periods, parsed.values, settings)", "run(parsed.periods, parsed.values)"),
 }
 ALL_MUTANTS = {
     "the race guard is removed": ("if (mine !== latest) return;", ""),
@@ -83,6 +85,43 @@ def close(a, b) -> str:
     return "" if a == b else f": page {a!r} python {b!r}"
 
 
+JS_NAMES = {"seasonal_naive": "Seasonal naive", "linear_trend": "Linear trend + seasonality",
+            "holt_winters_damped": "Holt-Winters (ETS), damped"}
+
+
+def tabs_agree(page) -> list[str]:
+    """Both Lab tabs on the construction series, as a visitor reads them.
+
+    Tab two: the construction sample's table and winner. Tab one: the "How it works"
+    backtest table, in the column for the published publication lag. Same models must
+    show the same average MAPE to the printed digit, and the same winner.
+    """
+    macro = DATA["macro"]
+    lag = macro["published"]["publication_lag_months"]
+    main_names = {r["key"]: r["name"] for r in macro["variants"][0]["table"]}
+    sample = next(x for x in SAMPLES if x.get("settings"))
+    page.click("#cf-tab-own")
+    page.click(f'button[data-sample="{sample["key"]}"]')
+    page.wait_for_function(DONE, arg=sample["series_id"], timeout=20000)
+    tab2 = {r[0].replace(" (winner)", ""): r[1] for r in page.eval_on_selector_all(
+        "#ac-table tbody tr", "rs => rs.map(r => [r.cells[0].textContent, r.cells[1].textContent])")}
+    winner2 = page.text_content("#ac-winner")
+    main_table = page.eval_on_selector_all(
+        "#construction .cf-how table.cf-table", """ts => { const t = ts.find(x => (x.caption || {}).textContent === 'Backtest error by model');
+            return [...t.tBodies[0].rows].map(r => [r.cells[0].textContent, ...[...r.cells].slice(1).map(c => c.textContent)]); }""")
+    variants = [v["publication_lag_months"] for v in macro["variants"]]
+    column = 2 * variants.index(lag)                          # each lag has an average then a 12-month column
+    tab1 = {row[0]: row[1 + column] for row in main_table}
+    diffs = []
+    for key, name in JS_NAMES.items():
+        if tab2.get(name) != tab1.get(main_names[key]):
+            diffs.append(f"{key}: own-data tab {tab2.get(name)}, main tab {tab1.get(main_names[key])}")
+    main_winner = next(v["winner"] for v in macro["variants"] if v["publication_lag_months"] == lag)
+    if winner2 != JS_NAMES.get(main_winner):
+        diffs.append(f"winner: own-data tab {winner2}, main tab {main_names[main_winner]}")
+    return diffs
+
+
 def compare_fixtures(page) -> list[str]:
     """The synthetic fixtures: results where Python had results, the same refusal where it refused."""
     diffs = []
@@ -107,7 +146,7 @@ def compare_samples(page) -> list[str]:
     diffs = []
     for s in SAMPLES:
         got = page.evaluate("""s => { const p = s.dates.map(d => [+d.slice(0, 4), +d.slice(5, 7)]);
-                                      return Autocast.run(p, s.values); }""", s)
+                                      return Autocast.run(p, s.values, s.settings || undefined); }""", s)
         d = close({k: got.get(k) for k in KEYS}, {k: s["result"][k] for k in KEYS})
         if d:
             diffs.append(f"{s['key']}{d}")
@@ -231,6 +270,9 @@ def main() -> int:
                 for (let i = 0; i < 24; i++) d.push(names[i % 12] + '-' + String((99 + Math.floor(i / 12)) % 100).padStart(2, '0') + ',' + i);
                 const r = Autocast.parse('date,value\\n' + d.join('\\n')); return [r.periods[0], r.periods[23]]; }""")
             rep.check("Jan-99 reads as 1999 and Dec-00 as 2000", first == [[1999, 1], [2000, 12]], f"{first}")
+            agree = tabs_agree(page)
+            rep.check("both tabs show the same winner and average errors for the construction series", not agree,
+                      "; ".join(agree))
             rep.check("the page does not ship the Python results",
                       all("result" not in s for s in page.evaluate("window.CONSTRUCTION_DATA.samples")))
             page.click("#cf-tab-own")
@@ -278,12 +320,14 @@ def main() -> int:
             rep.check("the file picker is cleared after each choice, so the same file can be chosen again",
                       page.eval_on_selector("#ac-file", "e => e.value") == "")
 
-            # A good file through the input, and the same file dropped on the zone.
-            good = body(SAMPLES[0]["dates"], SAMPLES[0]["values"]).encode("utf-8")
+            # A good file through the input, and the same file dropped on the zone. A visitor's
+            # file gets the general defaults, so the expected result is a default-settings sample's.
+            plain = next(x for x in SAMPLES if not x.get("settings"))
+            good = body(plain["dates"], plain["values"]).encode("utf-8")
             page.set_input_files("#ac-file", files=[{"name": "mine.csv", "mimeType": "text/csv", "buffer": good}])
             page.wait_for_function(DONE, arg="mine.csv", timeout=20000)
-            rep.check("a chosen file is forecast", page.text_content("#ac-winner") ==
-                      next(t["name"] for t in SAMPLES[0]["result"]["table"] if t["key"] == SAMPLES[0]["result"]["winner"]))
+            rep.check("a chosen file is forecast with the general defaults", page.text_content("#ac-winner") ==
+                      next(t["name"] for t in plain["result"]["table"] if t["key"] == plain["result"]["winner"]))
             page.evaluate("""text => { const dt = new DataTransfer();
                 dt.items.add(new File([text], 'dropped.csv', { type: 'text/csv' }));
                 const zone = document.getElementById('ac-drop');
@@ -334,8 +378,9 @@ def main() -> int:
                     status=200, content_type="text/javascript", body=b))
                 mpage.goto(base + "/lab", wait_until="networkidle")
                 mpage.click("#cf-tab-own")
-                mdiffs = compare_samples(mpage) + tie_check(mpage) + compare_fixtures(mpage) + race_check(mpage)
-                rep.check(f"mutant '{label}' is caught by the sample, tie, fixture and race checks", bool(mdiffs),
+                mdiffs = (compare_samples(mpage) + tie_check(mpage) + compare_fixtures(mpage) + race_check(mpage)
+                          + tabs_agree(mpage))
+                rep.check(f"mutant '{label}' is caught by the sample, tie, fixture, race and agreement checks", bool(mdiffs),
                           f"{len(mdiffs)} samples differ, first: {mdiffs[0][:120] if mdiffs else 'none'}")
                 mpage.close()
             browser.close()
