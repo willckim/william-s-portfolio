@@ -5,3 +5,5 @@ tests
 tools
 TASKS.md
 TOUR_ENGINE.md
+# Scan rules for tools/scan_history.py: repo-only.
+.history-scan-allow

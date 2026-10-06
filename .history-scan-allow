@@ -1,0 +1,8 @@
+# Allowed findings for tools/scan_history.py: label path-glob  # reason (required)
+# Labels name entries in the owner's local needles file, never the values.
+email *resume.pdf  # the resume carries contact details on purpose (owner, 2026-10-05)
+phone *resume.pdf  # the resume carries contact details on purpose (owner, 2026-10-05)
+name  *resume.pdf  # the resume is the owner's own
+name  *.html  # the pages of the owner's own portfolio carry the owner's name
+name  tools/*.py  # the generators write the owner's name into those pages
+name  (commit)  # commit author names kept, only author and committer emails were rewritten (2026-10-05)

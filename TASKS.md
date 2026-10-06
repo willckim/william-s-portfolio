@@ -62,6 +62,14 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
 - [x] lighthouse: 95+ in all four categories, mobile, on Home, Work, a case study, Lab
 - [x] check_pages links: tour-engine link removed (repo stays private). linkedin.com
       excluded, as it answers 999 to every signed-out request.
+- [x] check_history_scan: tools/scan_history.py opens xlsx, docx, zip, pdf and gzip before
+      searching history (the old byte search missed every one), with its own controls.
+      Needles live in a local file outside the repo, `.history-scan-allow` lists what is intended.
+
+## Open (2026-10-05)
+- [ ] History still holds the old Prairie Ridge workbook (name, OneDrive id) in both repos,
+      and the phone in old versions of the contact, home and quick pages and the archived
+      single-page sites. Not on the live pages. Decide: leave, or rewrite history. `py tools/scan_history.py <repo>` lists them.
 
 ## Decided (2026-09-23)
 - Tour Engine repo stays private: no links, "Source is private for now" line instead.

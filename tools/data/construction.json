@@ -1,16 +1,16 @@
 {
  "_generated_by": "tools/extract_construction.py",
- "extracted_at": "2026-10-04T20:01:05",
+ "extracted_at": "2026-10-05T19:26:04",
  "provenance": {
   "engine": "forecasting-engine (private)",
-  "commit": "57c06be",
-  "commit_date": "2026-10-04",
+  "commit": "ff920cb",
+  "commit_date": "2026-10-05",
   "uncommitted_changes": false,
   "files": {
    "macro.json": "0ec734df0852d236",
    "contractor.json": "ac4264db86989247",
    "samples.json": "eef26a218137303d",
-   "prairie_ridge_model.xlsx": "e42b150f16086d24"
+   "prairie_ridge_model.xlsx": "d8a7392ce30253be"
   }
  },
  "sources": {
@@ -11779,7 +11779,7 @@
  },
  "workbook": {
   "path": "/assets/lab/prairie-ridge-model.xlsx",
-  "sha256_16": "e42b150f16086d24",
-  "bytes": 68383
+  "sha256_16": "d8a7392ce30253be",
+  "bytes": 56543
  }
 }
