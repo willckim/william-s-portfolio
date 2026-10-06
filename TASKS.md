@@ -66,10 +66,11 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
       searching history (the old byte search missed every one), with its own controls.
       Needles live in a local file outside the repo, `.history-scan-allow` lists what is intended.
 
-## Open (2026-10-05)
-- [ ] History still holds the old Prairie Ridge workbook (name, OneDrive id) in both repos,
-      and the phone in old versions of the contact, home and quick pages and the archived
-      single-page sites. Not on the live pages. Decide: leave, or rewrite history. `py tools/scan_history.py <repo>` lists them.
+## Decided (2026-10-05)
+- No more history rewrites. History keeps the old Prairie Ridge workbook (name, OneDrive id)
+  in both repos and the phone in old versions of the contact, home and quick pages and the
+  archived single-page sites. None of it is on the live pages. `py tools/scan_history.py`
+  still lists them as findings, on purpose, so anything new stands out against that list.
 
 ## Decided (2026-09-23)
 - Tour Engine repo stays private: no links, "Source is private for now" line instead.
