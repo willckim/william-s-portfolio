@@ -66,6 +66,13 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
       searching history (the old byte search missed every one), with its own controls.
       Needles live in a local file outside the repo, `.history-scan-allow` lists what is intended.
 
+## 3D demos (2026-10-19)
+- [x] tools/build_demos.py: rebuilds Quote Engine (/demos/quote-engine/) and Apartment Studio
+      (/demos/lakeview/) from their private repos, refuses a dirty repo or a failing test, scans the
+      build (personal info, secrets, local paths, webhook URLs, source maps), pins tools/data/demos.json
+- [x] check_demos: pin matches demos/ and the clean source HEAD, build-script guards both ways, both
+      demos load at their clean URLs on desktop and phone, Credits and licenses panel works
+
 ## Decided (2026-10-05)
 - No more history rewrites. History keeps the old Prairie Ridge workbook (name, OneDrive id)
   in both repos and the phone in old versions of the contact, home and quick pages and the

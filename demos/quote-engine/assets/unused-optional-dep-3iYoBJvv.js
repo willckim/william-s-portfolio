@@ -1,0 +1,1 @@
+function e(){throw Error(`This jsPDF feature is not bundled in the quote builder.`)}export{e as default};

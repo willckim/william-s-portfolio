@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "currency": "USD",
+  "companyProfile": {
+    "name": "Argon Outdoor Living",
+    "logoUrl": "",
+    "primaryColor": "#1c2230",
+    "accentColor": "#c8a26a",
+    "quoteValidityDays": 30,
+    "leadWebhookUrl": "",
+    "contactEmail": "design@argon-outdoor.example",
+    "phone": "(555) 014-2290",
+    "address": "1840 Lakeview Commons, Suite 210, Barrington, IL 60010",
+    "licenseNumber": "IL-CONTR-104-0098"
+  },
+  "dimensions": {
+    "width": { "min": 8, "max": 24, "step": 2, "default": 12, "unit": "ft", "pricePerSqFt": 85 },
+    "length": { "min": 8, "max": 30, "step": 2, "default": 16, "unit": "ft" },
+    "height": { "min": 8, "max": 12, "step": 1, "default": 10, "unit": "ft", "multiplierPerFt": 1.05, "baselineFt": 8 }
+  },
+  "materials": [
+    {
+      "id": "bronze",
+      "name": "Matte Anodized Bronze",
+      "description": "Class I anodized 6063-T6 aluminum. Standard finish.",
+      "hex": "#3b332e",
+      "roughness": 0.35,
+      "metalness": 0.75,
+      "texture": null,
+      "price": { "type": "percent", "value": 0 }
+    },
+    {
+      "id": "black",
+      "name": "Architectural Jet Black",
+      "description": "AAMA 2604 powder coat with satin sheen.",
+      "hex": "#181a1c",
+      "roughness": 0.28,
+      "metalness": 0.8,
+      "texture": null,
+      "price": { "type": "percent", "value": 0.04 }
+    },
+    {
+      "id": "cedar",
+      "name": "Warm Cedar Wood-Grain Wrap",
+      "description": "Sublimated wood-grain finish over aluminum. No staining or sealing.",
+      "hex": "#8d532b",
+      "roughness": 0.55,
+      "metalness": 0.1,
+      "texture": "wood-grain",
+      "price": { "type": "perSqFt", "value": 9 }
+    },
+    {
+      "id": "white",
+      "name": "Alpine White",
+      "description": "High-reflectance powder coat that stays cool in direct sun.",
+      "hex": "#f2f3f5",
+      "roughness": 0.3,
+      "metalness": 0.4,
+      "texture": null,
+      "price": { "type": "percent", "value": 0.02 }
+    }
+  ],
+  "defaultMaterialId": "bronze",
+  "roofSystem": {
+    "louverAngle": { "min": 0, "max": 135, "step": 5, "default": 35, "unit": "deg" },
+    "defaultTypeId": "motorized",
+    "types": [
+      {
+        "id": "motorized",
+        "name": "Motorized Bio-Climatic Louvers",
+        "description": "Rain-sensing blades rotate 0 to 135 degrees with integrated gutters.",
+        "louverStyle": "adjustable",
+        "fixedAngleDeg": 0,
+        "price": { "type": "perSqFt", "value": 18 }
+      },
+      {
+        "id": "fixed",
+        "name": "Fixed Architectural Slats",
+        "description": "Static 45 degree slats for filtered shade at the lowest cost.",
+        "louverStyle": "fixed",
+        "fixedAngleDeg": 45,
+        "price": { "type": "flat", "value": 0 }
+      },
+      {
+        "id": "solar",
+        "name": "Insulated Solar-Ready Panels",
+        "description": "Solid insulated roof with pre-wired mounting rails for PV.",
+        "louverStyle": "solar",
+        "fixedAngleDeg": 0,
+        "price": { "type": "perSqFt", "value": 32 }
+      }
+    ]
+  },
+  "addons": [
+    {
+      "id": "ledLighting",
+      "sku": "ARG-LED-PRM",
+      "name": "Integrated Perimeter LED Strip Lighting",
+      "description": "Dimmable 2700K strip in all four header beams plus downlights.",
+      "default": true,
+      "price": { "type": "flat", "value": 1450 }
+    },
+    {
+      "id": "privacyScreens",
+      "sku": "ARG-SCR-MTR",
+      "name": "Motorized Drop-Down Privacy Screens",
+      "description": "Wind-rated 90% blackout screens on the rear and right side.",
+      "default": false,
+      "price": { "type": "flat", "value": 2200 },
+      "scene": { "sides": ["back", "right"] }
+    },
+    {
+      "id": "heaters",
+      "sku": "ARG-HTR-IR2",
+      "name": "Infrared Overhead Heaters",
+      "description": "Two 3,000 W beam-mounted infrared heaters.",
+      "default": false,
+      "price": { "type": "flat", "value": 1100 }
+    },
+    {
+      "id": "concreteFootings",
+      "sku": "ARG-FTG-PRM",
+      "name": "Concrete Footing & Permitting Package",
+      "description": "Engineered piers at every post plus municipal permit handling.",
+      "default": false,
+      "price": { "type": "flat", "value": 2800 }
+    },
+    {
+      "id": "outdoorKitchen",
+      "sku": "ARG-KIT-L36",
+      "name": "Built-in L-Shaped Outdoor Kitchen Module",
+      "description": "Powder-coated cabinets, sintered stone top and a 36 in. stainless grill.",
+      "default": true,
+      "price": { "type": "flat", "value": 6500 }
+    }
+  ],
+  "estimate": {
+    "installationPct": 0.15,
+    "installationMinimum": 2500,
+    "taxRate": 0.0625,
+    "rangeLowPct": 0.04,
+    "rangeHighPct": 0.06,
+    "roundTo": 100
+  },
+  "financing": {
+    "enabled": true,
+    "aprPct": 8.99,
+    "termMonths": 84,
+    "downPaymentPct": 0,
+    "basis": "low"
+  },
+  "disclaimer": "This is a preliminary estimate based on the selections shown. Final pricing is confirmed after an on-site survey, soil and utility checks, and local permit review. Financing is an estimate only, subject to credit approval, and not an offer of credit."
+}

@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "name": "The Lakeview One-Bedroom",
+  "wallHeight": 9,
+  "finishes": {
+    "paint-warm-white": { "id": "paint-warm-white", "name": "Warm White Paint", "kind": "paint", "color": "#efe9e0", "roughness": 0.85, "metalness": 0, "tileFt": 4 },
+    "paint-greige": { "id": "paint-greige", "name": "Greige Paint", "kind": "paint", "color": "#d8cfc2", "roughness": 0.85, "metalness": 0, "tileFt": 4 },
+    "paint-sage": { "id": "paint-sage", "name": "Sage Accent Paint", "kind": "paint", "color": "#a6b19a", "roughness": 0.85, "metalness": 0, "tileFt": 4 },
+    "facade": { "id": "facade", "name": "Fiber Cement Facade", "kind": "procedural", "pattern": "concrete", "color": "#8d9196", "roughness": 0.9, "metalness": 0, "tileFt": 6 },
+    "bath-tile": { "id": "bath-tile", "name": "White Subway Tile", "kind": "procedural", "pattern": "tile", "color": "#f3f2ef", "roughness": 0.35, "metalness": 0, "tileFt": 1.5 },
+    "oak-herringbone": { "id": "oak-herringbone", "name": "Natural Oak Herringbone", "kind": "procedural", "pattern": "herringbone", "color": "#b48656", "roughness": 0.55, "metalness": 0, "tileFt": 3 },
+    "oak-plank": { "id": "oak-plank", "name": "Wide Oak Plank", "kind": "procedural", "pattern": "hardwood", "color": "#a87d52", "roughness": 0.6, "metalness": 0, "tileFt": 6 },
+    "carrara-marble": { "id": "carrara-marble", "name": "Carrara Marble", "kind": "procedural", "pattern": "marble", "color": "#e9e7e3", "roughness": 0.2, "metalness": 0, "tileFt": 3 },
+    "porcelain-tile": { "id": "porcelain-tile", "name": "Large-Format Porcelain", "kind": "procedural", "pattern": "tile", "color": "#cdc6bc", "roughness": 0.4, "metalness": 0, "tileFt": 2 },
+    "teak-decking": { "id": "teak-decking", "name": "Teak Decking", "kind": "procedural", "pattern": "decking", "color": "#7a5c43", "roughness": 0.7, "metalness": 0, "tileFt": 4 },
+    "rug-living": { "id": "rug-living", "name": "Oatmeal Wool Area Rug", "kind": "procedural", "pattern": "carpet", "color": "#8f8577", "roughness": 0.95, "metalness": 0, "tileFt": 2 },
+    "rug-bedroom": { "id": "rug-bedroom", "name": "Ivory Berber Rug", "kind": "procedural", "pattern": "carpet", "color": "#d3c7b4", "roughness": 0.98, "metalness": 0, "tileFt": 2 },
+    "rug-runner": { "id": "rug-runner", "name": "Slate Flatweave Runner", "kind": "procedural", "pattern": "linen", "color": "#5f6b78", "roughness": 0.9, "metalness": 0, "tileFt": 1.5 },
+    "bath-mat": { "id": "bath-mat", "name": "Linen Bath Mat", "kind": "procedural", "pattern": "linen", "color": "#e8e2d6", "roughness": 0.95, "metalness": 0, "tileFt": 1 },
+    "art-sunset": { "id": "art-sunset", "name": "Sunset Color Field", "kind": "procedural", "pattern": "abstract", "color": "#c96f4a", "roughness": 0.8, "metalness": 0, "tileFt": 1 },
+    "art-ocean": { "id": "art-ocean", "name": "Ocean Study", "kind": "procedural", "pattern": "abstract", "color": "#3f6e8c", "roughness": 0.8, "metalness": 0, "tileFt": 1 },
+    "art-forest": { "id": "art-forest", "name": "Forest Floor", "kind": "procedural", "pattern": "abstract", "color": "#5b7a52", "roughness": 0.8, "metalness": 0, "tileFt": 1 },
+    "art-sand": { "id": "art-sand", "name": "Dune Lines", "kind": "procedural", "pattern": "abstract", "color": "#c9a46b", "roughness": 0.8, "metalness": 0, "tileFt": 1 }
+  },
+  "rooms": [
+    { "id": "living", "name": "Living Room", "rect": [0, 13, 14, 15], "floorFinish": "oak-herringbone", "outdoor": false },
+    { "id": "kitchen", "name": "Open Kitchen", "rect": [14, 13, 14, 15], "floorFinish": "oak-herringbone", "outdoor": false },
+    { "id": "bedroom", "name": "Bedroom", "rect": [0, 0, 13, 13], "floorFinish": "oak-plank", "outdoor": false },
+    { "id": "bath", "name": "Bathroom", "rect": [13, 0, 8, 9], "floorFinish": "carrara-marble", "outdoor": false },
+    { "id": "hall", "name": "Hallway", "rect": [13, 9, 8, 4], "floorFinish": "porcelain-tile", "outdoor": false },
+    { "id": "foyer", "name": "Entry Foyer", "rect": [21, 0, 7, 13], "floorFinish": "porcelain-tile", "outdoor": false },
+    { "id": "balcony", "name": "Balcony", "rect": [0, 28, 14, 6], "floorFinish": "teak-decking", "outdoor": true }
+  ],
+  "walls": [
+    {
+      "id": "w-north", "a": [0, 0], "b": [28, 0], "thickness": 0.6,
+      "finishA": "paint-warm-white", "finishB": "facade", "exteriorSide": "B",
+      "openings": [
+        { "id": "o-bed-window", "type": "window", "offset": 4, "width": 5, "height": 4.5, "sill": 3 },
+        { "id": "o-front-door", "type": "door", "offset": 23.5, "width": 3, "height": 7, "sill": 0 }
+      ]
+    },
+    {
+      "id": "w-east", "a": [28, 0], "b": [28, 28], "thickness": 0.6,
+      "finishA": "paint-warm-white", "finishB": "facade", "exteriorSide": "B",
+      "openings": [{ "id": "o-foyer-window", "type": "window", "offset": 8.5, "width": 3, "height": 4.5, "sill": 3 }]
+    },
+    {
+      "id": "w-south", "a": [28, 28], "b": [0, 28], "thickness": 0.6,
+      "finishA": "paint-warm-white", "finishB": "facade", "exteriorSide": "B",
+      "openings": [
+        { "id": "o-kitchen-window", "type": "window", "offset": 2, "width": 6, "height": 4.5, "sill": 3 },
+        { "id": "o-balcony-door", "type": "door", "offset": 16, "width": 6, "height": 8, "sill": 0 },
+        { "id": "o-living-window", "type": "window", "offset": 24.5, "width": 3, "height": 6, "sill": 1.5 }
+      ]
+    },
+    {
+      "id": "w-west", "a": [0, 28], "b": [0, 0], "thickness": 0.6,
+      "finishA": "paint-warm-white", "finishB": "facade", "exteriorSide": "B",
+      "openings": [{ "id": "o-living-window-w", "type": "window", "offset": 3, "width": 4, "height": 6, "sill": 1.5 }]
+    },
+    {
+      "id": "w-bed-east", "a": [13, 0], "b": [13, 13], "thickness": 0.5,
+      "finishA": "paint-sage", "finishB": "paint-warm-white", "exteriorSide": null,
+      "openings": [{ "id": "o-bed-door", "type": "door", "offset": 9.8, "width": 2.8, "height": 7, "sill": 0 }]
+    },
+    {
+      "id": "w-bed-south", "a": [0, 13], "b": [13, 13], "thickness": 0.5,
+      "finishA": "paint-greige", "finishB": "paint-sage", "exteriorSide": null,
+      "openings": []
+    },
+    {
+      "id": "w-bath-south", "a": [13, 9], "b": [21, 9], "thickness": 0.5,
+      "finishA": "paint-warm-white", "finishB": "bath-tile", "exteriorSide": null,
+      "openings": [{ "id": "o-bath-door", "type": "door", "offset": 3, "width": 2.6, "height": 7, "sill": 0 }]
+    },
+    {
+      "id": "w-bath-east", "a": [21, 0], "b": [21, 9], "thickness": 0.5,
+      "finishA": "bath-tile", "finishB": "paint-warm-white", "exteriorSide": null,
+      "openings": []
+    },
+    {
+      "id": "w-core-south", "a": [13, 13], "b": [28, 13], "thickness": 0.5,
+      "finishA": "paint-greige", "finishB": "paint-warm-white", "exteriorSide": null,
+      "openings": [
+        { "id": "o-hall-arch", "type": "opening", "offset": 1.5, "width": 4, "height": 8, "sill": 0 },
+        { "id": "o-foyer-arch", "type": "opening", "offset": 9.5, "width": 4, "height": 8, "sill": 0 }
+      ]
+    }
+  ],
+  "lights": [
+    { "id": "l-living", "roomId": "living", "position": [7, 8.5, 20.5], "color": "#ffc58f", "intensity": 30, "on": true, "switchPosition": [12.2, 4, 13.27], "switchFacing": [0, 1] },
+    { "id": "l-kitchen", "roomId": "kitchen", "position": [24, 8.5, 20.5], "color": "#ffcf9e", "intensity": 34, "on": true, "switchPosition": [20.5, 4, 13.27], "switchFacing": [0, 1] },
+    { "id": "l-bedroom", "roomId": "bedroom", "position": [6.5, 8.5, 6.5], "color": "#ffc08a", "intensity": 24, "on": true, "switchPosition": [12.73, 4, 9.2], "switchFacing": [-1, 0] },
+    { "id": "l-bath", "roomId": "bath", "position": [17, 8.5, 4.5], "color": "#ffd8b0", "intensity": 22, "on": true, "switchPosition": [15.4, 4, 8.73], "switchFacing": [0, -1] },
+    { "id": "l-hall", "roomId": "hall", "position": [17, 8.5, 11], "color": "#ffc896", "intensity": 12, "on": true, "switchPosition": [13.9, 4, 12.73], "switchFacing": [0, -1] },
+    { "id": "l-foyer", "roomId": "foyer", "position": [24.5, 8.5, 6], "color": "#ffc896", "intensity": 18, "on": true, "switchPosition": [21.27, 4, 2.2], "switchFacing": [1, 0] },
+    { "id": "l-balcony", "roomId": "balcony", "position": [9.5, 7.5, 28.7], "color": "#ffb878", "intensity": 10, "on": false, "switchPosition": [4.6, 4, 28.32], "switchFacing": [0, 1] }
+  ],
+  "furniture": [
+    { "id": "f-media", "type": "media-console", "position": [6.5, 14], "elevation": 0, "rotation": 0, "size": [7, 1.5], "finish": null },
+    { "id": "f-sofa", "type": "sectional-sofa", "position": [6.5, 21.5], "elevation": 0, "rotation": 180, "size": [9, 6], "finish": null },
+    { "id": "f-rug-living", "type": "rug", "position": [6.5, 18.5], "elevation": 0, "rotation": 0, "size": [10, 8], "finish": "rug-living" },
+    { "id": "f-coffee", "type": "coffee-table", "position": [6.5, 16.9], "elevation": 0, "rotation": 0, "size": [4, 2.2], "finish": null },
+    { "id": "f-lounge", "type": "lounge-chair", "position": [12, 16.6], "elevation": 0, "rotation": -135, "size": [2.6, 2.6], "finish": null },
+    { "id": "f-floor-lamp", "type": "floor-lamp", "position": [12.8, 23.6], "elevation": 0, "rotation": 0, "size": [1.2, 1.2], "finish": null },
+    { "id": "f-plant-living", "type": "plant", "position": [1.3, 26.6], "elevation": 0, "rotation": 0, "size": [1.6, 1.6], "finish": null },
+    { "id": "f-art-living", "type": "art-frame", "position": [0.3, 16.2], "elevation": 4.2, "rotation": 90, "size": [3.5, 2.6], "finish": "art-sunset" },
+    { "id": "f-curtain-living-w", "type": "curtains", "position": [0.5, 23], "elevation": 0, "rotation": 90, "size": [5.4, 0.35], "finish": null },
+    { "id": "f-curtain-living-s", "type": "curtains", "position": [2.25, 27.5], "elevation": 0, "rotation": 180, "size": [4.1, 0.35], "finish": null },
+    { "id": "f-curtain-balcony", "type": "curtains", "position": [9, 27.5], "elevation": 0, "rotation": 180, "size": [7.6, 0.35], "finish": null },
+    { "id": "f-books-coffee", "type": "books", "position": [6.9, 16.9], "elevation": 1.28, "rotation": 8, "size": [1.2, 0.8], "finish": null },
+
+    { "id": "f-counter", "type": "kitchen-counter", "position": [26.65, 21.5], "elevation": 0, "rotation": -90, "size": [10, 2.1], "finish": null },
+    { "id": "f-fridge", "type": "fridge", "position": [26.4, 14.95], "elevation": 0, "rotation": -90, "size": [2.8, 2.6], "finish": null },
+    { "id": "f-island", "type": "kitchen-island", "position": [21, 21], "elevation": 0, "rotation": -90, "size": [8, 3.2], "finish": null },
+    { "id": "f-stool-1", "type": "barstool", "position": [18.3, 18.5], "elevation": 0, "rotation": 90, "size": [1.4, 1.4], "finish": null },
+    { "id": "f-stool-2", "type": "barstool", "position": [18.3, 21], "elevation": 0, "rotation": 90, "size": [1.4, 1.4], "finish": null },
+    { "id": "f-stool-3", "type": "barstool", "position": [18.3, 23.5], "elevation": 0, "rotation": 90, "size": [1.4, 1.4], "finish": null },
+    { "id": "f-pendant-1", "type": "pendant-light", "position": [21, 18.6], "elevation": 5.6, "rotation": 0, "size": [1.1, 1.1], "finish": null },
+    { "id": "f-pendant-2", "type": "pendant-light", "position": [21, 21], "elevation": 5.6, "rotation": 0, "size": [1.1, 1.1], "finish": null },
+    { "id": "f-pendant-3", "type": "pendant-light", "position": [21, 23.4], "elevation": 5.6, "rotation": 0, "size": [1.1, 1.1], "finish": null },
+    { "id": "f-plant-island", "type": "plant", "position": [21.3, 24.5], "elevation": 3, "rotation": 0, "size": [0.9, 0.9], "finish": null },
+
+    { "id": "f-bed", "type": "bed", "position": [3.8, 6.5], "elevation": 0, "rotation": 90, "size": [5.2, 7], "finish": null },
+    { "id": "f-nightstand-1", "type": "nightstand", "position": [1.05, 2.9], "elevation": 0, "rotation": 90, "size": [1.8, 1.5], "finish": null },
+    { "id": "f-nightstand-2", "type": "nightstand", "position": [1.05, 10.1], "elevation": 0, "rotation": 90, "size": [1.8, 1.5], "finish": null },
+    { "id": "f-lamp-1", "type": "table-lamp", "position": [1.05, 2.9], "elevation": 2, "rotation": 90, "size": [0.9, 0.9], "finish": null },
+    { "id": "f-lamp-2", "type": "table-lamp", "position": [1.05, 10.1], "elevation": 2, "rotation": 90, "size": [0.9, 0.9], "finish": null },
+    { "id": "f-rug-bed", "type": "rug", "position": [5, 6.5], "elevation": 0, "rotation": 90, "size": [8, 9], "finish": "rug-bedroom" },
+    { "id": "f-dresser", "type": "dresser", "position": [11.85, 4], "elevation": 0, "rotation": -90, "size": [5, 1.8], "finish": null },
+    { "id": "f-art-bed", "type": "art-frame", "position": [0.3, 6.5], "elevation": 4.6, "rotation": 90, "size": [4.5, 2.4], "finish": "art-ocean" },
+    { "id": "f-curtain-bed", "type": "curtains", "position": [6.5, 0.5], "elevation": 0, "rotation": 0, "size": [7.2, 0.35], "finish": null },
+    { "id": "f-throw", "type": "throw-blanket", "position": [6.43, 6.5], "elevation": 0.47, "rotation": 90, "size": [4.8, 1.9], "finish": null },
+    { "id": "f-plant-bedroom", "type": "plant", "position": [1.2, 12], "elevation": 0, "rotation": 0, "size": [1.6, 1.6], "finish": null },
+    { "id": "f-books-dresser", "type": "books", "position": [11.9, 5.5], "elevation": 3, "rotation": -90, "size": [1.2, 0.6], "finish": null },
+    { "id": "f-plant-dresser", "type": "plant", "position": [11.9, 2.4], "elevation": 3, "rotation": 0, "size": [1, 1], "finish": null },
+
+    { "id": "f-vanity", "type": "vanity", "position": [16.2, 1.2], "elevation": 0, "rotation": 0, "size": [4, 1.8], "finish": null },
+    { "id": "f-tub", "type": "bathtub", "position": [19.45, 4.5], "elevation": 0, "rotation": -90, "size": [5.5, 2.6], "finish": null },
+    { "id": "f-toilet", "type": "toilet", "position": [14.45, 5.2], "elevation": 0, "rotation": 90, "size": [1.6, 2.4], "finish": null },
+    { "id": "f-bath-mat", "type": "rug", "position": [16.6, 5.6], "elevation": 0, "rotation": 0, "size": [3, 2], "finish": "bath-mat" },
+
+    { "id": "f-console", "type": "console-table", "position": [27.1, 6], "elevation": 0, "rotation": -90, "size": [4, 1.2], "finish": null },
+    { "id": "f-art-foyer", "type": "art-frame", "position": [27.7, 6], "elevation": 4.2, "rotation": -90, "size": [3, 2.2], "finish": "art-forest" },
+    { "id": "f-curtain-foyer", "type": "curtains", "position": [27.5, 10.3], "elevation": 0, "rotation": -90, "size": [4.2, 0.35], "finish": null },
+    { "id": "f-books-console", "type": "books", "position": [27.15, 4.9], "elevation": 2.7, "rotation": -90, "size": [1.2, 0.6], "finish": null },
+    { "id": "f-runner", "type": "rug", "position": [24.5, 6.5], "elevation": 0, "rotation": 0, "size": [3, 9], "finish": "rug-runner" },
+    { "id": "f-plant-foyer", "type": "plant", "position": [22.1, 1.2], "elevation": 0, "rotation": 0, "size": [1.4, 1.4], "finish": null },
+    { "id": "f-art-hall", "type": "art-frame", "position": [14.7, 9.25], "elevation": 4.4, "rotation": 0, "size": [1.8, 2.4], "finish": "art-sand" },
+
+    { "id": "f-rail-south", "type": "glass-railing", "position": [7, 33.9], "elevation": 0, "rotation": 0, "size": [14, 0.15], "finish": null },
+    { "id": "f-rail-west", "type": "glass-railing", "position": [0.1, 31.1], "elevation": 0, "rotation": 90, "size": [5.6, 0.15], "finish": null },
+    { "id": "f-rail-east", "type": "glass-railing", "position": [13.9, 31.1], "elevation": 0, "rotation": 90, "size": [5.6, 0.15], "finish": null },
+    { "id": "f-balcony-chair-1", "type": "lounge-chair", "position": [3.2, 31.6], "elevation": 0, "rotation": 0, "size": [2.6, 2.6], "finish": null },
+    { "id": "f-balcony-chair-2", "type": "lounge-chair", "position": [7.6, 31.6], "elevation": 0, "rotation": 0, "size": [2.6, 2.6], "finish": null },
+    { "id": "f-balcony-table", "type": "side-table", "position": [5.4, 31.9], "elevation": 0, "rotation": 0, "size": [1.4, 1.4], "finish": null },
+    { "id": "f-plant-balcony", "type": "plant", "position": [12.6, 29.4], "elevation": 0, "rotation": 0, "size": [1.6, 1.6], "finish": null }
+  ],
+  "spawn": { "position": [25, 2.6], "yaw": 3.14159 }
+}

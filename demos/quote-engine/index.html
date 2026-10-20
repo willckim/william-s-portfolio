@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Argon Outdoor Living | Design Your Louvered Pergola in 3D</title>
+    <meta name="description" content="Portfolio demo of a white-label 3D configurator and instant quote engine for high-ticket contractors." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="/demos/quote-engine/assets/index-5Fl8b0Vp.js"></script>
+    <link rel="stylesheet" crossorigin href="/demos/quote-engine/assets/index-0ci-mCAG.css">
+  </head>
+  <body>
+    <div class="ribbon">
+      Portfolio demo: a white-label 3D configurator and instant quote engine. Argon Outdoor Living is a fictional contractor.
+    </div>
+
+    <header class="site-header">
+      <a class="brand" href="#top"><span class="brand-mark">A</span>Argon <em>Outdoor Living</em></a>
+      <nav>
+        <a href="#configurator">Design &amp; Price</a>
+        <a href="#process">Process</a>
+        <a href="#embed">For Developers</a>
+      </nav>
+      <a class="header-cta" href="#configurator">Get My Quote</a>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="kicker">Louvered pergolas &middot; Outdoor kitchens &middot; North Shore, IL</p>
+          <h1>Design your outdoor room in 3D. <span>Price it before the first site visit.</span></h1>
+          <p class="lede">
+            Size the structure, choose a finish, rotate the louvers and add lighting, heat and a full outdoor kitchen.
+            Your itemized estimate updates with every change, and your build specification downloads as a PDF.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-gold" href="#configurator">Start designing</a>
+            <a class="btn btn-ghost" href="#process">How it works</a>
+          </div>
+        </div>
+        <dl class="stats">
+          <div><dt>Wind rating</dt><dd>110 mph</dd></div>
+          <div><dt>Louver range</dt><dd>0&ndash;135&deg;</dd></div>
+          <div><dt>Typical install</dt><dd>3&ndash;5 days</dd></div>
+        </dl>
+      </section>
+
+      <section id="configurator" class="configurator">
+        <div class="section-head">
+          <p class="kicker">Live configurator</p>
+          <h2>Build it. See it. Price it.</h2>
+        </div>
+        <custom-quote-builder config-url="/demos/quote-engine/pricing-config.json"></custom-quote-builder>
+      </section>
+
+      <section id="process" class="process">
+        <div class="section-head">
+          <p class="kicker">From render to reality</p>
+          <h2>A transparent path to your new outdoor room</h2>
+        </div>
+        <ol class="steps">
+          <li><span>01</span><h3>Design in 3D</h3><p>Every dimension, finish and upgrade is modeled live, so what you approve is what we build.</p></li>
+          <li><span>02</span><h3>Instant itemized estimate</h3><p>A realistic investment range with installation, tax and financing, not a blind bid.</p></li>
+          <li><span>03</span><h3>On-site survey</h3><p>We confirm footings, drainage and permits, then lock your final price.</p></li>
+        </ol>
+      </section>
+
+      <section id="embed" class="embed">
+        <div class="embed-copy">
+          <p class="kicker">For agencies and developers</p>
+          <h2>Two lines of HTML. Any website.</h2>
+          <p>
+            The whole configurator ships as one Web Component inside a Shadow DOM, so WordPress, Webflow and Squarespace
+            themes cannot break it. Pricing lives in a JSON file that updates without a rebuild.
+          </p>
+<pre><code id="embed-snippet">&lt;script src="https://cdn.example.com/quote-builder-embed.js"&gt;&lt;/script&gt;
+&lt;custom-quote-builder&gt;&lt;/custom-quote-builder&gt;</code></pre>
+        </div>
+        <div class="embed-log">
+          <div class="log-head">Live host events</div>
+          <pre id="event-log">Change a selection to see the quote-change event.</pre>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>&copy; 2026 Argon Outdoor Living (fictional demo brand)</span>
+      <span>Estimates are illustrative. No real leads are collected on this demo.</span>
+    </footer>
+  </body>
+</html>

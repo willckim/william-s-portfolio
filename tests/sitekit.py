@@ -22,7 +22,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(os.environ.get("SITE_ROOT") or Path(__file__).resolve().parent.parent).resolve()
-EXCLUDED_DIRS = {"_archive", "tests", "tools", ".git", ".claude", "node_modules"}
+EXCLUDED_DIRS = {"_archive", "tests", "tools", "demos", ".git", ".claude", "node_modules"}
 
 
 def site_pages() -> list[str]:
@@ -98,8 +98,8 @@ class _Server(socketserver.ThreadingMixIn, http.server.HTTPServer):
     allow_reuse_address = True
 
 
-def serve() -> tuple[str, _Server]:
-    handler = functools.partial(CleanUrlHandler, directory=str(ROOT))
+def serve(handler_class: type[CleanUrlHandler] = None) -> tuple[str, _Server]:
+    handler = functools.partial(handler_class or CleanUrlHandler, directory=str(ROOT))
     server = _Server(("127.0.0.1", 0), handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     return f"http://127.0.0.1:{server.server_address[1]}", server

@@ -1,0 +1,519 @@
+{
+  "version": 1,
+  "hdri": {
+    "id": "hotel_rooftop_balcony",
+    "url": "assets/hdri/hotel_rooftop_balcony_1k.hdr"
+  },
+  "models": {
+    "media-console": {
+      "id": "modern_wooden_cabinet",
+      "high": "assets/models/high/modern_wooden_cabinet.glb",
+      "low": "assets/models/low/modern_wooden_cabinet.glb"
+    },
+    "art-frame": {
+      "id": "hanging_picture_frame_01",
+      "high": "assets/models/high/hanging_picture_frame_01.glb",
+      "low": "assets/models/low/hanging_picture_frame_01.glb"
+    },
+    "barstool": {
+      "id": "henson_counter_stool",
+      "unitFt": 0.083333,
+      "high": "assets/models/high/henson_counter_stool.glb",
+      "low": "assets/models/low/henson_counter_stool.glb"
+    },
+    "sectional-sofa": {
+      "id": "jimmy_sectional_sofa",
+      "high": "assets/models/high/jimmy_sectional_sofa.glb",
+      "low": "assets/models/low/jimmy_sectional_sofa.glb"
+    },
+    "bed": {
+      "id": "soho_bed",
+      "duvet": {
+        "top": 0.4541,
+        "x0": -0.8918,
+        "x1": 0.7707,
+        "zHead": -1.0313,
+        "zStart": -0.5099,
+        "zFoot": 0.9774
+      },
+      "high": "assets/models/high/soho_bed.glb",
+      "low": "assets/models/low/soho_bed.glb"
+    },
+    "lounge-chair": {
+      "id": "mid_century_lounge_chair",
+      "high": "assets/models/high/mid_century_lounge_chair.glb",
+      "low": "assets/models/low/mid_century_lounge_chair.glb"
+    },
+    "coffee-table": {
+      "id": "modern_coffee_table_01",
+      "high": "assets/models/high/modern_coffee_table_01.glb",
+      "low": "assets/models/low/modern_coffee_table_01.glb"
+    },
+    "plant": {
+      "id": "potted_plant_02",
+      "high": "assets/models/high/potted_plant_02.glb",
+      "low": "assets/models/low/potted_plant_02.glb"
+    },
+    "books": {
+      "id": "book_encyclopedia_set_01",
+      "high": "assets/models/high/book_encyclopedia_set_01.glb",
+      "low": "assets/models/low/book_encyclopedia_set_01.glb"
+    }
+  },
+  "textures": {
+    "herringbone_parquet": {
+      "realFt": 11.155,
+      "avg": [
+        147,
+        112,
+        77
+      ]
+    },
+    "laminate_floor_02": {
+      "realFt": 5.577,
+      "avg": [
+        155,
+        129,
+        99
+      ]
+    },
+    "oak_wood_planks": {
+      "realFt": 3.937,
+      "avg": [
+        162,
+        118,
+        84
+      ]
+    },
+    "marble_01": {
+      "realFt": 4.921,
+      "avg": [
+        159,
+        159,
+        159
+      ]
+    },
+    "interior_tiles": {
+      "realFt": 6.234,
+      "avg": [
+        155,
+        155,
+        155
+      ]
+    },
+    "long_white_tiles": {
+      "realFt": 4.167,
+      "avg": [
+        199,
+        199,
+        199
+      ]
+    },
+    "plastered_wall_04": {
+      "realFt": 10.499,
+      "avg": [
+        139,
+        139,
+        139
+      ]
+    },
+    "plaster_grey_04": {
+      "realFt": 4.921,
+      "avg": [
+        143,
+        143,
+        143
+      ]
+    },
+    "caban": {
+      "realFt": 0.899,
+      "avg": [
+        131,
+        131,
+        131
+      ]
+    },
+    "rough_linen": {
+      "realFt": 0.888,
+      "avg": [
+        169,
+        169,
+        169
+      ]
+    },
+    "hessian_380": {
+      "realFt": 0.899,
+      "avg": [
+        149,
+        149,
+        149
+      ]
+    },
+    "terry_cloth": {
+      "realFt": 1.204,
+      "avg": [
+        75,
+        75,
+        75
+      ]
+    },
+    "american_walnut_veneer": {
+      "realFt": 3.281,
+      "avg": [
+        115,
+        110,
+        105
+      ]
+    },
+    "oak_veneer_01": {
+      "realFt": 6.004,
+      "avg": [
+        161,
+        126,
+        87
+      ]
+    },
+    "Carpet008": {
+      "realFt": 2.5,
+      "avg": [
+        177,
+        177,
+        177
+      ]
+    },
+    "Carpet014": {
+      "realFt": 1.5,
+      "avg": [
+        187,
+        187,
+        187
+      ]
+    },
+    "Marble021": {
+      "realFt": 6,
+      "avg": [
+        243,
+        242,
+        240
+      ]
+    },
+    "terlenka": {
+      "realFt": 0.872,
+      "avg": [
+        178,
+        178,
+        178
+      ]
+    }
+  },
+  "backdrop": {
+    "band": {
+      "fromAzDeg": 259,
+      "toAzDeg": 345,
+      "topElevDeg": 6,
+      "bottomElevDeg": -14,
+      "overlapDeg": 12
+    },
+    "high": "assets/hdri/hotel_rooftop_balcony_backdrop_4096.webp",
+    "low": "assets/hdri/hotel_rooftop_balcony_backdrop_2048.webp",
+    "groundColor": [
+      89,
+      97,
+      93
+    ]
+  },
+  "credits": [
+    {
+      "name": "Henson Iron and Mango Wood Counter Stool",
+      "authors": [
+        "BO SONGPOL"
+      ],
+      "page": "https://sketchfab.com/3d-models/henson-iron-and-mango-wood-counter-stool-bf96525817f245d2a7bbd78110a29c3d",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "use": "Kitchen counter stools",
+      "changes": "Compressed and simplified; turned to face forward; recolored with this project's oak and black metal materials."
+    },
+    {
+      "name": "Jimmy sectional sofa",
+      "authors": [
+        "BertO"
+      ],
+      "page": "https://sketchfab.com/3d-models/jimmy-sectional-sofa-03f1678351214e169ed36e05c7fe3bf0",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "use": "Living room sectional",
+      "changes": "Compressed and simplified; grey fabric recolored to this project's oatmeal wool, legs to black metal, pillows to caramel."
+    },
+    {
+      "name": "Soho bed - 3D Model",
+      "authors": [
+        "BertO"
+      ],
+      "page": "https://sketchfab.com/3d-models/soho-bed-3d-model-97e361e8beda4112ac5b1b5bcd388cdf",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "use": "Bed frame, mattress and pillows (the folded duvet is modeled in code)",
+      "changes": "Compressed and simplified; recolored with this project's oatmeal wool and linen; its flat sheet removed and replaced by a folded duvet modeled in code."
+    },
+    {
+      "name": "Hotel Rooftop Balcony",
+      "authors": [
+        "Dimitrios Savva",
+        "Jarod Guest"
+      ],
+      "page": "https://polyhaven.com/a/hotel_rooftop_balcony",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Environment lighting, reflections and the view through the windows"
+    },
+    {
+      "name": "Modern Wooden Cabinet",
+      "authors": [
+        "Patrik Pangerl"
+      ],
+      "page": "https://polyhaven.com/a/modern_wooden_cabinet",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "TV stand"
+    },
+    {
+      "name": "Hanging Picture Frame 01",
+      "authors": [
+        "James Ray Cock"
+      ],
+      "page": "https://polyhaven.com/a/hanging_picture_frame_01",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Wall art frames (the canvas takes the art finish)"
+    },
+    {
+      "name": "Mid Century Lounge Chair",
+      "authors": [
+        "Kuutti Siitonen"
+      ],
+      "page": "https://polyhaven.com/a/mid_century_lounge_chair",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Living room and balcony lounge chairs"
+    },
+    {
+      "name": "Modern Coffee Table 01",
+      "authors": [
+        "Amin"
+      ],
+      "page": "https://polyhaven.com/a/modern_coffee_table_01",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Coffee table"
+    },
+    {
+      "name": "Potted Plant 02",
+      "authors": [
+        "Rico Cilliers"
+      ],
+      "page": "https://polyhaven.com/a/potted_plant_02",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Potted plants"
+    },
+    {
+      "name": "Book Encyclopedia Set 01",
+      "authors": [
+        "John Malcolm"
+      ],
+      "page": "https://polyhaven.com/a/book_encyclopedia_set_01",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Books on the console, dresser and coffee table"
+    },
+    {
+      "name": "Herringbone Parquet",
+      "authors": [
+        "Jenelle van Heerden",
+        "Sergej Majboroda"
+      ],
+      "page": "https://polyhaven.com/a/herringbone_parquet",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Herringbone wood floors"
+    },
+    {
+      "name": "Laminate Floor 02",
+      "authors": [
+        "Dario Barresi",
+        "Charlotte Baglioni"
+      ],
+      "page": "https://polyhaven.com/a/laminate_floor_02",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Plank wood floors"
+    },
+    {
+      "name": "Oak Wood Planks",
+      "authors": [
+        "Dimitrios Savva"
+      ],
+      "page": "https://polyhaven.com/a/oak_wood_planks",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Balcony decking"
+    },
+    {
+      "name": "Marble 01",
+      "authors": [
+        "Rob Tuytel"
+      ],
+      "page": "https://polyhaven.com/a/marble_01",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Stone (marble finish) floors"
+    },
+    {
+      "name": "Interior Tiles",
+      "authors": [
+        "Charlotte Baglioni"
+      ],
+      "page": "https://polyhaven.com/a/interior_tiles",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Porcelain and slate tile floors"
+    },
+    {
+      "name": "Long White Tiles",
+      "authors": [
+        "Jenelle van Heerden",
+        "Sergej Majboroda"
+      ],
+      "page": "https://polyhaven.com/a/long_white_tiles",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Bathroom subway wall tile"
+    },
+    {
+      "name": "Plastered Wall 04",
+      "authors": [
+        "Rob Tuytel"
+      ],
+      "page": "https://polyhaven.com/a/plastered_wall_04",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Painted walls (tinted to the paint color)"
+    },
+    {
+      "name": "Plaster Grey 04",
+      "authors": [
+        "Rob Tuytel"
+      ],
+      "page": "https://polyhaven.com/a/plaster_grey_04",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Facade and polished concrete"
+    },
+    {
+      "name": "Caban",
+      "authors": [
+        "colormass",
+        "Rico Cilliers"
+      ],
+      "page": "https://polyhaven.com/a/caban",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Sofa, headboard and upholstery (wool)"
+    },
+    {
+      "name": "Rough Linen",
+      "authors": [
+        "colormass",
+        "Rico Cilliers"
+      ],
+      "page": "https://polyhaven.com/a/rough_linen",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Bedding and linen finishes"
+    },
+    {
+      "name": "Hessian 380",
+      "authors": [
+        "colormass",
+        "Rico Cilliers"
+      ],
+      "page": "https://polyhaven.com/a/hessian_380",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Jute runner"
+    },
+    {
+      "name": "Terry Cloth",
+      "authors": [
+        "colormass",
+        "Rico Cilliers"
+      ],
+      "page": "https://polyhaven.com/a/terry_cloth",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Bath mat"
+    },
+    {
+      "name": "American Walnut Veneer",
+      "authors": [
+        "Jenelle van Heerden"
+      ],
+      "page": "https://polyhaven.com/a/american_walnut_veneer",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Walnut furniture"
+    },
+    {
+      "name": "Oak Veneer 01",
+      "authors": [
+        "Jenelle van Heerden"
+      ],
+      "page": "https://polyhaven.com/a/oak_veneer_01",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Oak furniture and cabinetry"
+    },
+    {
+      "name": "Carpet008",
+      "authors": [
+        "ambientCG"
+      ],
+      "page": "https://ambientcg.com/a/Carpet008",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Living room area rug (square-motif wool)"
+    },
+    {
+      "name": "Carpet014",
+      "authors": [
+        "ambientCG"
+      ],
+      "page": "https://ambientcg.com/a/Carpet014",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Bedroom area rug (loop berber)"
+    },
+    {
+      "name": "Marble021",
+      "authors": [
+        "ambientCG"
+      ],
+      "page": "https://ambientcg.com/a/Marble021",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Quartz countertops, island and vanity top"
+    },
+    {
+      "name": "Terlenka",
+      "authors": [
+        "colormass",
+        "Rico Cilliers"
+      ],
+      "page": "https://polyhaven.com/a/terlenka",
+      "license": "CC0 1.0",
+      "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "use": "Curtains and the throw blanket"
+    }
+  ]
+}
