@@ -1,4 +1,4 @@
-"""Copy rules for every deployed page: no em dashes, no semicolons, no stale CPA date.
+"""Copy rules for every deployed page: no em dashes, no semicolons, and the résumé facts.
 
 Reads the visible text of each page (script and style contents excluded, entities
 decoded), plus the text a visitor or a screen reader is given in title, alt,
@@ -62,11 +62,77 @@ RULES = [
     # The contractor in the Construction Forecast is made up. Its name never
     # appears without the label right after it.
     ("contractor labeled fictional", re.compile(r"Prairie Ridge Builders(?! \(fictional\))")),
+    # Résumé facts, swept on 2026-10-19. The Concur review was 12 hours, not 36. The ~40 hours a
+    # month figure came from an old wrong number. The title and project names are fixed.
+    ("no retired 36", re.compile(r"(?<![\w.,])36(?![\w]|[.,]\d)")),
+    ("no retired 40 hours", re.compile(r"\b40\s*(?:hours|hrs|h)\b|~\s*40\b", re.I)),
+    ("never Accounting's lead", re.compile(r"Accounting['’]s lead", re.I)),
+    ("never Practitioner Website Consolidation", re.compile(r"Practitioner Website Consolidation", re.I)),
+    ("no Clinical Care Path report", re.compile(r"Clinical Care Path", re.I)),
+    ("no sales tax automation", re.compile(r"sales tax automation", re.I)),
+    ("no workshop", re.compile(r"workshop", re.I)),
+    ("no Automation Lead title", re.compile(r"Automation Lead", re.I)),
 ]
+
+# Any month and year near the CPA exams must be January 2027, whichever side it sits on.
+_DATE = (r"(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|June?|July?|Aug(?:ust)?|"
+         r"Sep(?:t(?:ember)?)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\.?\s+20\d\d")
+_CPA_DATES = re.compile(rf"CPA exams?\W{{0,3}}(?:in\s+)?({_DATE})|({_DATE})\W{{0,3}}CPA exams?|Sitting\s+({_DATE})", re.I)
+_JANUARY_2027 = re.compile(r"Jan(?:uary)?\.?\s+2027", re.I)
+
+
+def wrong_cpa_dates(text: str) -> list[str]:
+    return [m.group(0) for m in _CPA_DATES.finditer(text)
+            if not _JANUARY_2027.fullmatch(next(g for g in m.groups() if g))]
+
+
+RULES.append(("CPA exams only in January 2027", wrong_cpa_dates))
+
+# Phrases a rule must not judge, with the reason. Only removed from the page named.
+EXEMPT = {
+    # The Lab's forecasting tools, kept as is: the construction backtest window ("the last 36
+    # months"), and the second tab's 36 backtest origins, fold counts ("36 to 25") and chart
+    # caption ("the last 36 points of your data").
+    ("/lab", "no retired 36"): [re.compile(r"the last 36 (?:months|points)|\b36 origins\b|\b36 to \d+\b", re.I)],
+}
+
+# Every rule above added on 2026-10-19, with copy it must catch and copy it must pass.
+SELF_TESTS = [
+    ("no retired 36", "cut a 36-hour review", "cut a 12-hour review, 4.36 GB, 360 days, 1,936"),
+    ("no retired 40 hours", "~40 hrs of close work", "40 percent, 1,940 transactions"),
+    ("never Accounting's lead", "Accounting's lead on the project", "the bridge between Accounting, IT, and Marketing"),
+    ("never Practitioner Website Consolidation", "Practitioner Website Consolidation", "One Website Project"),
+    ("no Clinical Care Path report", "a Clinical Care Path rebate report", "a royalty report"),
+    ("no sales tax automation", "a sales tax automation", "reviewing a sales tax reconciliation"),
+    ("no workshop", "Workshop resource", "Guide"),
+    ("no Automation Lead title", "Staff Accountant, Automation Lead", "Staff Accountant · Technical Solutions"),
+    ("CPA exams only in January 2027", "CPA exams December 2026",
+     "CPA exams January 2027. Jan 2027 CPA exams. Sitting January 2027. CPA candidate in Illinois. Mar 2026 Staff"),
+]
+
+
+def hits(rule, text: str) -> list[str]:
+    if callable(rule):
+        return rule(text)
+    return [text[max(0, m.start() - 40): m.end() + 20] for m in rule.finditer(text)]
+
+
+def judged(url: str, name: str, text: str) -> str:
+    for rx in EXEMPT.get((url, name), []):
+        text = rx.sub(" ", text)
+    return text
+
+
+def self_test(rep: Report) -> None:
+    rules = dict(RULES)
+    for name, bad, good in SELF_TESTS:
+        rep.check(f"rule '{name}' catches {bad!r} and passes {good!r}",
+                  bool(hits(rules[name], bad)) and not hits(rules[name], good))
 
 
 def main() -> int:
     rep = Report("Copy rules")
+    self_test(rep)
     pages = site_pages()
     if not pages:
         rep.not_run("pages found", "no deployed HTML pages were found")
@@ -74,16 +140,16 @@ def main() -> int:
     # Copy that lives in scripts: the tour's cards.
     tour = (ROOT / "assets" / "tour" / "tour-host.js").read_text(encoding="utf-8")
     strings = " ".join(re.findall(r'(?:title|body|targetName|instruction): "([^"]*)"', tour))
-    for name, rx in RULES:
-        hits = [strings[max(0, m.start() - 40): m.end() + 20] for m in rx.finditer(strings)]
-        rep.check(f"tour cards: {name}", bool(strings) and not hits, "; ".join(repr(h) for h in hits[:3]))
+    for name, rule in RULES:
+        found = hits(rule, strings)
+        rep.check(f"tour cards: {name}", bool(strings) and not found, "; ".join(repr(h) for h in found[:3]))
     for url in pages:
         parser = TextOf()
         parser.feed(page_file(url).read_text(encoding="utf-8"))
         text = re.sub(r"\s+", " ", " ".join(parser.parts))
-        for name, rx in RULES:
-            hits = [text[max(0, m.start() - 40): m.end() + 20] for m in rx.finditer(text)]
-            rep.check(f"{url}: {name}", not hits, "; ".join(repr(h) for h in hits[:3]))
+        for name, rule in RULES:
+            found = hits(rule, judged(url, name, text))
+            rep.check(f"{url}: {name}", not found, "; ".join(repr(h) for h in found[:3]))
     rendered(rep)
     return rep.finish()
 
@@ -131,10 +197,10 @@ def rendered(rep: Report) -> None:
                     page.wait_for_selector("dialog.palette[open]")
                     texts.append(page.inner_text("dialog.palette"))
                 text = re.sub(r"\s+", " ", " ".join(texts))
-                for name, rx in RULES:
-                    hits = [text[max(0, m.start() - 40): m.end() + 20] for m in rx.finditer(text)]
-                    rep.check(f"rendered {url}: {name}", bool(text.strip()) and not hits,
-                              "; ".join(repr(h) for h in hits[:3]))
+                for name, rule in RULES:
+                    found = hits(rule, judged(url, name, text))
+                    rep.check(f"rendered {url}: {name}", bool(text.strip()) and not found,
+                              "; ".join(repr(h) for h in found[:3]))
             browser.close()
     finally:
         server.shutdown()

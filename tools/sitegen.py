@@ -188,10 +188,10 @@ CASES = (
         dek="An LLM-assisted classifier for corporate card transactions, built so the model can suggest "
             "but never decide.",
         description="Case study: an LLM-assisted classifier for about 1,900 corporate card transactions "
-                    "per cycle, inside deterministic rule guardrails. 36 hours to 10 minutes.",
+                    "per cycle, inside deterministic rule guardrails. 12 hours to about 10 minutes.",
         problem=(
             "Every cycle, about 1,900 corporate card transactions had to be reviewed and classified before "
-            "the close could move. The monthly review took 36 hours, inside a five-day close across two "
+            "the close could move. The monthly review took 12 hours, inside a five-day close across two "
             "legal entities.",
         ),
         did=(
@@ -223,7 +223,7 @@ CASES = (
             footnote="Every step writes to the audit log.",
         ),
         results=(
-            Result("36 h → 10 min", "Monthly review time"),
+            Result("12 h → 10 min", "Monthly review time"),
             Result("95–97%", "Exact match to human reviewers"),
             Result("0", "Misclassifications in the benchmark"),
             Result("~1,900", "Transactions per cycle"),
@@ -277,31 +277,33 @@ CASES = (
     ),
     Case(
         slug="fast-close",
-        name="Fast Close Report Fix",
-        kind="Financial systems",
-        dek="A SQL-based close report that produced wrong data for months, traced to its defect and "
-            "followed until it ran clean.",
-        description="Case study: isolating a defect in the SQL-based Fast Close report, handing BI the "
-                    "exact fix, and following through four months until the August close ran clean.",
+        name="Royalty Report Fix",
+        kind="Financial systems · a fix, not an automation",
+        dek="The SQL-based royalty report used in the Fast Close produced wrong data for months. I traced "
+            "it to its defect and followed it until it ran clean.",
+        description="Case study: isolating a defect in the SQL-based royalty report used in the Fast Close, "
+                    "giving the BI team the exact fix, and following through four months until the August "
+                    "close ran clean.",
         problem=(
-            "The Fast Close report is SQL-based, and it had produced wrong data for months. Wrong numbers "
-            "in a close report are worse than none, because people act on them.",
+            "The royalty report used in the Fast Close is SQL-based, and it had produced wrong data for "
+            "months. Wrong numbers in a close report are worse than none, because people act on them.",
         ),
         did=(
-            "I wrote the SQL myself to isolate the defect, then gave the BI team the exact fix to apply.",
-            "Then I followed through for four months, close by close, until the August close ran clean.",
+            "I wrote and ran the SQL myself to isolate the defect, then gave the BI team the exact fix.",
+            "Then I followed through for four months, close by close, until the August close ran clean. It "
+            "is a fix, not an automation.",
         ),
-        how="The diagnosis was mine and the change went through BI, so the fix was applied by the people "
-            "who maintain the report.",
+        how="The diagnosis was mine and the change went through the BI team, so the fix was applied by the "
+            "people who maintain the report.",
         diagram=Diagram(
-            title="Fast Close Report Fix: how the defect was closed",
-            desc="The SQL-based Fast Close report had produced wrong data for months. Diagnostic SQL "
-                 "isolated the defect. The exact fix was handed to BI to apply. Four months of "
-                 "follow-through, close by close, confirmed it, and the August close ran clean.",
+            title="Royalty Report Fix: how the defect was closed",
+            desc="The SQL-based royalty report used in the Fast Close had produced wrong data for months. "
+                 "Diagnostic SQL isolated the defect. The exact fix was handed to the BI team to apply. Four "
+                 "months of follow-through, close by close, confirmed it, and the August close ran clean.",
             flow=(
-                Stage("source", "Fast Close report, SQL-based, wrong data for months"),
+                Stage("source", "Royalty report used in the Fast Close, SQL-based, wrong data for months"),
                 Stage("processing", "Diagnostic SQL isolates the defect"),
-                Stage("guardrail", "The exact fix, applied by BI", strong=True),
+                Stage("guardrail", "The exact fix, applied by the BI team", strong=True),
                 Stage("review", "Four months of follow-through, close by close"),
                 Stage("output", "The August close ran clean"),
             ),
@@ -358,28 +360,27 @@ CASES = (
     ),
     Case(
         slug="consolidation",
-        name="Practitioner Website Consolidation",
+        name="One Website Project",
         kind="Cross-functional · launching December 31, 2026",
-        dek="Three practitioner platforms becoming one, with the specification layer written between "
-            "Marketing and IT.",
-        description="Case study: authoring the specification layer for consolidating three practitioner "
-                    "platforms into one, and surfacing a tax compliance requirement no document had.",
+        dek="Three practitioner platforms becoming one, with me as the bridge between Accounting, IT, and "
+            "Marketing.",
+        description="Case study: the bridge between Accounting, IT, and Marketing on consolidating three "
+                    "practitioner platforms into one, and a tax requirement no project document had.",
         problem=(
             "Three practitioner platforms are being consolidated into one. The project spans IT, "
             "Accounting, and Marketing, and it needed a precise written account of what the consolidated "
             "platform must do, in terms both Marketing and IT could build from.",
         ),
         did=(
-            "I was selected as the cross-functional bridge between IT, Accounting, and Marketing. I author "
-            "the specification layer: a workflows document, a decisions sheet, and a clickable HTML "
-            "prototype.",
-            "Along the way I surfaced a tax compliance requirement missing from all project documentation, "
-            "W-9/TIN and verified banking before proceeds accrue, and drove it into the ERP design.",
+            "I was brought on as the bridge between Accounting, IT, and Marketing. I wrote the workflows "
+            "document, the decisions sheet, and a clickable HTML prototype.",
+            "Along the way I caught a W-9/TIN and verified banking requirement missing from all project "
+            "documents, and got it into the ERP design.",
         ),
         how="The specification is where a requirement either gets written down or gets missed, so the tax "
             "requirement sits there as a gate on the design.",
         diagram=Diagram(
-            title="Practitioner Website Consolidation: specification flow",
+            title="One Website Project: specification flow",
             desc="Three practitioner platforms feed a specification layer made of a workflows document, a "
                  "decisions sheet, and a clickable HTML prototype. A tax compliance requirement, W-9/TIN "
                  "and verified banking before proceeds accrue, acts as the guardrail. Marketing and IT "
@@ -399,7 +400,7 @@ CASES = (
         results=(
             Result("3 → 1", "Practitioner platforms"),
             Result("Dec 31, 2026", "Launch"),
-            Result("1", "Tax compliance requirement surfaced that no project document had"),
+            Result("1", "W-9/TIN and verified banking requirement caught that no project document had"),
         ),
         nxt="Turn the tax compliance requirement into test cases, so the launch is checked against it, not "
             "only designed for it.",

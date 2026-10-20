@@ -10,7 +10,7 @@ reduced motion, dark mode, and one started from the Lab.
 Against the motion layer (assets/tour/tour-host.js):
   - the tour waits for the preloader, finished or skipped
   - a step scrolls with Lenis, which pauses wheel scrolling until it lands
-  - the numbers step lands on its chapter's anchor, where 36h -> 10m is formed
+  - the numbers step lands on its chapter's anchor, where 12h -> 10m is formed
   - the spotlight stays on its target while the page scrolls under it
   - the first card on a new page waits for the ledger-line wipe to finish, and the
     page that is leaving draws no card during its wipe
@@ -38,7 +38,7 @@ from sitekit import ROOT, Report, serve
 
 EXPECTED = [  # (page, card title) for the seven authored steps, in order
     ("home", "Who I am, in one line"),
-    ("home", "36h → 10m"),
+    ("home", "12h → 10m"),
     ("home", "Quick view"),
     ("home", "See the work"),
     ("work", "Start with Concur"),
@@ -258,7 +258,7 @@ def drive(rep: Report, browser, base: str, label: str, start: str = "/", **kw) -
     if numbers is None:
         rep.check(f"{label}: the numbers step was reached", False)
     elif with_motion:
-        rep.check(f"{label}: the numbers step lands on its chapter anchor, 36h → 10m formed",
+        rep.check(f"{label}: the numbers step lands on its chapter anchor, 12h → 10m formed",
                   numbers["anchor"] is not None and abs(numbers["y"] - numbers["anchor"]) <= 2
                   and abs(numbers["stage"] - 2) < 0.01 and numbers["shown"] == 1, f"{numbers}")
         rep.check(f"{label}: Lenis holds the wheel while a step scrolls", locked_mid is True, f"{locked_mid}")
@@ -417,7 +417,7 @@ def copy(rep: Report, browser, base: str) -> None:
     wrong = {k + 1: steps[k][1] for k, want in briefed.items() if len(steps) > k and steps[k][1] != want}
     rep.check("steps 3, 6 and 7 read exactly as briefed", len(steps) == 7 and not wrong, f"{wrong}")
     rep.check("step 2 quotes the proof strip exactly",
-              steps[1][0] == "36h → 10m" and steps[1][1].rstrip(".") in
+              steps[1][0] == "12h → 10m" and steps[1][1].rstrip(".") in
               (ROOT / "index.html").read_text(encoding="utf-8"), steps[1][1][:40])
 
 
