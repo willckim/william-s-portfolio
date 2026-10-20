@@ -82,6 +82,17 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
 - [x] Work: Products tab shows without JavaScript, /work#products and same-page links open it
 - [x] check_demos_page: cards, links, no demo code, menu on every page (desktop and phone), Work tabs, paths
 
+## Home and One Website Project (2026-10-20)
+- [x] One Website Project: "in progress, with ongoing improvements through 2027" on Home, About, Work,
+      /work/consolidation and /quick. check_copy bans "Dec 31, 2026" and "December 31, 2026"
+- [x] Home: "Try it yourself" below the proof strip (Construction Forecast, Quote Engine, Apartment Studio,
+      static images, See all demos). Now block: CPA January 2027, One Website, Recently shipped
+- [x] About: the VP of Accounting selected William to lead the team's automation work (restored)
+- [x] check_home: the section, its links, no demo code on Home (mutant with a demo frame caught), Now,
+      the One Website wording. Lighthouse gate for Home raised to 95 Performance
+- [x] apartment-walkthrough-studio: private GitHub repo. Its 6 unpublished commits that carried a personal
+      or work email were re-authored to noreply before the first push (trees unchanged). Pin moved to 3b2b8dd
+
 ## Decided (2026-10-05)
 - No more history rewrites. History keeps the old Prairie Ridge workbook (name, OneDrive id)
   in both repos and the phone in old versions of the contact, home and quick pages and the

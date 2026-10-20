@@ -12,8 +12,9 @@ still covers what is under it, and would otherwise be invisible to the hit test.
 
 Controls, so a pass means the probe could see: an injected fixed band over the
 content must be caught, and so must the Home stage with the rule that let it
-outlive the story (margin-bottom: -100vh on a sticky element) put back. That one is
-desktop only: on a phone the old stage had scrolled away by the bottom of the page.
+outlive the story (margin-bottom: -100vh on a sticky element) put back. Home is also
+probed just past the story, since its content after the story is taller than a screen
+and the old stage had scrolled away by the bottom: the control is graded there.
 
     py tests/check_layers.py
 """
@@ -95,18 +96,25 @@ OLD_STAGE = """() => {
 }"""
 
 
-def to_bottom(page) -> tuple[int, int]:
-    """Scroll to the end and wait until it stays there (Lenis and late layout settle)."""
+BOTTOM = "document.documentElement.scrollHeight - innerHeight"
+# Home, just past the scroll story: the story's bottom edge at the top of the screen, where
+# the proof strip and Try it yourself sit. A stage that outlives the story covers them here
+# even when the page goes on for more than a screen after them.
+PAST_STORY = "Math.min(document.getElementById('story').getBoundingClientRect().bottom + scrollY, " + BOTTOM + ")"
+
+
+def to_bottom(page, target: str = BOTTOM) -> tuple[int, int]:
+    """Scroll to the target and wait until it stays there (Lenis and late layout settle)."""
     last = -1
     for _ in range(30):
-        page.evaluate("window.scrollTo(0, document.documentElement.scrollHeight)")
+        page.evaluate(f"window.scrollTo(0, {target})")
         page.wait_for_timeout(250)
         y = page.evaluate("Math.round(scrollY)")
         if y == last:
             break
         last = y
     page.wait_for_timeout(400)
-    return page.evaluate("[Math.round(scrollY), document.documentElement.scrollHeight - innerHeight]")
+    return page.evaluate(f"[Math.round(scrollY), Math.round({target})]")
 
 
 def settle(page, url: str) -> None:
@@ -115,10 +123,10 @@ def settle(page, url: str) -> None:
         page.wait_for_function("document.getElementById('stage').matches('.ready, .static')", timeout=10000)
 
 
-def grade(rep: Report, name: str, page, expect_clear: bool, want: str = "") -> None:
-    y, end = to_bottom(page)
-    if y < end - 1:
-        rep.check(f"{name}: reached the bottom", False, f"scrollY {y} of {end}")
+def grade(rep: Report, name: str, page, expect_clear: bool, want: str = "", target: str = BOTTOM) -> None:
+    y, end = to_bottom(page, target)
+    if abs(y - end) > 1:
+        rep.check(f"{name}: reached the scroll position", False, f"scrollY {y} of {end}")
         return
     r = page.evaluate(PROBE, STEP)
     if not r["onContent"]:
@@ -151,6 +159,9 @@ def main() -> int:
                             rep.check(f"{size} {scheme} {url}: theme applied", False, f"resolved {resolved}")
                         else:
                             grade(rep, f"{size} {scheme} {url}: only the header overlaps content", page, True)
+                            if url == "/":
+                                grade(rep, f"{size} {scheme} /, just past the story: only the header overlaps content",
+                                      page, True, target=PAST_STORY)
                         page.close()
                     ctx.close()
 
@@ -164,14 +175,13 @@ def main() -> int:
                 page.evaluate(BAND)
                 grade(rep, f"control, {size} /about: an injected fixed band (pointer-events: none) is caught",
                       page, False, "div#probe-band")
-                # On a phone the content after the story is taller than a screen, so the old
-                # stage had already scrolled away by the bottom: it is a desktop-only control.
-                if size == "desktop":
-                    page.goto(base + "/", wait_until="load")
-                    settle(page, "/")
-                    page.evaluate(OLD_STAGE)
-                    grade(rep, f"control, {size} /: the old sticky stage (margin-bottom: -100vh) is caught",
-                          page, False, "div.cine-stage")
+                # The content after the story is taller than a screen, so by the bottom the old
+                # stage has scrolled away. Just past the story it still covers the proof strip.
+                page.goto(base + "/", wait_until="load")
+                settle(page, "/")
+                page.evaluate(OLD_STAGE)
+                grade(rep, f"control, {size} /, just past the story: the old sticky stage (margin-bottom: -100vh) "
+                      "is caught", page, False, "div.cine-stage", target=PAST_STORY)
                 ctx.close()
             browser.close()
     finally:

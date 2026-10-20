@@ -2,7 +2,7 @@
 
     py tests/lighthouse.py [/path ...]      default: every page in GATES
 
-Gates: /quick 100 in all four. Home 90+ Performance and 100 in the other three.
+Gates: /quick 100 in all four. Home 95+ Performance and 100 in the other three.
 About, Contact, Lab and a case study 95+ in all four. Work is reported at 95+ too.
 
 Runs the Lighthouse CLI from tests/node_modules against the local clean-URL server
@@ -35,7 +35,7 @@ CATS = ("performance", "accessibility", "best-practices", "seo")
 RUNS = 3
 GATES = {   # path -> minimum per category (performance, accessibility, best-practices, seo)
     "/quick": (100, 100, 100, 100),
-    "/": (90, 100, 100, 100),
+    "/": (95, 100, 100, 100),
     "/about": (95, 95, 95, 95),
     "/contact": (95, 95, 95, 95),
     "/lab": (95, 95, 95, 95),
