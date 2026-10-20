@@ -1,0 +1,2 @@
+# Built demo files are pinned by content hash: keep their bytes exactly, no line-ending conversion.
+demos/** -text
