@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import os
+from urllib.parse import urlsplit
 import subprocess
 import sys
 from pathlib import Path
@@ -67,7 +68,8 @@ def run(url: str, out: Path) -> dict:
 
 
 def main() -> int:
-    rep = Report("Lighthouse, mobile" + (f", {os.environ['LH_BASE']}" if os.environ.get("LH_BASE") else ""))
+    host = urlsplit(os.environ.get("LH_BASE", "")).hostname     # never the whole URL, which could carry a login
+    rep = Report("Lighthouse, mobile" + (f", {host}" if host else ""))
     if not LH.exists():
         rep.not_run("Lighthouse", "run: npm --prefix tests install")
         return rep.finish()
