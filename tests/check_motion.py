@@ -61,7 +61,7 @@ def quick(rep: Report, browser, base: str) -> None:
                                             "/work/time-tracker", "/work/consolidation"}), f"{cases}")
     rep.check("/quick, JavaScript off: the résumé link is there", page.locator("a[href='/resume.pdf']").count() > 0)
     nums = page.eval_on_selector_all(".proof .num", "e => e.map(x => x.textContent)")
-    rep.check("/quick: the proof strip's four numbers, as on Home", nums == ["36h → 10m", "95–97%", "~40 hrs", "3"],
+    rep.check("/quick: the proof strip's four numbers, as on Home", nums == ["12h → 10m", "95–97%", "~30m → ~10m", "3"],
               f"{nums}")
     rep.check("/quick: no console errors", not errors, "; ".join(errors[:3]))
     ctx.close()
@@ -258,8 +258,8 @@ def story(rep: Report, browser, base: str) -> None:
     chapters = page.eval_on_selector_all("[data-glyph]", """e => e.map(h => ({ text: h.textContent.trim(),
         href: h.closest('.ch-card').querySelector('.ch-go').getAttribute('href') }))""")
     texts = [g["text"] for g in glyphs]
-    rep.check("the particles draw 36h → 10m, then 95–97%, then 3",
-              texts == ["36h → 10m", "95–97%", "3"], f"{texts}")
+    rep.check("the particles draw 12h → 10m, then 95–97%, then 3",
+              texts == ["12h → 10m", "95–97%", "3"], f"{texts}")
     rep.check("each particle number is exactly a proof strip value",
               bool(texts) and all(t in values for t in texts), f"proof strip {list(values)}")
     rep.check("each number's chapter links where the proof strip does",

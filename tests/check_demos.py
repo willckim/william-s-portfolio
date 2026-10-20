@@ -246,7 +246,9 @@ def check_launch(rep: Report, browser, base: str, slug: str, label: str, **ctx_a
     rep.check(f"/work/{slug}, {label}: nothing from /demos, no three.js or jsPDF before launch", early == [], str(early[:3]))
     rep.check(f"/work/{slug}, {label}: the poster is shown before launch",
               any("/assets/work/" in u and u.endswith(".webp") for u in urls))
-    hosts_before = {urlsplit(u).netloc for u in urls}
+    def hosts() -> set[str]:   # network hosts only: about:blank, blob: and data: never leave the browser
+        return {urlsplit(u).netloc for u in urls if urlsplit(u).scheme in ("http", "https")}
+    hosts_before = hosts()
     page.click("[data-demo-launch]")
     if slug == "quote-engine":
         rep.check(f"/work/{slug}, {label}: the launched widget prices",
@@ -271,7 +273,7 @@ def check_launch(rep: Report, browser, base: str, slug: str, label: str, **ctx_a
         if not ctx_args.get("is_mobile"):
             rep.check(f"/work/{slug}, {label}: a full screen button where the browser supports it",
                       "Full screen" in bar or not page.evaluate("() => document.fullscreenEnabled"), bar)
-    added = sorted({urlsplit(u).netloc for u in urls} - hosts_before)
+    added = sorted(hosts() - hosts_before)
     rep.check(f"/work/{slug}, {label}: launch contacts no new host, only this site", added == [], str(added))
     rep.check(f"/work/{slug}, {label}: no failed request through launch", not failed, str(failed[:3]))
     rep.check(f"/work/{slug}, {label}: no console errors through launch", not errors, str(errors[:3]))
