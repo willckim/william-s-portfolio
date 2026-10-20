@@ -72,6 +72,9 @@ RULES = [
     ("no sales tax automation", re.compile(r"sales tax automation", re.I)),
     ("no workshop", re.compile(r"workshop", re.I)),
     ("no Automation Lead title", re.compile(r"Automation Lead", re.I)),
+    # The One Website Project has no launch date any more (2026-10-20). It is in progress, with
+    # ongoing improvements through 2027.
+    ("no retired One Website launch date", re.compile(r"(?<!\w)Dec(?:ember)?\.?\s+31,?\s+2026(?!\d)", re.I)),
 ]
 
 # Any month and year near the CPA exams must be January 2027, whichever side it sits on.
@@ -96,7 +99,7 @@ EXEMPT = {
     ("/lab", "no retired 36"): [re.compile(r"the last 36 (?:months|points)|\b36 origins\b|\b36 to \d+\b", re.I)],
 }
 
-# Every rule above added on 2026-10-19, with copy it must catch and copy it must pass.
+# Every rule above added on 2026-10-19 or later, with copy it must catch and copy it must pass.
 SELF_TESTS = [
     ("no retired 36", "cut a 36-hour review", "cut a 12-hour review, 4.36 GB, 360 days, 1,936"),
     ("no retired 40 hours", "~40 hrs of close work", "40 percent, 1,940 transactions"),
@@ -106,6 +109,13 @@ SELF_TESTS = [
     ("no sales tax automation", "a sales tax automation", "reviewing a sales tax reconciliation"),
     ("no workshop", "Workshop resource", "Guide"),
     ("no Automation Lead title", "Staff Accountant, Automation Lead", "Staff Accountant · Technical Solutions"),
+    # Restored on 2026-10-20: the VP of Accounting's selection is a fact, and neither title rule
+    # may fire on it.
+    ("no Automation Lead title", "Automation Lead", "the VP of Accounting selected me to lead the team's automation work"),
+    ("never Accounting's lead", "Accounting's lead", "the VP of Accounting selected me to lead the team's automation work"),
+    ("no retired One Website launch date", "launching December 31, 2026",
+     "in progress, with ongoing improvements through 2027. December 2026. Dec 30, 2026. 31 records in 2026"),
+    ("no retired One Website launch date", "in progress, launch Dec 31, 2026", "Dec 31, 2027"),
     ("CPA exams only in January 2027", "CPA exams December 2026",
      "CPA exams January 2027. Jan 2027 CPA exams. Sitting January 2027. CPA candidate in Illinois. Mar 2026 Staff"),
 ]

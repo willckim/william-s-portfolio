@@ -341,7 +341,7 @@ CASES = (
     Case(
         slug="consolidation",
         name="One Website Project",
-        kind="Cross-functional · launching December 31, 2026",
+        kind="Cross-functional · in progress, with ongoing improvements through 2027",
         dek="Three practitioner platforms becoming one, with me as the bridge between Accounting, IT, and "
             "Marketing.",
         description="Case study: the bridge between Accounting, IT, and Marketing on consolidating three "
@@ -364,8 +364,8 @@ CASES = (
             desc="Three practitioner platforms feed a specification layer made of a workflows document, a "
                  "decisions sheet, and a clickable HTML prototype. A tax compliance requirement, W-9/TIN "
                  "and verified banking before proceeds accrue, acts as the guardrail. Marketing and IT "
-                 "work from one specification, and the output is one platform, launching December 31, "
-                 "2026, with the requirement in the ERP design.",
+                 "work from one specification, and the output is one platform, in progress with ongoing "
+                 "improvements through 2027, with the requirement in the ERP design.",
             flow=(
                 Stage("source", "Three practitioner platforms"),
                 Stage("processing", "Specification layer: workflows document, decisions sheet, clickable "
@@ -373,17 +373,17 @@ CASES = (
                 Stage("guardrail", "Tax compliance requirement: W-9/TIN and verified banking before "
                                    "proceeds accrue", strong=True),
                 Stage("review", "Marketing and IT work from one specification"),
-                Stage("output", "One platform, launching December 31, 2026, with the requirement in the "
-                                "ERP design"),
+                Stage("output", "One platform, in progress with ongoing improvements through 2027, with the "
+                                "requirement in the ERP design"),
             ),
         ),
         results=(
             Result("3 → 1", "Practitioner platforms"),
-            Result("Dec 31, 2026", "Launch"),
+            Result("In progress", "With ongoing improvements through 2027", numeric=False),
             Result("1", "W-9/TIN and verified banking requirement caught that no project document had"),
         ),
-        nxt="Turn the tax compliance requirement into test cases, so the launch is checked against it, not "
-            "only designed for it.",
+        nxt="Turn the tax compliance requirement into test cases, so each improvement is checked against it, "
+            "not only designed for it.",
         stack=("Specification writing", "Workflows document", "Decisions sheet", "HTML prototype",
                "ERP design"),
     ),
