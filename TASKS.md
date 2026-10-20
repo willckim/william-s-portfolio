@@ -72,6 +72,11 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
       build (personal info, secrets, local paths, webhook URLs, source maps), pins tools/data/demos.json
 - [x] check_demos: pin matches demos/ and the clean source HEAD, build-script guards both ways, both
       demos load at their clean URLs on desktop and phone, Credits and licenses panel works
+- [x] /work/quote-engine and /work/apartment-studio from the case template (tools/productgen.py), with a
+      poster and "Launch the demo": nothing from demos/ loads before the click (assets/demo-launch.js).
+      Quote Engine via its 2-line snippet in demo mode, studio in a frame at low quality on phones
+- [x] Products rows, palette, /quick, sitemap. No GitHub link or private repo name for either
+- [x] Lighthouse 95+ mobile on /work, /work/quote-engine, /work/apartment-studio
 
 ## Decided (2026-10-05)
 - No more history rewrites. History keeps the old Prairie Ridge workbook (name, OneDrive id)

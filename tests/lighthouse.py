@@ -40,6 +40,8 @@ GATES = {   # path -> minimum per category (performance, accessibility, best-pra
     "/lab": (95, 95, 95, 95),
     "/work/concur": (95, 95, 95, 95),
     "/work": (95, 95, 95, 95),
+    "/work/quote-engine": (95, 95, 95, 95),       # before the demo is launched
+    "/work/apartment-studio": (95, 95, 95, 95),
 }
 
 

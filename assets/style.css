@@ -863,3 +863,32 @@ html.lenis, html.lenis body { height: auto; }
 
 /* Anchored panels clear the sticky header when jumped to. */
 section[id], article[id] { scroll-margin-top: 80px; }
+
+/* ---------- 3D demos on the product case studies: poster first, launched on request ---------- */
+.demo { margin: 28px 0 8px; }
+.demo-stage { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; border: 1px solid var(--rule); background: var(--bone-2); }
+.demo-poster { display: block; width: 100%; height: 100%; object-fit: cover; }
+.demo-cta {
+  position: absolute; left: 0; right: 0; bottom: 0; display: grid; justify-items: start; gap: 8px;
+  padding: 18px 20px; background: linear-gradient(to top, color-mix(in srgb, var(--bone) 94%, transparent) 55%, transparent);
+}
+.demo-try { margin: 0; font-weight: 600; color: var(--ink); }
+.demo-note { margin: 0; font-size: 13px; color: var(--ink-2); }
+.demo-embed { margin: 14px 0 6px; font-size: 14px; color: var(--ink-2); }
+.demo-snippet {
+  margin: 0; padding: 12px 14px; overflow-x: auto; border-radius: 8px; border: 1px solid var(--rule);
+  background: var(--surface); font: 13px/1.5 "IBM Plex Mono", ui-monospace, monospace; color: var(--ink);
+}
+.demo-live { border-radius: 10px; overflow: hidden; border: 1px solid var(--rule); background: var(--surface); }
+.demo-widget { padding: 0; }
+.demo-frame { aspect-ratio: 16 / 10; min-height: 420px; }
+.demo-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
+.demo-frame:fullscreen { border: 0; border-radius: 0; aspect-ratio: auto; }
+.demo-bar { display: flex; flex-wrap: wrap; gap: 10px; margin: 0 0 10px; }
+.demo-status { margin: 10px 0 0; font-size: 13px; color: var(--ink-2); }
+.demo-status:empty { display: none; }
+@media (max-width: 640px) {
+  .demo-stage { aspect-ratio: 4 / 5; }
+  .demo-cta { padding: 14px 16px; }
+  .demo-frame { aspect-ratio: 3 / 4; min-height: 0; }
+}

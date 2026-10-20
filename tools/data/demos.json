@@ -19,15 +19,15 @@
  },
  "quote-engine": {
   "base": "/demos/quote-engine/",
-  "built_at": "2026-10-19T19:17:49",
-  "bytes": 2133771,
-  "commit": "4ed9bc4",
+  "built_at": "2026-10-19T19:37:57",
+  "bytes": 2133813,
+  "commit": "b9b1fb4",
   "commit_date": "2026-10-19",
   "files": 6,
-  "sha256_16": "f97fbd65794eba70",
+  "sha256_16": "a5d28c546039725b",
   "source": "3d-quote-engine",
   "tests": {
-   "browser": 32,
+   "browser": 34,
    "unit": 66
   }
  }

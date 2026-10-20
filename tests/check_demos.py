@@ -12,6 +12,10 @@ source repo is refused and a clean one is not, and the publish scan refuses a
 webhook URL, a local path, a secret, a source map and a planted identity inside
 a gzip, while a clean build passes.
 
+Launch: each case page loads nothing from demos/, no three.js and no jsPDF, until
+"Launch the demo" is clicked, then loads the real embed snippet or the frame (at
+the lighter quality on a phone). No page names a private repo or links GitHub.
+
 Served: both demos load through the local server, which strips trailing slashes
 and /index.html the way Vercel does (checked first, as the control), with no
 failed request and no console error, on desktop and on a phone. The apartment
@@ -21,6 +25,7 @@ studio keeps its on-screen Credits and licenses panel.
 from __future__ import annotations
 
 import gzip
+import re
 import http.server
 import json
 import shutil
@@ -30,6 +35,7 @@ import tempfile
 import urllib.error
 import urllib.request
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from playwright.sync_api import sync_playwright
 
@@ -74,6 +80,23 @@ def check_pin(rep: Report) -> None:
                       head == entry["commit"], f"pin {entry['commit']}, HEAD {head}")
         except build_demos.Refused as e:
             rep.check(f"{key}: pin is the source repo's clean HEAD", False, str(e).splitlines()[0])
+    # The hash above reads the working copy. What deploys is what git holds, so nothing may be uncommitted.
+    pending = subprocess.run(["git", "status", "--porcelain", "--", "demos", "tools/data/demos.json"], cwd=ROOT,
+                             capture_output=True, text=True).stdout.strip()
+    rep.check("demos/ and its pin are committed, so the deploy is the build the pin names", pending == "",
+              pending.replace("\n", " | ")[:200])
+
+
+def check_counts(rep: Report) -> None:
+    """The build refuses a failing browser suite, and a suite that ran nothing."""
+    rep.check("build script reads a passing browser suite's count", build_demos.passed_checks("x", 0, "34/34 checks passed") == 34)
+    for out, code, why in (("33/34 checks passed", 1, "a failing suite"), ("0/0 checks passed", 0, "an empty suite"),
+                           ("no summary line", 0, "a suite with no summary")):
+        try:
+            build_demos.passed_checks("x", code, out)
+            rep.check(f"build script refuses {why}", False)
+        except build_demos.Refused:
+            rep.check(f"build script refuses {why}", True)
 
 
 def git(repo: Path, *args: str) -> None:
@@ -98,6 +121,12 @@ def check_guards(rep: Report, tmp: Path) -> None:
 
     planted = "jane.example@example.org"
     real = scan_history.load_needles
+    scan_history.load_needles = lambda *a: []
+    try:
+        build_demos.scan(tmp)
+        rep.check("publish scan refuses to run without the needles file (NOT RUN, never clean)", False)
+    except build_demos.Refused as e:
+        rep.check("publish scan refuses to run without the needles file (NOT RUN, never clean)", "NOT RUN" in str(e))
     scan_history.load_needles = lambda *a: [scan_history.needle("email", planted)]
     try:
         clean = tmp / "clean"
@@ -111,9 +140,7 @@ def check_guards(rep: Report, tmp: Path) -> None:
             "a secret": ("app.js", b'const key = "sk-abcdefghijklmnopqrstuvwxyz012345";'),
             "an AWS access key": ("app.js", b'const id = "AKIA0000000000000000";'),
             "a Google API key": ("app.js", b'const k = "AIza' + b"0" * 35 + b'";'),
-            "a private key": ("key.txt", b"-----BEGIN RSA PRIVATE KEY-----
-MIIB
-"),
+            "a private key": ("key.txt", b"-----BEGIN RSA PRIVATE KEY-----\nMIIB\n"),
             "a source map": ("app.js.map", b'{"version":3}'),
             "a source map reference": ("app.js", b"//# sourceMappingURL=app.js.map"),
             "an identity inside a gzip": ("data.json.gz", gzip.compress(planted.encode() + b" " * 200)),
@@ -195,6 +222,77 @@ def check_demo_mode(rep: Report, browser, base: str) -> None:
     ctx.close()
 
 
+def settled(page, condition: str, seconds: int) -> bool:
+    """True once the condition holds. A timeout is a failed check, never a crash that hides the rest."""
+    try:
+        page.wait_for_function(condition, timeout=seconds * 1000)
+        return True
+    except Exception:  # noqa: BLE001
+        return False
+
+
+DEMO_FILES = re.compile(r"/demos/|three|jspdf", re.I)
+
+
+def check_launch(rep: Report, browser, base: str, slug: str, label: str, **ctx_args) -> None:
+    """The case page loads nothing of its demo until "Launch the demo" is clicked, then loads it."""
+    ctx = browser.new_context(**ctx_args)
+    page = ctx.new_page()
+    errors, failed = watch(page)
+    urls: list[str] = []
+    page.on("request", lambda r: urls.append(r.url))
+    page.goto(f"{base}/work/{slug}", wait_until="networkidle")
+    early = [u for u in urls if DEMO_FILES.search(u.replace(base, ""))]
+    rep.check(f"/work/{slug}, {label}: nothing from /demos, no three.js or jsPDF before launch", early == [], str(early[:3]))
+    rep.check(f"/work/{slug}, {label}: the poster is shown before launch",
+              any("/assets/work/" in u and u.endswith(".webp") for u in urls))
+    hosts_before = {urlsplit(u).netloc for u in urls}
+    page.click("[data-demo-launch]")
+    if slug == "quote-engine":
+        rep.check(f"/work/{slug}, {label}: the launched widget prices",
+                  settled(page, f"() => document.querySelector('{QE}')?.shadowRoot?.querySelector('[data-output=range]')"
+                                "?.textContent.includes('$')", 120))
+        loaded = [u.replace(base, "") for u in urls if "/demos/quote-engine/" in u]
+        rep.check(f"/work/{slug}, {label}: launch loads the embed and its config from /demos/quote-engine",
+                  "/demos/quote-engine/quote-builder-embed.js" in loaded
+                  and any(u.startswith("/demos/quote-engine/pricing-config.json") for u in loaded), str(loaded))
+        rep.check(f"/work/{slug}, {label}: the launched widget is in demo mode",
+                  page.evaluate(f"() => !!document.querySelector('{QE}[demo-mode]')"))
+    else:
+        src = page.evaluate("() => document.querySelector('.demo-frame iframe')?.getAttribute('src')")
+        want = "/demos/lakeview?quality=low" if ctx_args.get("is_mobile") else "/demos/lakeview"
+        rep.check(f"/work/{slug}, {label}: launch opens the studio in a frame at {want}", src == want, str(src))
+        rep.check(f"/work/{slug}, {label}: the studio in the frame reports ready",
+                  settled(page, f"() => document.querySelector('.demo-frame iframe')?.contentDocument"
+                                f"?.querySelector('{APT}')?.hasAttribute('data-ready')", 300))
+        bar = page.locator(".demo-bar").inner_text()
+        rep.check(f"/work/{slug}, {label}: the studio runs in the page, with an own-tab link",
+                  "Open in its own tab" in bar, bar.replace("\n", " | "))
+        if not ctx_args.get("is_mobile"):
+            rep.check(f"/work/{slug}, {label}: a full screen button where the browser supports it",
+                      "Full screen" in bar or not page.evaluate("() => document.fullscreenEnabled"), bar)
+    added = sorted({urlsplit(u).netloc for u in urls} - hosts_before)
+    rep.check(f"/work/{slug}, {label}: launch contacts no new host, only this site", added == [], str(added))
+    rep.check(f"/work/{slug}, {label}: no failed request through launch", not failed, str(failed[:3]))
+    rep.check(f"/work/{slug}, {label}: no console errors through launch", not errors, str(errors[:3]))
+    ctx.close()
+
+
+def check_no_source_links(rep: Report) -> None:
+    """Both source repos stay private: no GitHub link or mention for the two products anywhere."""
+    pages = {f"/work/{s}": (ROOT / "work" / f"{s}.html").read_text(encoding="utf-8")
+             for s in ("quote-engine", "apartment-studio")}
+    work = (ROOT / "work.html").read_text(encoding="utf-8")
+    rows = re.findall(r"<tr>\s*<td class=\"name\">(?:3D Quote Engine|Apartment Walkthrough Studio).*?</tr>", work, re.S)
+    rep.check("Products tab: both 3D products are listed", len(rows) == 2, f"{len(rows)} rows")
+    for where, html in [*pages.items(), *((f"Products row {i + 1}", r) for i, r in enumerate(rows))]:
+        rep.check(f"{where}: no GitHub link or mention", "github" not in html.lower())
+    for name in ("3d-quote-engine", "apartment-walkthrough-studio", "3D-Quote-Engine"):
+        hits = [p.relative_to(ROOT).as_posix() for p in ROOT.rglob("*.html")
+                if "_archive" not in p.parts and "demos" not in p.parts and name in p.read_text(encoding="utf-8")]
+        rep.check(f"no page names the private repo {name}", hits == [], str(hits[:3]))
+
+
 def check_lakeview(rep: Report, browser, base: str, label: str, query: str, **ctx_args) -> None:
     ctx = browser.new_context(**ctx_args)
     page = ctx.new_page()
@@ -223,6 +321,8 @@ def check_lakeview(rep: Report, browser, base: str, label: str, query: str, **ct
 def main() -> int:
     rep = Report("3D demos: pinned, safe to publish, working at /demos")
     check_pin(rep)
+    check_no_source_links(rep)
+    check_counts(rep)
     with tempfile.TemporaryDirectory() as t:
         check_guards(rep, Path(t))
     base, server = serve(ProductionHeaders)
@@ -235,6 +335,9 @@ def main() -> int:
             check_demo_mode(rep, browser, base)
             check_lakeview(rep, browser, base, "desktop", "", viewport={"width": 1280, "height": 800})
             check_lakeview(rep, browser, base, "phone", "?quality=low", **PHONE)
+            for slug in ("quote-engine", "apartment-studio"):
+                check_launch(rep, browser, base, slug, "desktop", viewport={"width": 1280, "height": 800})
+                check_launch(rep, browser, base, slug, "phone", **PHONE)
             browser.close()
     finally:
         server.shutdown()

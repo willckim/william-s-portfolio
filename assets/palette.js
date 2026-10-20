@@ -19,6 +19,8 @@
     ["Case studies", "Royalty Report Fix", "/work/fast-close", "sql bi royalty report defect fast close fix"],
     ["Case studies", "Accounting Time Tracker", "/work/time-tracker", "timekeeping approval audit trail azure function"],
     ["Case studies", "One Website Project", "/work/consolidation", "platform specification prototype tax w-9 tin erp"],
+    ["Products", "3D Quote Engine: live demo", "/work/quote-engine", "pergola configurator instant quote pdf three.js embed snippet contractor shadow dom"],
+    ["Products", "Apartment Walkthrough Studio: live demo", "/work/apartment-studio", "3d floor plan walkthrough dollhouse lakeview one-bedroom finishes design book"],
     ["Lab tools", "Tour Engine: tour this site", "/lab#tour", "walkthrough guided spotlight host adapter mutation testing"],
     ["Lab tools", "Construction Forecast", "/lab#construction", "fp&a scenario backtest forecast construction spending tariffs weather rates excel prairie ridge"],
     ["Lab tools", "Mosca's inequality calculator", "/lab#pqc", "post-quantum pqc readiness harvest now decrypt later retention exposure"],

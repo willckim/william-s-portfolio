@@ -1,0 +1,28 @@
+{
+ "lakeview": {
+  "demo_commit": "4ba42d9",
+  "files": [
+   {
+    "bytes": 36162,
+    "file": "assets/work/lakeview-poster-1200.webp"
+   },
+   {
+    "bytes": 14124,
+    "file": "assets/work/lakeview-poster-640.webp"
+   }
+  ]
+ },
+ "quote-engine": {
+  "demo_commit": "b9b1fb4",
+  "files": [
+   {
+    "bytes": 20984,
+    "file": "assets/work/quote-engine-poster-1200.webp"
+   },
+   {
+    "bytes": 9728,
+    "file": "assets/work/quote-engine-poster-640.webp"
+   }
+  ]
+ }
+}

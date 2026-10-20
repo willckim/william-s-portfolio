@@ -1,4 +1,5 @@
-"""Case studies: same template for all five, under 400 words, accessible diagrams.
+"""Case studies: same template for all seven (five at Ortho, two products), under 400 words,
+accessible diagrams.
 
 Reads the pages through the local clean-URL server, so it grades the URLs that
 deploy (/work/concur, not work/concur.html).
@@ -16,7 +17,7 @@ from html.parser import HTMLParser
 
 from sitekit import ROOT, Report, serve
 
-SLUGS = ("concur", "royalty", "fast-close", "time-tracker", "consolidation")
+SLUGS = ("concur", "royalty", "fast-close", "time-tracker", "consolidation", "quote-engine", "apartment-studio")
 SECTIONS = ["Problem", "What I did", "How it works", "Results", "What I'd do next", "Stack"]
 MAX_WORDS = 400
 # The Concur diagram must show this order: model output, then rules, then a person, then posting.

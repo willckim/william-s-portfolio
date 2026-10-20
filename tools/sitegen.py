@@ -1,4 +1,4 @@
-"""Generate the shared site header on every page, and the five case study pages.
+"""Generate the shared site header on every page, the five Ortho case studies and the two products.
 
     py tools/sitegen.py            rewrite the header everywhere, regenerate work/*.html
     py tools/sitegen.py --check    exit 1 if any page differs from what this would write
@@ -17,13 +17,14 @@ from __future__ import annotations
 import json
 import re
 import sys
-from dataclasses import dataclass
 from html import escape
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from casemodel import Case, Result  # noqa: E402
 from diagram import Diagram, Group, Stage, render  # noqa: E402
 import constructiongen  # noqa: E402
+import productgen  # noqa: E402
 import labgen  # noqa: E402
 import quickgen  # noqa: E402
 
@@ -155,29 +156,6 @@ FAVICON = ("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox
            "stroke-linejoin='round'/%3E%3C/svg%3E")
 
 # ----------------------------------------------------------- case studies -----
-
-
-@dataclass(frozen=True)
-class Result:
-    value: str
-    label: str
-    numeric: bool = True        # IBM Plex Mono is for numbers only
-
-
-@dataclass(frozen=True)
-class Case:
-    slug: str
-    name: str
-    kind: str
-    dek: str
-    description: str
-    problem: tuple[str, ...]
-    did: tuple[str, ...]
-    how: str
-    diagram: Diagram
-    results: tuple[Result, ...]
-    nxt: str
-    stack: tuple[str, ...]
 
 
 CASES = (
@@ -414,9 +392,13 @@ def _paras(ps: tuple[str, ...]) -> str:
     return "\n".join(f"          <p>{escape(p)}</p>" for p in ps)
 
 
-def case_page(i: int) -> str:
-    c = CASES[i]
-    prev_c, next_c = CASES[i - 1], CASES[(i + 1) % len(CASES)]
+def case_page(i: int, cases: tuple[Case, ...] = CASES, demo: str = "",
+              results_note: str = "As stated on the résumé.") -> str:
+    """One case study. Products pass their live demo block, which loads only its launcher script."""
+    c = cases[i]
+    prev_c, next_c = cases[i - 1], cases[(i + 1) % len(cases)]
+    demo_html = f"\n\n      {demo}" if demo else ""
+    demo_js = '\n  <script src="/assets/demo-launch.js" defer></script>' if demo else ""
     results = "\n".join(
         f'          <div><dt>{escape(r.label)}</dt>'
         f'<dd class="{"num" if r.numeric else "word"}">{escape(r.value)}</dd></div>' for r in c.results)
@@ -449,7 +431,7 @@ def case_page(i: int) -> str:
         <p class="kind">{escape(c.kind)}</p>
         <h1>{escape(c.name)}</h1>
         <p>{escape(c.dek)}</p>
-      </div>
+      </div>{demo_html}
 
       <section class="ledger" aria-labelledby="problem-h">
         <aside><h2 id="problem-h">Problem</h2></aside>
@@ -473,7 +455,7 @@ def case_page(i: int) -> str:
       </section>
 
       <section class="ledger" aria-labelledby="results-h">
-        <aside><h2 id="results-h">Results</h2><p>As stated on the résumé.</p></aside>
+        <aside><h2 id="results-h">Results</h2><p>{escape(results_note)}</p></aside>
         <dl class="results">
 {results}
         </dl>
@@ -508,7 +490,7 @@ def case_page(i: int) -> str:
   </footer>
 
   {MOTION_SCRIPTS}
-  {SITE_JS}
+  {SITE_JS}{demo_js}
 </body>
 </html>
 '''
@@ -550,7 +532,8 @@ def expected() -> dict[Path, str]:
     out[ROOT / "assets" / "lab" / "pqc-data.js"] = labgen.pqc_js()
     out[ROOT / "assets" / "lab" / "construction-data.js"] = constructiongen.construction_js()
     out[ROOT / "quick.html"] = quickgen.page(CASES, FAVICON)
-    urls = [href for _, href, _, _ in NAV] + [f"/work/{c.slug}" for c in CASES] + ["/copilot", "/quick"]
+    urls = ([href for _, href, _, _ in NAV] + [f"/work/{c.slug}" for c in CASES + productgen.CASES]
+            + ["/copilot", "/quick"])
     out[ROOT / "sitemap.xml"] = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
         '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
@@ -558,6 +541,9 @@ def expected() -> dict[Path, str]:
         + "</urlset>\n")
     for i, c in enumerate(CASES):
         out[ROOT / "work" / f"{c.slug}.html"] = case_page(i)
+    for i, c in enumerate(productgen.CASES):
+        out[ROOT / "work" / f"{c.slug}.html"] = case_page(i, productgen.CASES, productgen.demo_block(c.slug),
+                                                          productgen.RESULTS_NOTE)
     return out
 
 

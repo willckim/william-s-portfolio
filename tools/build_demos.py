@@ -109,6 +109,8 @@ def unit_tests(src: Path, tmp: Path) -> int:
     data = json.loads(report.read_text(encoding="utf-8")) if report.exists() else {}
     if done.returncode != 0 or not data.get("success"):
         raise Refused(f"{src.name}: unit tests failed ({data.get('numFailedTests', '?')} failed)")
+    if not data.get("numPassedTests"):
+        raise Refused(f"{src.name}: the unit suite ran no tests, so it proves nothing")
     return int(data["numPassedTests"])
 
 
@@ -116,10 +118,15 @@ def browser_checks(src: Path) -> int:
     if run([NPM, "run", "build"], src).returncode != 0:
         raise Refused(f"{src.name}: npm run build failed")
     done = run([sys.executable, "scripts/e2e_smoke.py"], src)
-    found = re.findall(r"(\d+)/(\d+) checks passed", done.stdout)
-    if done.returncode != 0 or not found or found[-1][0] != found[-1][1]:
-        tail = "\n".join(done.stdout.strip().splitlines()[-5:])
-        raise Refused(f"{src.name}: browser checks failed\n{tail}")
+    return passed_checks(src.name, done.returncode, done.stdout)
+
+
+def passed_checks(name: str, returncode: int, stdout: str) -> int:
+    """The browser check count from a suite's output. Any failure, or a suite of none, refuses."""
+    found = re.findall(r"(\d+)/(\d+) checks passed", stdout)
+    if returncode != 0 or not found or found[-1][0] != found[-1][1] or int(found[-1][1]) == 0:
+        tail = "\n".join(stdout.strip().splitlines()[-5:])
+        raise Refused(f"{name}: browser checks failed or none ran\n{tail}")
     return int(found[-1][0])
 
 
@@ -234,6 +241,23 @@ def content_hash(out: Path) -> tuple[int, int, str]:
     return len(files), sum(p.stat().st_size for p in files), digest.hexdigest()[:16]
 
 
+def install(out: Path, dest: Path) -> None:
+    """Copy beside the destination first, then swap, so a failed copy never leaves a half demo."""
+    staged, old = dest.with_name(dest.name + ".new"), dest.with_name(dest.name + ".old")
+    try:
+        shutil.rmtree(staged, ignore_errors=True)
+        shutil.rmtree(old, ignore_errors=True)
+        shutil.copytree(out, staged)
+        if dest.exists():
+            dest.rename(old)
+        staged.rename(dest)
+        shutil.rmtree(old, ignore_errors=True)
+    except OSError as e:
+        if old.exists() and not dest.exists():
+            old.rename(dest)
+        raise Refused(f"could not install {dest.name}: {e}") from e
+
+
 def publish(demo: Demo) -> dict:
     src = source_dir(demo)
     commit, date = clean_head(src)
@@ -257,9 +281,7 @@ def publish(demo: Demo) -> dict:
             entry["download_bytes"] = download_bytes(demo, out, tmp)
         files, size, digest = content_hash(out)
         entry.update({"files": files, "bytes": size, "sha256_16": digest})
-        dest = ROOT / demo.base.strip("/")
-        shutil.rmtree(dest, ignore_errors=True)
-        shutil.copytree(out, dest)
+        install(out, ROOT / demo.base.strip("/"))
     entry["built_at"] = datetime.now().isoformat(timespec="seconds")
     return entry
 
