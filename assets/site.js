@@ -40,6 +40,11 @@
     // The Experiments tab moved to the Lab. Old links still land somewhere real.
     if (initial === "experiments") { location.replace("/lab#experiments"); return; }
     show(panels.some(function (p) { return p.id === initial; }) ? initial : buttons[0].dataset.panel, false);
+    // A link to /work#products from this same page changes only the hash, with no page load.
+    window.addEventListener("hashchange", function () {
+      var id = location.hash.replace("#", "");
+      if (panels.some(function (p) { return p.id === id; })) show(id, false);
+    });
   }
 
   // Tour Engine: loaded only when asked for, or when a tour is already under way

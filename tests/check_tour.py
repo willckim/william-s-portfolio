@@ -36,16 +36,17 @@ from playwright.sync_api import sync_playwright
 
 from sitekit import ROOT, Report, serve
 
-EXPECTED = [  # (page, card title) for the seven authored steps, in order
+EXPECTED = [  # (page, card title) for the eight authored steps, in order
     ("home", "Who I am, in one line"),
     ("home", "12h → 10m"),
     ("home", "Quick view"),
     ("home", "See the work"),
     ("work", "Start with Concur"),
     ("case-concur", "The guardrails"),
+    ("demos", "Try it yourself"),
     ("lab", "The Mosca calculator"),
 ]
-PAGE_OF = {"home": "/", "work": "/work", "case-concur": "/work/concur", "lab": "/lab"}
+PAGE_OF = {"home": "/", "work": "/work", "case-concur": "/work/concur", "demos": "/demos", "lab": "/lab"}
 # A clone of willckim/tour-engine beside this repo in OneDrive, as PQC_DIR is for Mosca.
 SRC = os.environ.get("TOUR_ENGINE_SRC") or str(Path.home() / "OneDrive" / "tour-engine")
 NO_INTRO = "try { sessionStorage.setItem('wk.intro', '1') } catch (e) {}"
@@ -247,13 +248,13 @@ def drive(rep: Report, browser, base: str, label: str, start: str = "/", **kw) -
             page.wait_for_timeout(120)               # the numbers step is scrolling now
             locked_mid = page.evaluate("!!(window.__motion.lenis && window.__motion.lenis.isLocked)")
     final = state(page)
-    rep.check(f"{label}: all seven authored steps shown in order", authored == EXPECTED,
-              f"{len(authored)} of 7 via {cards} cards")
+    rep.check(f"{label}: all {len(EXPECTED)} authored steps shown in order", authored == EXPECTED,
+              f"{len(authored)} of {len(EXPECTED)} via {cards} cards")
     rep.check(f"{label}: Done ends the tour on the Lab, no step left",
               bool(final) and not final["active"] and final["page"] == "lab")
     rep.check(f"{label}: no step fell back to 'could not find'", timeouts == 0, f"{timeouts}")
     bad = [a for a in aligns if isinstance(a[1], str) or a[1] > ALIGN_PX]
-    rep.check(f"{label}: the spotlight sits on its target on every card", len(aligns) >= 7 and not bad,
+    rep.check(f"{label}: the spotlight sits on its target on every card", len(aligns) >= len(EXPECTED) and not bad,
               f"{len(aligns)} cards, worst {max((a[1] for a in aligns if not isinstance(a[1], str)), default=None)}px {bad[:2]}")
     if numbers is None:
         rep.check(f"{label}: the numbers step was reached", False)
@@ -366,7 +367,7 @@ def skips(rep: Report, browser, base: str) -> None:
         if not ok:
             results.append((k, {**after, "errors": errors[:2]}))
         ctx.close()
-    rep.check("Skip on each of the 7 steps: no tour, Lenis free, the page scrolls, the dot is back, no saved place",
+    rep.check(f"Skip on each of the {len(EXPECTED)} steps: no tour, Lenis free, the page scrolls, the dot is back, no saved place",
               not results, f"{results[:2]}")
 
 
@@ -408,14 +409,18 @@ def copy(rep: Report, browser, base: str) -> None:
     steps = page.evaluate("TourHost.steps.map(s => [s.title, s.body, s.targetName, s.instruction])")
     ctx.close()
     words = " ".join(w for s in steps for w in s if w)
-    rep.check("step text: no em dash and no semicolon", len(steps) == 7 and not re.search("[—;]", words),
+    rep.check("step text: no em dash and no semicolon", len(steps) == len(EXPECTED) and not re.search("[—;]", words),
               f"{len(steps)} steps")
     # Worded by the owner in the tour brief, not read off tour-host.js.
     briefed = {2: "Short on time? Here is the one-page version.",
                5: "The model never posts anything. Rules and a person check every result.",
-               6: "Try the calculator yourself."}
+               7: "Try the calculator yourself."}
     wrong = {k + 1: steps[k][1] for k, want in briefed.items() if len(steps) > k and steps[k][1] != want}
-    rep.check("steps 3, 6 and 7 read exactly as briefed", len(steps) == 7 and not wrong, f"{wrong}")
+    rep.check("steps 3, 6 and 8 read exactly as briefed", len(steps) == len(EXPECTED) and not wrong, f"{wrong}")
+    # The Lab tells a visitor how long the tour is. It must match the tour that runs.
+    words_n = {7: "Seven", 8: "Eight", 9: "Nine", 4: "four", 5: "five", 6: "six"}
+    said = f"{words_n.get(len(steps), len(steps))} steps across {words_n.get(len(PAGE_OF), len(PAGE_OF))} pages"
+    rep.check("the Lab states the tour's real length", said in (ROOT / "lab.html").read_text(encoding="utf-8"), said)
     rep.check("step 2 quotes the proof strip exactly",
               steps[1][0] == "12h → 10m" and steps[1][1].rstrip(".") in
               (ROOT / "index.html").read_text(encoding="utf-8"), steps[1][1][:40])

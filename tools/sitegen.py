@@ -34,6 +34,7 @@ ROOT = Path(__file__).resolve().parent.parent
 NAV = (
     ("home", "/", "ledger", "Home"),
     ("work", "/work", "blueprint", "Work"),
+    ("demos", "/demos", "teal", "Demos"),
     ("lab", "/lab", "amber", "Lab"),
     ("about", "/about", "violet", "About"),
     ("contact", "/contact", "coral", "Contact"),
@@ -42,6 +43,7 @@ NAV = (
 PAGES = {  # file -> the nav tab it sits under
     "index.html": "home",
     "work.html": "work",
+    "demos.html": "demos",
     "lab.html": "lab",
     "about.html": "about",
     "contact.html": "contact",

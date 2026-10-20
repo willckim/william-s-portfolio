@@ -23,6 +23,7 @@
   var LINKS = {
     home: '#nav a[href="/"]',
     work: '#nav a[href="/work"]',
+    demos: '#nav a[href="/demos"]',
     lab: '#nav a[href="/lab"]',
     contact: '#nav a[href="/contact"]',
     "case-concur": '#ortho .ix-link[href="/work/concur"] .ix-name'
@@ -155,6 +156,11 @@
         title: "The guardrails",
         body: "The model never posts anything. Rules and a person check every result.",
         targetName: "the architecture diagram", instruction: "Find the diagram under How it works" },
+      { tab: "demos", kind: "region", advance: "next",
+        target: [{ by: "css", value: ".demo-cards" }],
+        title: "Try it yourself",
+        body: "Every live demo, on one page. Pick one and try it.",
+        targetName: "the demo cards", instruction: "Find the demo cards on Demos" },
       { tab: "lab", kind: "region", advance: "next",
         target: [{ by: "id", value: "mosca" }],
         title: "The Mosca calculator",

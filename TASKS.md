@@ -77,6 +77,10 @@ deployed on Vercel with clean URLs. Not deployed: this file, `tools/`, `tests/`,
       Quote Engine via its 2-line snippet in demo mode, studio in a frame at low quality on phones
 - [x] Products rows, palette, /quick, sitemap. No GitHub link or private repo name for either
 - [x] Lighthouse 95+ mobile on /work, /work/quote-engine, /work/apartment-studio
+- [x] Demos tab (teal) between Work and Lab, /demos "Try it yourself": six static cards, no demo code on
+      the page (tools/demo_cards.py renders the Lab previews). In the palette, /quick and the tour (step 7)
+- [x] Work: Products tab shows without JavaScript, /work#products and same-page links open it
+- [x] check_demos_page: cards, links, no demo code, menu on every page (desktop and phone), Work tabs, paths
 
 ## Decided (2026-10-05)
 - No more history rewrites. History keeps the old Prairie Ridge workbook (name, OneDrive id)

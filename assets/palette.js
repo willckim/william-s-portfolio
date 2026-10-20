@@ -10,6 +10,7 @@
   var INDEX = [
     ["Pages", "Home", "/", "start overview proof results now"],
     ["Pages", "Work", "/work", "ledger ortho products production systems"],
+    ["Pages", "Demos: try it yourself", "/demos", "live demos try it 3d quote engine apartment construction tour quantum grover calculator"],
     ["Pages", "Lab", "/lab", "tools interactive experiments"],
     ["Pages", "About", "/about", "profile timeline skills certifications how i work principles"],
     ["Pages", "Contact", "/contact", "email linkedin github hire open to roles"],

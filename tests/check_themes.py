@@ -24,7 +24,7 @@ from playwright.sync_api import sync_playwright
 from sitekit import ROOT, Report, serve, site_pages
 
 AXE = Path(__file__).resolve().parent / "node_modules" / "axe-core" / "axe.min.js"
-ACCENTS = ("ledger", "blueprint", "amber", "coral", "violet")
+ACCENTS = ("ledger", "blueprint", "amber", "coral", "violet", "teal")
 
 
 def lum(hexc: str) -> float:

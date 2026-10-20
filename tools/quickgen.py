@@ -172,7 +172,7 @@ def page(cases, favicon: str) -> str:
   <a class="skip" href="#main">Skip to content</a>
   <header class="top">
     <strong>William Kim</strong>
-    <nav aria-label="Quick view"><a href="/">Full site</a><a href="/resume.pdf">Résumé (PDF)</a><a href="/contact">Contact</a></nav>
+    <nav aria-label="Quick view"><a href="/">Full site</a><a href="/demos">Demos</a><a href="/resume.pdf">Résumé (PDF)</a><a href="/contact">Contact</a></nav>
   </header>
   <main id="main">
     <h1>William Kim</h1>
