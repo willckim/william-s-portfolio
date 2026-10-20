@@ -154,8 +154,12 @@ def scan(out: Path) -> list[str]:
         for n in needles:
             if scan_history.matches(n, forms):
                 problems.append(f"{rel}: {n.label}")
-        text = "\n".join(t for _, form in forms for t in scan_history.texts(form))
-        problems += [f"{rel}: {what}" for what, rx in FORBIDDEN.items() if rx.search(text)]
+        # Secret prefixes are case-sensitive (AKIA, AIza, BEGIN ... PRIVATE KEY), so the patterns
+        # also run on the text as written, not only on the case-folded forms the needles use.
+        as_written = "\n".join(form.decode("utf-8", "replace") for _, form in forms)
+        folded = "\n".join(t for _, form in forms for t in scan_history.texts(form))
+        problems += [f"{rel}: {what}" for what, rx in FORBIDDEN.items()
+                     if rx.search(as_written) or rx.search(folded)]
     return problems
 
 

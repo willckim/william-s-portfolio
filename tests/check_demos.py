@@ -109,6 +109,11 @@ def check_guards(rep: Report, tmp: Path) -> None:
             "a webhook URL": ("pricing-config.json", b'{"leadWebhookUrl": "https://hooks.zapier.com/hooks/catch/1/x"}'),
             "a local file path": ("app.js", b'const p = "C:\\\\Users\\\\jane\\\\project\\\\src";'),
             "a secret": ("app.js", b'const key = "sk-abcdefghijklmnopqrstuvwxyz012345";'),
+            "an AWS access key": ("app.js", b'const id = "AKIA0000000000000000";'),
+            "a Google API key": ("app.js", b'const k = "AIza' + b"0" * 35 + b'";'),
+            "a private key": ("key.txt", b"-----BEGIN RSA PRIVATE KEY-----
+MIIB
+"),
             "a source map": ("app.js.map", b'{"version":3}'),
             "a source map reference": ("app.js", b"//# sourceMappingURL=app.js.map"),
             "an identity inside a gzip": ("data.json.gz", gzip.compress(planted.encode() + b" " * 200)),
