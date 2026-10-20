@@ -67,13 +67,14 @@ def run(url: str, out: Path) -> dict:
 
 
 def main() -> int:
-    rep = Report("Lighthouse, mobile")
+    rep = Report("Lighthouse, mobile" + (f", {os.environ['LH_BASE']}" if os.environ.get("LH_BASE") else ""))
     if not LH.exists():
         rep.not_run("Lighthouse", "run: npm --prefix tests install")
         return rep.finish()
     paths = [a for a in sys.argv[1:] if a.startswith("/")] or list(GATES)
     (HERE / "shots").mkdir(exist_ok=True)
-    base, server = serve()
+    live = os.environ.get("LH_BASE", "").rstrip("/")     # e.g. https://www.williamckim.com, to grade production
+    base, server = (live, None) if live else serve()
     try:
         for path in paths:
             name = path.strip("/").replace("/", "_") or "home"
@@ -88,7 +89,8 @@ def main() -> int:
             rep.check(f"{path}: at least {'/'.join(map(str, gate))}",
                       all(s[c] >= g for c, g in zip(CATS, gate)), detail)
     finally:
-        server.shutdown()
+        if server:
+            server.shutdown()
     return rep.finish()
 
 
