@@ -1,9 +1,9 @@
 {
  "lakeview": {
   "base": "/demos/lakeview/",
-  "built_at": "2026-10-19T19:09:32",
+  "built_at": "2026-10-20T06:48:21",
   "bytes": 19677758,
-  "commit": "4ba42d9",
+  "commit": "3b2b8dd",
   "commit_date": "2026-10-19",
   "download_bytes": {
    "high": 15533924,
