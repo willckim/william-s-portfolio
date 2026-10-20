@@ -162,6 +162,34 @@ def check_quote_engine(rep: Report, browser, base: str, label: str, **ctx_args) 
     ctx.close()
 
 
+def check_demo_mode(rep: Report, browser, base: str) -> None:
+    """The hosted quote engine is in demo mode: the form says so, the PDF downloads, and submit
+    makes no network request. The source repo's suite has the control that sees a webhook POST."""
+    ctx = browser.new_context(viewport={"width": 1280, "height": 800}, accept_downloads=True)
+    page = ctx.new_page()
+    errors, _ = watch(page)
+    page.goto(f"{base}/demos/quote-engine/")
+    page.wait_for_function(f"() => document.querySelector('{QE}')?.shadowRoot?.querySelector('[data-output=range]')"
+                           "?.textContent.includes('$')", timeout=60_000)
+    page.locator(f'{QE} [data-action="quote"]').click()
+    notice = page.locator(f"{QE} dialog[open]").inner_text()
+    for field, value in (("name", "Jordan Rivera"), ("email", "jordan@example.com"),
+                         ("phone", "(555) 201-3344"), ("zip", "60010")):
+        page.locator(f"{QE} #qb-f-{field}").fill(value)
+    requests: list[str] = []
+    page.on("request", lambda r: requests.append(f"{r.method} {r.url}"))
+    with page.expect_download() as dl:
+        page.locator(f'{QE} form button[type="submit"]').click()
+    page.locator(f"{QE} .qb-success").wait_for(state="visible")
+    page.wait_for_timeout(1500)
+    rep.check("quote engine: the hosted demo says nothing is sent", "Demo only, nothing you enter is sent anywhere" in notice)
+    rep.check("quote engine: the hosted demo's PDF downloads", dl.value.suggested_filename.endswith(".pdf"),
+              dl.value.suggested_filename)
+    rep.check("quote engine: submit on the hosted demo makes no network request", requests == [], str(requests[:3]))
+    rep.check("quote engine: no console errors through submit", not errors, str(errors[:3]))
+    ctx.close()
+
+
 def check_lakeview(rep: Report, browser, base: str, label: str, query: str, **ctx_args) -> None:
     ctx = browser.new_context(**ctx_args)
     page = ctx.new_page()
@@ -199,6 +227,7 @@ def main() -> int:
             browser = p.chromium.launch(args=GL)
             check_quote_engine(rep, browser, base, "desktop", viewport={"width": 1280, "height": 800})
             check_quote_engine(rep, browser, base, "phone", **PHONE)
+            check_demo_mode(rep, browser, base)
             check_lakeview(rep, browser, base, "desktop", "", viewport={"width": 1280, "height": 800})
             check_lakeview(rep, browser, base, "phone", "?quality=low", **PHONE)
             browser.close()
